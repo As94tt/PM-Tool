@@ -114,7 +114,9 @@ export default function PersonDetailPage() {
               {availabilityPercent}% available
             </span>
           </div>
-          <p className="mt-1 text-muted-foreground">{person.jobTitle}</p>
+          <p className="mt-1 text-muted-foreground">
+            {person.jobTitle} <span className="text-muted-foreground/50">·</span> {person.department}
+          </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             {location && (
               <span className="inline-flex items-center gap-1.5">

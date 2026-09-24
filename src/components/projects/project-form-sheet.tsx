@@ -86,6 +86,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
   const [endDate, setEndDate] = useState(project?.endDate ?? "");
   const [status, setStatus] = useState<ProjectStatus>(project?.status ?? "planned");
   const [leadPersonId, setLeadPersonId] = useState(project?.leadPersonId ?? people[0]?.id ?? "");
+  const [deliveryResponsibleId, setDeliveryResponsibleId] = useState(project?.deliveryResponsiblePersonId ?? "");
   const [outcomes, setOutcomes] = useState(project?.outcomes.join("\n") ?? "");
   const [totalBudget, setTotalBudget] = useState(String(project?.totalBudget ?? 0));
   const [imageUrl, setImageUrl] = useState<string | undefined>(project?.imageUrl);
@@ -102,6 +103,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
   }
 
   const peopleOptions = people.map((p) => ({ value: p.id, label: fullName(p) }));
+  const deliveryResponsibleOptions = [{ value: "none", label: "None" }, ...peopleOptions];
   const industryOptions = industries.map((i) => ({ value: i.id, label: i.name }));
   const projectTypeOptions = projectTypes.map((t) => ({ value: t, label: t }));
   const statusOptions = STATUS_OPTIONS;
@@ -131,6 +133,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
     setOutcomes("");
     setTotalBudget("0");
     setImageUrl(undefined);
+    setDeliveryResponsibleId("");
     setSelectedSkillIds([]);
     setTeam([]);
   }
@@ -157,6 +160,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         endDate: endDate || null,
         status,
         leadPersonId,
+        deliveryResponsiblePersonId: deliveryResponsibleId || undefined,
         outcomes: outcomesList,
         totalBudget: Number(totalBudget) || 0,
         imageUrl,
@@ -181,6 +185,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         endDate: endDate || null,
         status,
         leadPersonId,
+        deliveryResponsiblePersonId: deliveryResponsibleId || undefined,
         outcomes: outcomesList,
         currency: "EUR",
         totalBudget: Number(totalBudget) || 0,
@@ -188,7 +193,12 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
       },
       [
         { projectId: id, personId: leadPersonId, roleOnProject: "Project Lead" },
-        ...team.filter((t) => t.personId !== leadPersonId).map((t) => ({ projectId: id, ...t })),
+        ...(deliveryResponsibleId && deliveryResponsibleId !== leadPersonId
+          ? [{ projectId: id, personId: deliveryResponsibleId, roleOnProject: "Delivery Responsible" }]
+          : []),
+        ...team
+          .filter((t) => t.personId !== leadPersonId && t.personId !== deliveryResponsibleId)
+          .map((t) => ({ projectId: id, ...t })),
       ],
       selectedSkillIds
     );
@@ -313,6 +323,24 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
                     {people.map((p) => (
                       <SelectItem key={p.id} value={p.id}>
                         {fullName(p)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-2">
+                <Label className="mb-1.5">Delivery responsible</Label>
+                <Select
+                  value={deliveryResponsibleId || "none"}
+                  onValueChange={(v) => setDeliveryResponsibleId(v && v !== "none" ? v : "")}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{selectLabel(deliveryResponsibleOptions, "Delivery responsible")}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {deliveryResponsibleOptions.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

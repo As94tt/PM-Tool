@@ -8,6 +8,7 @@ export const PEOPLE_IMPORT_FIELDS: ImportField[] = [
   { key: "firstName", label: "First name", required: true },
   { key: "lastName", label: "Last name", required: true },
   { key: "jobTitle", label: "Job title", required: true },
+  { key: "department", label: "Department (IT Solutions / Development / Data / 5G)" },
   { key: "city", label: "Location (city)" },
   { key: "bio", label: "Bio" },
 ];

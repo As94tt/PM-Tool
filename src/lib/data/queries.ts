@@ -12,6 +12,7 @@ import type {
   SkillLevel,
   ProjectStatus,
   Client,
+  Department,
 } from "@/lib/types";
 import { getAllocationForPersonMonth, getHorizonMonths } from "./capacity";
 
@@ -232,6 +233,7 @@ export function getPeopleBecomingAvailableSoon(
 export interface PeopleFilters {
   query?: string;
   locationId?: string;
+  department?: Department;
   skillId?: string;
   minSkillLevel?: SkillLevel;
   certificationId?: string;
@@ -255,6 +257,7 @@ export function filterPeople(params: {
   return people.filter((p) => {
     if (q && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(q)) return false;
     if (filters.locationId && p.locationId !== filters.locationId) return false;
+    if (filters.department && p.department !== filters.department) return false;
     if (filters.industryId && !p.industryExperienceIds.includes(filters.industryId)) return false;
 
     if (filters.skillId) {

@@ -1,4 +1,4 @@
-First Name,Last Name,Job Title,City,Bio
-Elena,Vasquez,Cloud Consultant,Munich,Specialises in multi-cloud landing zones for manufacturing clients.
-Tom,Berger,Data Analyst,Berlin,Focuses on BI dashboards and reporting automation.
-Priya,Nair,Scrum Master,Hamburg,Coaches delivery teams across telecom engagements.
+First Name,Last Name,Job Title,Department,City,Bio
+Elena,Vasquez,Cloud Consultant,IT Solutions,Munich,Specialises in multi-cloud landing zones for manufacturing clients.
+Tom,Berger,Data Analyst,Data,Berlin,Focuses on BI dashboards and reporting automation.
+Priya,Nair,Scrum Master,5G,Hamburg,Coaches delivery teams across telecom engagements.

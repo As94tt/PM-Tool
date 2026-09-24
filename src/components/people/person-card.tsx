@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin, Award } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { DepartmentBadge } from "@/components/shared/department-badge";
 import type { Person, Location } from "@/lib/types";
 import { fullName, initials, type PersonSkillDetail } from "@/lib/data/queries";
 import { getAllocationStatus, ALLOCATION_STATUS_STYLES, ALLOCATION_STATUS_LABEL } from "@/lib/data/capacity";
@@ -38,11 +39,14 @@ export function PersonCard({
             {fullName(person)}
           </p>
           <p className="truncate text-xs text-muted-foreground">{person.jobTitle}</p>
-          {location && (
-            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground/80">
-              <MapPin className="size-3" /> {location.city}
-            </p>
-          )}
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
+            {location && (
+              <span className="flex items-center gap-1 text-xs text-muted-foreground/80">
+                <MapPin className="size-3" /> {location.city}
+              </span>
+            )}
+            <DepartmentBadge department={person.department} className="text-muted-foreground/80" />
+          </div>
         </div>
       </div>
 

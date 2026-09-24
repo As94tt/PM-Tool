@@ -59,6 +59,7 @@ export default function ProjectDetailPage() {
   const industry = industries.find((i) => i.id === project.industryId);
   const members = getProjectMemberDetails(projectMembers, people, project.id);
   const lead = people.find((p) => p.id === project.leadPersonId);
+  const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
   const similar = getSimilarProjects(projects, projectSkills, project.id, 3);
   const budgetPlan = budgetPlans.find((b) => b.projectId === project.id);
@@ -183,19 +184,41 @@ export default function ProjectDetailPage() {
 
         <div className="flex flex-col gap-6">
           <Card className="p-5 shadow-elevation-1">
-            <h2 className="font-heading text-sm font-semibold">Project lead</h2>
-            {lead && (
-              <Link href={`/people/${lead.id}`} className="mt-3 flex items-center gap-3 hover:opacity-80">
-                <Avatar className="size-10">
-                  <AvatarImage src={lead.avatarUrl} alt={fullName(lead)} />
-                  <AvatarFallback>{initials(lead)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{fullName(lead)}</p>
-                  <p className="truncate text-xs text-muted-foreground">{lead.jobTitle}</p>
+            <h2 className="font-heading text-sm font-semibold">Leadership</h2>
+            <div className="mt-3 flex flex-col gap-4">
+              {lead && (
+                <div>
+                  <p className="mb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Project lead</p>
+                  <Link href={`/people/${lead.id}`} className="flex items-center gap-3 hover:opacity-80">
+                    <Avatar className="size-10">
+                      <AvatarImage src={lead.avatarUrl} alt={fullName(lead)} />
+                      <AvatarFallback>{initials(lead)}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{fullName(lead)}</p>
+                      <p className="truncate text-xs text-muted-foreground">{lead.jobTitle}</p>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            )}
+              )}
+              {deliveryResponsible && (
+                <div>
+                  <p className="mb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                    Delivery responsible
+                  </p>
+                  <Link href={`/people/${deliveryResponsible.id}`} className="flex items-center gap-3 hover:opacity-80">
+                    <Avatar className="size-10">
+                      <AvatarImage src={deliveryResponsible.avatarUrl} alt={fullName(deliveryResponsible)} />
+                      <AvatarFallback>{initials(deliveryResponsible)}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{fullName(deliveryResponsible)}</p>
+                      <p className="truncate text-xs text-muted-foreground">{deliveryResponsible.jobTitle}</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
           </Card>
 
           <Card className="p-5 shadow-elevation-1">

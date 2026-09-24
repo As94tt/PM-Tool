@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SkillLevelCell } from "./skill-level-cell";
-import type { SkillCategory, SkillLevel } from "@/lib/types";
+import { DEPARTMENTS, type SkillCategory, type SkillLevel } from "@/lib/types";
 
 export function MatrixView() {
   const people = useAppStore((s) => s.people);
@@ -24,6 +24,7 @@ export function MatrixView() {
   const [category, setCategory] = useState<string>(categories[0] ?? "");
   const [roleQuery, setRoleQuery] = useState("");
   const [locationId, setLocationId] = useState("");
+  const [department, setDepartment] = useState("");
   const [minLevel, setMinLevel] = useState(0);
   const [minAvailability, setMinAvailability] = useState(0);
 
@@ -39,6 +40,7 @@ export function MatrixView() {
   const visiblePeople = people.filter((p) => {
     if (roleQuery && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(roleQuery.toLowerCase())) return false;
     if (locationId && p.locationId !== locationId) return false;
+    if (department && p.department !== department) return false;
     if (minAvailability > 0) {
       const allocated = getAllocationForPersonMonth(resourceAllocations, p.id, month);
       if (100 - allocated < minAvailability) return false;
@@ -52,6 +54,7 @@ export function MatrixView() {
 
   const categoryOptions = [{ value: "all", label: "All categories" }, ...categories.map((c) => ({ value: c, label: c }))];
   const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
   const levelOptions = [
     { value: "0", label: "Any level" },
     ...[1, 2, 3, 4, 5].map((l) => ({ value: String(l), label: `Level ${l}+` })),
@@ -89,6 +92,18 @@ export function MatrixView() {
             </SelectTrigger>
             <SelectContent>
               {locationOptions.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={department || "any"} onValueChange={(v) => setDepartment(v && v !== "any" ? v : "")}>
+            <SelectTrigger size="sm" className="w-[170px]">
+              <SelectValue>{selectLabel(departmentOptions, "Department")}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {departmentOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
                 </SelectItem>

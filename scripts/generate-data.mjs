@@ -198,6 +198,20 @@ const TRACKS = {
 };
 const TRACK_KEYS = Object.keys(TRACKS);
 
+// each track maps to one of the four company departments
+const TRACK_DEPARTMENT = {
+  cloud: "IT Solutions",
+  infra: "IT Solutions",
+  security: "IT Solutions",
+  business: "IT Solutions",
+  sales: "IT Solutions",
+  dev: "Development",
+  design: "Development",
+  pm: "Development",
+  data: "Data",
+  telco: "5G",
+};
+
 const FIRST_NAMES = [
   "Anna", "Lukas", "Mia", "Felix", "Laura", "Jonas", "Sophie", "Paul", "Lena", "Tim",
   "Julia", "Max", "Hannah", "David", "Nina", "Tobias", "Clara", "Simon", "Sarah", "Jan",
@@ -322,6 +336,7 @@ for (let i = 0; i < PERSON_COUNT; i++) {
     lastName,
     avatarUrl: `https://i.pravatar.cc/300?img=${shuffledAvatars[i % shuffledAvatars.length]}`,
     jobTitle,
+    department: TRACK_DEPARTMENT[trackKey],
     locationId: location.id,
     bio,
     interestIds,
@@ -475,6 +490,14 @@ PROJECT_DEFS.forEach((def, idx) => {
   team.forEach((member) => {
     projectMembers.push({ projectId: id, personId: member.id, roleOnProject: pick(rolesOnProject) });
   });
+
+  // ~70% of projects also get a delivery responsible, distinct from the lead
+  if (team.length > 0 && chance(0.7)) {
+    const deliveryResponsible = pick(team);
+    projects[projects.length - 1].deliveryResponsiblePersonId = deliveryResponsible.id;
+    const membership = projectMembers.find((m) => m.projectId === id && m.personId === deliveryResponsible.id);
+    if (membership) membership.roleOnProject = "Delivery Responsible";
+  }
 
   const allMembers = [lead, ...team];
 

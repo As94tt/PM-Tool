@@ -69,12 +69,17 @@ export interface User {
   role: AppRole;
 }
 
+export type Department = "IT Solutions" | "Development" | "Data" | "5G";
+
+export const DEPARTMENTS: Department[] = ["IT Solutions", "Development", "Data", "5G"];
+
 export interface Person {
   id: string;
   firstName: string;
   lastName: string;
   avatarUrl: string;
   jobTitle: string;
+  department: Department;
   locationId: string;
   bio: string;
   interestIds: string[];
@@ -95,6 +100,8 @@ export interface Project {
   endDate: string | null; // null = ongoing
   status: ProjectStatus;
   leadPersonId: string;
+  /** Optional — the person accountable for day-to-day delivery, distinct from the project lead. */
+  deliveryResponsiblePersonId?: string;
   outcomes: string[];
   currency: string;
   totalBudget: number;

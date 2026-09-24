@@ -5,6 +5,7 @@
     "lastName": "Richter",
     "avatarUrl": "https://i.pravatar.cc/300?img=41",
     "jobTitle": "Senior Cloud Architect",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "Based in Lisbon, Thomas is a Senior Cloud Architect on the delivery team, with 7 years of experience across automotive engagements. Recently focused on Terraform work for enterprise clients.",
     "interestIds": [
@@ -26,6 +27,7 @@
     "lastName": "Dubois",
     "avatarUrl": "https://i.pravatar.cc/300?img=26",
     "jobTitle": "Senior Software Engineer",
+    "department": "Development",
     "locationId": "loc-ham",
     "bio": "Felix works as a Senior Software Engineer out of the Hamburg office, with 10 years of experience across public sector engagements. Enjoys mentoring on Cloud Security topics whenever possible.",
     "interestIds": [
@@ -44,6 +46,7 @@
     "lastName": "de Vries",
     "avatarUrl": "https://i.pravatar.cc/300?img=42",
     "jobTitle": "Senior Data Scientist",
+    "department": "Data",
     "locationId": "loc-ber",
     "bio": "Based in Berlin, Ioana is a Senior Data Scientist on the delivery team, with a 10-year track record delivering automotive initiatives. Currently deepening expertise in Microservices.",
     "interestIds": [
@@ -63,6 +66,7 @@
     "lastName": "Sharma",
     "avatarUrl": "https://i.pravatar.cc/300?img=48",
     "jobTitle": "OSS/BSS Consultant",
+    "department": "5G",
     "locationId": "loc-cluj",
     "bio": "Beatriz works as a OSS/BSS Consultant out of the Cluj-Napoca office, with a 5-year track record delivering insurance initiatives. Enjoys mentoring on VMware topics whenever possible.",
     "interestIds": [
@@ -83,6 +87,7 @@
     "lastName": "Santos",
     "avatarUrl": "https://i.pravatar.cc/300?img=68",
     "jobTitle": "Site Reliability Engineer",
+    "department": "IT Solutions",
     "locationId": "loc-muc",
     "bio": "Rui works as a Site Reliability Engineer out of the Munich office, with a 3-year track record delivering banking & financial services initiatives. Enjoys mentoring on Azure topics whenever possible.",
     "interestIds": [
@@ -104,6 +109,7 @@
     "lastName": "Mendes",
     "avatarUrl": "https://i.pravatar.cc/300?img=55",
     "jobTitle": "Security Architect",
+    "department": "IT Solutions",
     "locationId": "loc-col",
     "bio": "Sebastian works as a Security Architect out of the Cologne office, bringing 2 years of hands-on work in banking & financial services projects. Recently focused on SIEM work for enterprise clients.",
     "interestIds": [
@@ -121,6 +127,7 @@
     "lastName": "Becker",
     "avatarUrl": "https://i.pravatar.cc/300?img=63",
     "jobTitle": "Delivery Lead",
+    "department": "Development",
     "locationId": "loc-lon",
     "bio": "Based in London, Franziska is a Delivery Lead on the delivery team, with a 5-year track record delivering manufacturing initiatives. Enjoys mentoring on Business Analysis topics whenever possible.",
     "interestIds": [
@@ -138,6 +145,7 @@
     "lastName": "Costa",
     "avatarUrl": "https://i.pravatar.cc/300?img=45",
     "jobTitle": "Change Manager",
+    "department": "IT Solutions",
     "locationId": "loc-waw",
     "bio": "Noah works as a Change Manager out of the Warsaw office, with 4 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Business Analysis topics whenever possible.",
     "interestIds": [
@@ -157,6 +165,7 @@
     "lastName": "Laurent",
     "avatarUrl": "https://i.pravatar.cc/300?img=7",
     "jobTitle": "Sales Director",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "David works as a Sales Director out of the Lisbon office, with a 16-year track record delivering logistics & transportation initiatives. Currently deepening expertise in Financial Modeling.",
     "interestIds": [
@@ -176,6 +185,7 @@
     "lastName": "Radu",
     "avatarUrl": "https://i.pravatar.cc/300?img=57",
     "jobTitle": "Senior Product Designer",
+    "department": "Development",
     "locationId": "loc-fra",
     "bio": "Based in Frankfurt, Moritz is a Senior Product Designer on the delivery team, with a 8-year track record delivering energy & utilities initiatives. Recently focused on UX Research work for enterprise clients.",
     "interestIds": [
@@ -194,6 +204,7 @@
     "lastName": "Schmidt",
     "avatarUrl": "https://i.pravatar.cc/300?img=65",
     "jobTitle": "Senior Cloud Architect",
+    "department": "IT Solutions",
     "locationId": "loc-stu",
     "bio": "Thomas is a Senior Cloud Architect, based in Stuttgart, bringing 8 years of hands-on work in automotive projects. Recently focused on Linux Administration work for enterprise clients.",
     "interestIds": [
@@ -213,6 +224,7 @@
     "lastName": "Richter",
     "avatarUrl": "https://i.pravatar.cc/300?img=58",
     "jobTitle": "Full-Stack Engineer",
+    "department": "Development",
     "locationId": "loc-ams",
     "bio": "Based in Amsterdam, Mia is a Full-Stack Engineer on the delivery team, with 2 years of experience across public sector engagements. Currently deepening expertise in Microservices.",
     "interestIds": [
@@ -232,6 +244,7 @@
     "lastName": "Meyer",
     "avatarUrl": "https://i.pravatar.cc/300?img=17",
     "jobTitle": "Analytics Consultant",
+    "department": "Data",
     "locationId": "loc-ber",
     "bio": "Felix is a Analytics Consultant, based in Berlin, with a 3-year track record delivering manufacturing initiatives. Currently deepening expertise in Python.",
     "interestIds": [
@@ -251,6 +264,7 @@
     "lastName": "Wojcik",
     "avatarUrl": "https://i.pravatar.cc/300?img=4",
     "jobTitle": "OSS/BSS Consultant",
+    "department": "5G",
     "locationId": "loc-col",
     "bio": "Katarzyna works as a OSS/BSS Consultant out of the Cologne office, bringing 8 years of hands-on work in banking & financial services projects. Currently deepening expertise in CI/CD.",
     "interestIds": [
@@ -269,6 +283,7 @@
     "lastName": "Dumitru",
     "avatarUrl": "https://i.pravatar.cc/300?img=36",
     "jobTitle": "Senior Site Reliability Engineer",
+    "department": "IT Solutions",
     "locationId": "loc-ham",
     "bio": "Based in Hamburg, David is a Senior Site Reliability Engineer on the delivery team, with a 9-year track record delivering banking & financial services initiatives. Enjoys mentoring on Docker topics whenever possible.",
     "interestIds": [
@@ -286,6 +301,7 @@
     "lastName": "Novak",
     "avatarUrl": "https://i.pravatar.cc/300?img=18",
     "jobTitle": "Security Architect",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "Marie is a Security Architect, based in Lisbon, bringing 1 years of hands-on work in logistics & transportation projects. Recently focused on VMware work for enterprise clients.",
     "interestIds": [
@@ -305,6 +321,7 @@
     "lastName": "Wojcik",
     "avatarUrl": "https://i.pravatar.cc/300?img=37",
     "jobTitle": "Program Manager",
+    "department": "Development",
     "locationId": "loc-ber",
     "bio": "Based in Berlin, Noah is a Program Manager on the delivery team, bringing 7 years of hands-on work in automotive projects. Recently focused on Kanban work for enterprise clients.",
     "interestIds": [
@@ -322,6 +339,7 @@
     "lastName": "Müller",
     "avatarUrl": "https://i.pravatar.cc/300?img=3",
     "jobTitle": "Change Manager",
+    "department": "IT Solutions",
     "locationId": "loc-waw",
     "bio": "Sebastian is a Change Manager, based in Warsaw, with a 6-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Kanban.",
     "interestIds": [
@@ -340,6 +358,7 @@
     "lastName": "Santos",
     "avatarUrl": "https://i.pravatar.cc/300?img=54",
     "jobTitle": "Sales Director",
+    "department": "IT Solutions",
     "locationId": "loc-ber",
     "bio": "Based in Berlin, Anna is a Sales Director on the delivery team, with a 18-year track record delivering retail & e-commerce initiatives. Enjoys mentoring on Account Management topics whenever possible.",
     "interestIds": [
@@ -359,6 +378,7 @@
     "lastName": "Khan",
     "avatarUrl": "https://i.pravatar.cc/300?img=47",
     "jobTitle": "Senior Product Designer",
+    "department": "Development",
     "locationId": "loc-buc",
     "bio": "Based in Bucharest, Max is a Senior Product Designer on the delivery team, with 7 years of experience across logistics & transportation engagements. Recently focused on Go work for enterprise clients.",
     "interestIds": [
@@ -378,6 +398,7 @@
     "lastName": "Constantin",
     "avatarUrl": "https://i.pravatar.cc/300?img=21",
     "jobTitle": "Cloud Solutions Architect",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "Based in Lisbon, Chloe is a Cloud Solutions Architect on the delivery team, with 3 years of experience across logistics & transportation engagements. Recently focused on VMware work for enterprise clients.",
     "interestIds": [
@@ -397,6 +418,7 @@
     "lastName": "Dumitru",
     "avatarUrl": "https://i.pravatar.cc/300?img=46",
     "jobTitle": "Software Engineer",
+    "department": "Development",
     "locationId": "loc-cluj",
     "bio": "Chloe is a Software Engineer, based in Cluj-Napoca, bringing 1 years of hands-on work in banking & financial services projects. Recently focused on Docker work for enterprise clients.",
     "interestIds": [
@@ -416,6 +438,7 @@
     "lastName": "Berg",
     "avatarUrl": "https://i.pravatar.cc/300?img=24",
     "jobTitle": "Analytics Consultant",
+    "department": "Data",
     "locationId": "loc-lis",
     "bio": "Jonas is a Analytics Consultant, based in Lisbon, bringing 4 years of hands-on work in public sector projects. Recently focused on TypeScript work for enterprise clients.",
     "interestIds": [
@@ -436,6 +459,7 @@
     "lastName": "Schmidt",
     "avatarUrl": "https://i.pravatar.cc/300?img=49",
     "jobTitle": "Telco Network Engineer",
+    "department": "5G",
     "locationId": "loc-waw",
     "bio": "Based in Warsaw, Daniel is a Telco Network Engineer on the delivery team, with 4 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Private Networks topics whenever possible.",
     "interestIds": [
@@ -456,6 +480,7 @@
     "lastName": "Koch",
     "avatarUrl": "https://i.pravatar.cc/300?img=61",
     "jobTitle": "Network Engineer",
+    "department": "IT Solutions",
     "locationId": "loc-muc",
     "bio": "Daniel is a Network Engineer, based in Munich, with 1 years of experience across healthcare & life sciences engagements. Currently deepening expertise in Google Cloud Platform.",
     "interestIds": [
@@ -475,6 +500,7 @@
     "lastName": "Patel",
     "avatarUrl": "https://i.pravatar.cc/300?img=66",
     "jobTitle": "GRC Consultant",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "Based in Lisbon, Youssef is a GRC Consultant on the delivery team, bringing 4 years of hands-on work in logistics & transportation projects. Recently focused on Penetration Testing work for enterprise clients.",
     "interestIds": [
@@ -494,6 +520,7 @@
     "lastName": "Bianchi",
     "avatarUrl": "https://i.pravatar.cc/300?img=16",
     "jobTitle": "Scrum Master",
+    "department": "Development",
     "locationId": "loc-ham",
     "bio": "Hannah is a Scrum Master, based in Hamburg, with 1 years of experience across logistics & transportation engagements. Recently focused on PRINCE2 work for enterprise clients.",
     "interestIds": [
@@ -515,6 +542,7 @@
     "lastName": "de Vries",
     "avatarUrl": "https://i.pravatar.cc/300?img=53",
     "jobTitle": "Senior Business Analyst",
+    "department": "IT Solutions",
     "locationId": "loc-muc",
     "bio": "Elena is a Senior Business Analyst, based in Munich, bringing 17 years of hands-on work in telecommunications projects. Recently focused on Business Analysis work for enterprise clients.",
     "interestIds": [
@@ -536,6 +564,7 @@
     "lastName": "Werner",
     "avatarUrl": "https://i.pravatar.cc/300?img=38",
     "jobTitle": "Sales Director",
+    "department": "IT Solutions",
     "locationId": "loc-waw",
     "bio": "Beatriz is a Sales Director, based in Warsaw, with 10 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Financial Modeling topics whenever possible.",
     "interestIds": [
@@ -554,6 +583,7 @@
     "lastName": "Wojcik",
     "avatarUrl": "https://i.pravatar.cc/300?img=51",
     "jobTitle": "UX Designer",
+    "department": "Development",
     "locationId": "loc-ber",
     "bio": "Based in Berlin, Chloe is a UX Designer on the delivery team, with 5 years of experience across manufacturing engagements. Enjoys mentoring on Microservices topics whenever possible.",
     "interestIds": [
@@ -571,6 +601,7 @@
     "lastName": "Richter",
     "avatarUrl": "https://i.pravatar.cc/300?img=1",
     "jobTitle": "Senior Cloud Architect",
+    "department": "IT Solutions",
     "locationId": "loc-fra",
     "bio": "Based in Frankfurt, Julia is a Senior Cloud Architect on the delivery team, with 6 years of experience across logistics & transportation engagements. Recently focused on Terraform work for enterprise clients.",
     "interestIds": [
@@ -590,6 +621,7 @@
     "lastName": "Fischer",
     "avatarUrl": "https://i.pravatar.cc/300?img=43",
     "jobTitle": "Backend Developer",
+    "department": "Development",
     "locationId": "loc-lon",
     "bio": "Based in London, Rui is a Backend Developer on the delivery team, bringing 3 years of hands-on work in banking & financial services projects. Currently deepening expertise in Python.",
     "interestIds": [
@@ -609,6 +641,7 @@
     "lastName": "Patel",
     "avatarUrl": "https://i.pravatar.cc/300?img=70",
     "jobTitle": "Senior Machine Learning Engineer",
+    "department": "Data",
     "locationId": "loc-ham",
     "bio": "Based in Hamburg, Arjun is a Senior Machine Learning Engineer on the delivery team, with a 12-year track record delivering insurance initiatives. Enjoys mentoring on REST API Design topics whenever possible.",
     "interestIds": [
@@ -628,6 +661,7 @@
     "lastName": "Richter",
     "avatarUrl": "https://i.pravatar.cc/300?img=15",
     "jobTitle": "Senior Network Architect",
+    "department": "5G",
     "locationId": "loc-col",
     "bio": "Anna is a Senior Network Architect, based in Cologne, with a 16-year track record delivering telecommunications initiatives. Recently focused on 5G work for enterprise clients.",
     "interestIds": [
@@ -648,6 +682,7 @@
     "lastName": "Silva",
     "avatarUrl": "https://i.pravatar.cc/300?img=20",
     "jobTitle": "Site Reliability Engineer",
+    "department": "IT Solutions",
     "locationId": "loc-ham",
     "bio": "Based in Hamburg, David is a Site Reliability Engineer on the delivery team, bringing 6 years of hands-on work in energy & utilities projects. Enjoys mentoring on Docker topics whenever possible.",
     "interestIds": [
@@ -667,6 +702,7 @@
     "lastName": "Jansen",
     "avatarUrl": "https://i.pravatar.cc/300?img=2",
     "jobTitle": "Security Consultant",
+    "department": "IT Solutions",
     "locationId": "loc-ham",
     "bio": "Sebastian works as a Security Consultant out of the Hamburg office, bringing 4 years of hands-on work in manufacturing projects. Currently deepening expertise in Ansible.",
     "interestIds": [
@@ -686,6 +722,7 @@
     "lastName": "Laurent",
     "avatarUrl": "https://i.pravatar.cc/300?img=39",
     "jobTitle": "Delivery Lead",
+    "department": "Development",
     "locationId": "loc-waw",
     "bio": "Arjun is a Delivery Lead, based in Warsaw, bringing 17 years of hands-on work in telecommunications projects. Recently focused on Kanban work for enterprise clients.",
     "interestIds": [
@@ -703,6 +740,7 @@
     "lastName": "Conti",
     "avatarUrl": "https://i.pravatar.cc/300?img=60",
     "jobTitle": "Change Manager",
+    "department": "IT Solutions",
     "locationId": "loc-lis",
     "bio": "Based in Lisbon, Simon is a Change Manager on the delivery team, bringing 2 years of hands-on work in public sector projects. Recently focused on PRINCE2 work for enterprise clients.",
     "interestIds": [
@@ -721,6 +759,7 @@
     "lastName": "Rossi",
     "avatarUrl": "https://i.pravatar.cc/300?img=30",
     "jobTitle": "Bid Manager",
+    "department": "IT Solutions",
     "locationId": "loc-muc",
     "bio": "Based in Munich, Jonas is a Bid Manager on the delivery team, with a 8-year track record delivering insurance initiatives. Enjoys mentoring on Change Management topics whenever possible.",
     "interestIds": [
@@ -741,6 +780,7 @@
     "lastName": "Larsen",
     "avatarUrl": "https://i.pravatar.cc/300?img=8",
     "jobTitle": "UI Designer",
+    "department": "Development",
     "locationId": "loc-ber",
     "bio": "Based in Berlin, Andrei is a UI Designer on the delivery team, bringing 4 years of hands-on work in banking & financial services projects. Currently deepening expertise in Microservices.",
     "interestIds": [

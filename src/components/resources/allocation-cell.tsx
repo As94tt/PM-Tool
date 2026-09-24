@@ -58,11 +58,30 @@ export function AllocationCell({
         render={
           <button
             className={cn(
-              "flex h-8 w-full items-center justify-center rounded-md text-xs font-semibold tabular-nums transition-opacity hover:opacity-80",
-              total > 0 ? styles.bar : "bg-transparent text-border hover:bg-secondary"
+              "flex w-full flex-col gap-0.5 rounded-md p-0.5 text-left transition-opacity hover:opacity-80",
+              rows.length === 0 && "h-8 items-center justify-center"
             )}
           >
-            {total > 0 ? `${total}%` : "–"}
+            {rows.length === 0 ? (
+              <span className="text-xs text-border">–</span>
+            ) : (
+              rows.map((r) => {
+                const project = projects.find((p) => p.id === r.projectId);
+                return (
+                  <span
+                    key={r.id}
+                    title={project?.name}
+                    className={cn(
+                      "flex items-center justify-between gap-1 rounded px-1.5 py-0.5 text-[10px] leading-tight font-medium",
+                      styles.badge
+                    )}
+                  >
+                    <span className="truncate">{project?.name ?? "Unknown"}</span>
+                    <span className="shrink-0 tabular-nums">{r.allocationPercent}%</span>
+                  </span>
+                );
+              })
+            )}
           </button>
         }
       />

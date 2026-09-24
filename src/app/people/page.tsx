@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { SkillLevel } from "@/lib/types";
+import { DEPARTMENTS, type SkillLevel, type Department } from "@/lib/types";
 
 const AVAILABILITY_OPTIONS = [
   { label: "Any availability", value: "0" },
@@ -61,6 +61,7 @@ function PeoplePageInner() {
 
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [locationId, setLocationId] = useState(searchParams.get("location") ?? "");
+  const [department, setDepartment] = useState(searchParams.get("department") ?? "");
   const [industryId, setIndustryId] = useState(searchParams.get("industry") ?? "");
   const [skillId, setSkillId] = useState(searchParams.get("skill") ?? "");
   const [minLevel, setMinLevel] = useState(searchParams.get("level") ?? "");
@@ -70,6 +71,7 @@ function PeoplePageInner() {
   const filters: PeopleFilters = {
     query: query || undefined,
     locationId: locationId || undefined,
+    department: (department as Department) || undefined,
     industryId: industryId || undefined,
     skillId: skillId || undefined,
     minSkillLevel: skillId && minLevel ? (Number(minLevel) as SkillLevel) : undefined,
@@ -88,15 +90,16 @@ function PeoplePageInner() {
         filters,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [people, personSkills, personCertifications, projectMembers, resourceAllocations, query, locationId, industryId, skillId, minLevel, certificationId, minAvailability]
+    [people, personSkills, personCertifications, projectMembers, resourceAllocations, query, locationId, department, industryId, skillId, minLevel, certificationId, minAvailability]
   );
 
   const month = getHorizonMonths(1)[0];
-  const hasActiveFilters = Boolean(query || locationId || industryId || skillId || certificationId || minAvailability !== "0");
+  const hasActiveFilters = Boolean(query || locationId || department || industryId || skillId || certificationId || minAvailability !== "0");
 
   function clearFilters() {
     setQuery("");
     setLocationId("");
+    setDepartment("");
     setIndustryId("");
     setSkillId("");
     setMinLevel("");
@@ -116,6 +119,10 @@ function PeoplePageInner() {
   }, [skills]);
 
   const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const departmentOptions = [
+    { value: "any", label: "All departments" },
+    ...DEPARTMENTS.map((d) => ({ value: d, label: d })),
+  ];
   const industryOptions = [
     { value: "any", label: "All industries" },
     ...industries.map((i) => ({ value: i.id, label: i.name })),
@@ -160,6 +167,19 @@ function PeoplePageInner() {
               {locations.map((l) => (
                 <SelectItem key={l.id} value={l.id}>
                   {l.city}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={department || "any"} onValueChange={(v) => setDepartment(v && v !== "any" ? v : "")}>
+            <SelectTrigger size="sm" className="w-[160px]">
+              <SelectValue placeholder="Department">{selectLabel(departmentOptions, "Department")}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {departmentOptions.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AllocationCell } from "./allocation-cell";
-import type { AllocationStatus } from "@/lib/types";
+import { DEPARTMENTS, type AllocationStatus } from "@/lib/types";
 
 export function ResourcePlanningView() {
   const people = useAppStore((s) => s.people);
@@ -20,13 +20,16 @@ export function ResourcePlanningView() {
 
   const [query, setQuery] = useState("");
   const [locationId, setLocationId] = useState("");
+  const [department, setDepartment] = useState("");
 
   const horizon = getHorizonMonths(12);
   const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
 
   const visiblePeople = people.filter((p) => {
     if (query && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(query.toLowerCase())) return false;
     if (locationId && p.locationId !== locationId) return false;
+    if (department && p.department !== department) return false;
     return true;
   });
 
@@ -41,6 +44,18 @@ export function ResourcePlanningView() {
             </SelectTrigger>
             <SelectContent>
               {locationOptions.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={department || "any"} onValueChange={(v) => setDepartment(v && v !== "any" ? v : "")}>
+            <SelectTrigger size="sm" className="w-[170px]">
+              <SelectValue>{selectLabel(departmentOptions, "Department")}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {departmentOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
                 </SelectItem>
@@ -69,7 +84,7 @@ export function ResourcePlanningView() {
                 {horizon.map((month) => (
                   <th
                     key={month}
-                    className="sticky top-0 z-10 min-w-[76px] border-b border-l border-border bg-card px-1 py-2 text-center text-[11px] font-medium text-muted-foreground"
+                    className="sticky top-0 z-10 min-w-[132px] border-b border-l border-border bg-card px-1 py-2 text-center text-[11px] font-medium text-muted-foreground"
                   >
                     {formatMonthLabel(month)}
                   </th>
@@ -87,12 +102,17 @@ export function ResourcePlanningView() {
                       </Avatar>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium">{fullName(person)}</span>
-                        <span className="block truncate text-[11px] text-muted-foreground">{person.jobTitle}</span>
+                        <span className="block truncate text-[11px] text-muted-foreground">
+                          {person.jobTitle} · {person.department}
+                        </span>
                       </span>
                     </Link>
                   </td>
                   {horizon.map((month) => (
-                    <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
+                    <td
+                      key={month}
+                      className="border-b border-l border-border/70 p-1 align-top group-hover:bg-secondary/50"
+                    >
                       <AllocationCell person={person} month={month} allocations={resourceAllocations} projects={projects} />
                     </td>
                   ))}

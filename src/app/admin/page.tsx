@@ -14,7 +14,7 @@ import { CsvImportWizard } from "@/components/admin/csv-import-wizard";
 import { PEOPLE_IMPORT_FIELDS, PROJECT_IMPORT_FIELDS } from "@/lib/csv-import";
 import { selectLabel } from "@/lib/select-utils";
 import { useAppStore } from "@/store/app-store-provider";
-import type { Person, Project, SkillCategory } from "@/lib/types";
+import { DEPARTMENTS, type Department, type Person, type Project, type SkillCategory } from "@/lib/types";
 
 const SKILL_CATEGORIES: SkillCategory[] = [
   "Cloud",
@@ -53,12 +53,16 @@ export default function AdminPage() {
     const now = new Date().toISOString().slice(0, 10);
     const newPeople: Person[] = rows.map((row, i) => {
       const location = locations.find((l) => l.city.toLowerCase() === row.city?.toLowerCase());
+      const department = DEPARTMENTS.find(
+        (d) => d.toLowerCase() === row.department?.trim().toLowerCase()
+      ) as Department | undefined;
       return {
         id: `person-import-${Date.now()}-${i}`,
         firstName: row.firstName,
         lastName: row.lastName,
         avatarUrl: `https://i.pravatar.cc/300?u=${encodeURIComponent(row.firstName + row.lastName)}`,
         jobTitle: row.jobTitle,
+        department: department ?? DEPARTMENTS[0],
         locationId: (location ?? locations[0]).id,
         bio: row.bio || `${row.firstName} recently joined the team as ${row.jobTitle}.`,
         interestIds: [],

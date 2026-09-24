@@ -33,7 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { selectLabel } from "@/lib/select-utils";
-import type { Person, Project, SkillLevel } from "@/lib/types";
+import { DEPARTMENTS, type Department, type Person, type Project, type SkillLevel } from "@/lib/types";
 
 const ROLE_SUGGESTIONS = [
   "Project Lead",
@@ -176,6 +176,25 @@ export function EditProfileSheet({ person }: { person: Person }) {
 
         <ScrollArea className="h-[calc(100svh-6rem)]">
           <div className="flex flex-col gap-8 px-6 py-6">
+            <section>
+              <Label className="mb-2">Department</Label>
+              <Select
+                value={person.department}
+                onValueChange={(v) => v && updatePerson(person.id, { department: v as Department })}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue>{selectLabel(DEPARTMENTS.map((d) => ({ value: d, label: d })), "Department")}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {DEPARTMENTS.map((d) => (
+                    <SelectItem key={d} value={d}>
+                      {d}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+
             <section>
               <Label htmlFor="bio" className="mb-2">
                 Bio

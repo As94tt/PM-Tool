@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAppStore } from "@/store/app-store-provider";
 import { selectLabel } from "@/lib/select-utils";
-import type { Person } from "@/lib/types";
+import { DEPARTMENTS, type Department, type Person } from "@/lib/types";
 
 export function PersonFormSheet() {
   const router = useRouter();
@@ -35,6 +35,7 @@ export function PersonFormSheet() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
+  const [department, setDepartment] = useState<Department>(DEPARTMENTS[0]);
   const [locationId, setLocationId] = useState(locations[0]?.id ?? "");
   const [bio, setBio] = useState("");
   const [interestIds, setInterestIds] = useState<string[]>([]);
@@ -71,6 +72,7 @@ export function PersonFormSheet() {
       lastName: lastName.trim(),
       avatarUrl: `https://i.pravatar.cc/300?u=${encodeURIComponent(id)}`,
       jobTitle: jobTitle.trim(),
+      department,
       locationId,
       bio: bio.trim() || `${firstName.trim()} recently joined the team as ${jobTitle.trim()}.`,
       interestIds,
@@ -122,7 +124,22 @@ export function PersonFormSheet() {
                   placeholder="Cloud Solutions Architect"
                 />
               </div>
-              <div className="col-span-2">
+              <div>
+                <Label className="mb-1.5">Department</Label>
+                <Select value={department} onValueChange={(v) => v && setDepartment(v as Department)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{selectLabel(DEPARTMENTS.map((d) => ({ value: d, label: d })), "Department")}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DEPARTMENTS.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
                 <Label className="mb-1.5">Location</Label>
                 <Select value={locationId} onValueChange={(v) => v && setLocationId(v)}>
                   <SelectTrigger className="w-full">

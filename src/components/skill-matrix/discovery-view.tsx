@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { SkillLevelDots } from "@/components/shared/skill-level";
 import { getAllocationStatus, ALLOCATION_STATUS_STYLES } from "@/lib/data/capacity";
 import { cn } from "@/lib/utils";
-import type { SkillLevel } from "@/lib/types";
+import { DEPARTMENTS, type SkillLevel } from "@/lib/types";
 
 export function DiscoveryView({
   skillId,
@@ -27,6 +28,7 @@ export function DiscoveryView({
   minAvailability: number;
   setMinAvailability: (v: number) => void;
 }) {
+  const [department, setDepartment] = useState("");
   const skills = useAppStore((s) => s.skills);
   const people = useAppStore((s) => s.people);
   const personSkills = useAppStore((s) => s.personSkills);
@@ -48,19 +50,22 @@ export function DiscoveryView({
     value: String(a),
     label: a === 0 ? "Any availability" : `${a}%+ available`,
   }));
+  const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
 
-  const results = skillId
-    ? discoverPeopleBySkill({
-        people,
-        personSkills,
-        projectMembers,
-        projects,
-        resourceAllocations,
-        skillId,
-        minLevel: minLevel as SkillLevel,
-        minAvailabilityPercent: minAvailability,
-      })
-    : [];
+  const results = (
+    skillId
+      ? discoverPeopleBySkill({
+          people,
+          personSkills,
+          projectMembers,
+          projects,
+          resourceAllocations,
+          skillId,
+          minLevel: minLevel as SkillLevel,
+          minAvailabilityPercent: minAvailability,
+        })
+      : []
+  ).filter((r) => !department || r.person.department === department);
 
   return (
     <div className="flex flex-col gap-6">
@@ -108,6 +113,19 @@ export function DiscoveryView({
               ))}
             </SelectContent>
           </Select>
+
+          <Select value={department || "any"} onValueChange={(v) => setDepartment(v && v !== "any" ? v : "")}>
+            <SelectTrigger size="sm" className="w-[170px]">
+              <SelectValue>{selectLabel(departmentOptions, "Department")}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {departmentOptions.map((o) => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -147,7 +165,7 @@ export function DiscoveryView({
                   <p className="truncate text-sm font-medium">{fullName(person)}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {person.jobTitle}
-                    {location ? ` · ${location.city}` : ""}
+                    {location ? ` · ${location.city}` : ""} · {person.department}
                   </p>
                   {relevantProjects.length > 0 && (
                     <p className="mt-1 truncate text-xs text-muted-foreground/80">
