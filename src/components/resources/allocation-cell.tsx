@@ -90,7 +90,7 @@ export function AllocationCell({
 
         <div className="mt-3 flex items-center gap-1.5 border-t border-border pt-3">
           <Select value={addProjectId || "none"} onValueChange={(v) => setAddProjectId(v && v !== "none" ? v : "")}>
-            <SelectTrigger size="sm" className="flex-1">
+            <SelectTrigger size="sm" className="min-w-0 flex-1">
               <SelectValue placeholder="Add project…">{selectLabel(projectOptions, "Add project…")}</SelectValue>
             </SelectTrigger>
             <SelectContent>
