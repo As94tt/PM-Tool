@@ -54,6 +54,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const certifications = useAppStore((s) => s.certifications);
   const interests = useAppStore((s) => s.interests);
   const industries = useAppStore((s) => s.industries);
+  const locations = useAppStore((s) => s.locations);
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
   const projects = useAppStore((s) => s.projects);
@@ -67,6 +68,9 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const addProjectMembership = useAppStore((s) => s.addProjectMembership);
   const removeProjectMembership = useAppStore((s) => s.removeProjectMembership);
 
+  const [firstName, setFirstName] = useState(person.firstName);
+  const [lastName, setLastName] = useState(person.lastName);
+  const [jobTitle, setJobTitle] = useState(person.jobTitle);
   const [bio, setBio] = useState(person.bio);
   const [addSkillId, setAddSkillId] = useState("");
   const [addSkillLevel, setAddSkillLevel] = useState("3");
@@ -112,6 +116,18 @@ export function EditProfileSheet({ person }: { person: Person }) {
     { value: "none", label: "Select a project" },
     ...availableProjectsForAdd.map((p) => ({ value: p.id, label: p.name })),
   ];
+  const locationOptions = locations.map((l) => ({ value: l.id, label: l.city }));
+
+  function saveBasics() {
+    const patch: Partial<Person> = {};
+    if (firstName.trim() && firstName !== person.firstName) patch.firstName = firstName.trim();
+    if (lastName.trim() && lastName !== person.lastName) patch.lastName = lastName.trim();
+    if (jobTitle.trim() && jobTitle !== person.jobTitle) patch.jobTitle = jobTitle.trim();
+    if (Object.keys(patch).length > 0) {
+      updatePerson(person.id, patch);
+      toast.success("Profile updated");
+    }
+  }
 
   function saveBio() {
     if (bio !== person.bio) {
@@ -177,22 +193,78 @@ export function EditProfileSheet({ person }: { person: Person }) {
         <ScrollArea className="h-[calc(100svh-6rem)]">
           <div className="flex flex-col gap-8 px-6 py-6">
             <section>
-              <Label className="mb-2">Department</Label>
-              <Select
-                value={person.department}
-                onValueChange={(v) => v && updatePerson(person.id, { department: v as Department })}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue>{selectLabel(DEPARTMENTS.map((d) => ({ value: d, label: d })), "Department")}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {DEPARTMENTS.map((d) => (
-                    <SelectItem key={d} value={d}>
-                      {d}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <h3 className="mb-3 text-sm font-semibold">Basics</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="ep-first" className="mb-1.5">
+                    First name
+                  </Label>
+                  <Input
+                    id="ep-first"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    onBlur={saveBasics}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="ep-last" className="mb-1.5">
+                    Last name
+                  </Label>
+                  <Input
+                    id="ep-last"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    onBlur={saveBasics}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label htmlFor="ep-title" className="mb-1.5">
+                    Job title
+                  </Label>
+                  <Input
+                    id="ep-title"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    onBlur={saveBasics}
+                  />
+                </div>
+                <div>
+                  <Label className="mb-1.5">Department</Label>
+                  <Select
+                    value={person.department}
+                    onValueChange={(v) => v && updatePerson(person.id, { department: v as Department })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{selectLabel(DEPARTMENTS.map((d) => ({ value: d, label: d })), "Department")}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DEPARTMENTS.map((d) => (
+                        <SelectItem key={d} value={d}>
+                          {d}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="mb-1.5">Location</Label>
+                  <Select
+                    value={person.locationId}
+                    onValueChange={(v) => v && updatePerson(person.id, { locationId: v })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{selectLabel(locationOptions, "Location")}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locations.map((l) => (
+                        <SelectItem key={l.id} value={l.id}>
+                          {l.city}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </section>
 
             <section>

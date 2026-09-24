@@ -58,7 +58,7 @@ export function AllocationCell({
         render={
           <button
             className={cn(
-              "flex w-full flex-col gap-0.5 rounded-md p-0.5 text-left transition-opacity hover:opacity-80",
+              "flex w-full min-w-0 flex-col gap-0.5 rounded-md p-0.5 text-left transition-opacity hover:opacity-80",
               rows.length === 0 && "h-8 items-center justify-center"
             )}
           >
@@ -72,11 +72,11 @@ export function AllocationCell({
                     key={r.id}
                     title={project?.name}
                     className={cn(
-                      "flex items-center justify-between gap-1 rounded px-1.5 py-0.5 text-[10px] leading-tight font-medium",
+                      "flex min-w-0 items-center justify-between gap-1 rounded px-1.5 py-0.5 text-[10px] leading-tight font-medium",
                       styles.badge
                     )}
                   >
-                    <span className="truncate">{project?.name ?? "Unknown"}</span>
+                    <span className="min-w-0 truncate">{project?.name ?? "Unknown"}</span>
                     <span className="shrink-0 tabular-nums">{r.allocationPercent}%</span>
                   </span>
                 );

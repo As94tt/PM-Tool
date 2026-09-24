@@ -207,27 +207,36 @@ export interface AvailabilitySoon {
   futureAllocation: number;
 }
 
+/**
+ * People whose allocation is meaningfully dropping within the horizon — not
+ * just crossing a fixed "free" threshold (that misses anyone who's, say,
+ * going from 90% on one project to 55%, which is a real staffing signal even
+ * though 55% isn't "free"). A person qualifies if some future month is both
+ * at least `minDropPoints` lower than their current allocation and at or
+ * below `maxFutureAllocation` — i.e. a real, useful drop in workload.
+ */
 export function getPeopleBecomingAvailableSoon(
   people: Person[],
   resourceAllocations: ResourceAllocation[],
-  opts: { withinMonths?: number; freeThreshold?: number } = {}
+  opts: { withinMonths?: number; minDropPoints?: number; maxFutureAllocation?: number } = {}
 ): AvailabilitySoon[] {
-  const { withinMonths = 3, freeThreshold = 50 } = opts;
+  const { withinMonths = 3, minDropPoints = 15, maxFutureAllocation = 80 } = opts;
   const months = getHorizonMonths(withinMonths + 1);
   const currentMonth = months[0];
   const result: AvailabilitySoon[] = [];
   for (const person of people) {
     const currentAllocation = getAllocationForPersonMonth(resourceAllocations, person.id, currentMonth);
-    if (currentAllocation < freeThreshold) continue;
     for (let i = 1; i < months.length; i++) {
       const futureAllocation = getAllocationForPersonMonth(resourceAllocations, person.id, months[i]);
-      if (futureAllocation < freeThreshold) {
+      if (futureAllocation <= maxFutureAllocation && currentAllocation - futureAllocation >= minDropPoints) {
         result.push({ person, currentAllocation, freeFromMonth: months[i], futureAllocation });
         break;
       }
     }
   }
-  return result.toSorted((a, b) => a.freeFromMonth.localeCompare(b.freeFromMonth));
+  return result.toSorted(
+    (a, b) => a.freeFromMonth.localeCompare(b.freeFromMonth) || a.futureAllocation - b.futureAllocation
+  );
 }
 
 export interface PeopleFilters {

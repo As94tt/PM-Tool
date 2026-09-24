@@ -66,7 +66,7 @@ export default function DashboardPage() {
       (a, b) =>
         Math.abs(new Date(a.startDate).getTime() - now) - Math.abs(new Date(b.startDate).getTime() - now)
     )
-    .slice(0, 5);
+    .slice(0, 8);
 
   const skillCounts = skills
     .map((s) => ({ key: s.id, label: s.name, value: personSkills.filter((ps) => ps.skillId === s.id).length }))
@@ -149,18 +149,6 @@ export default function DashboardPage() {
               ))}
             </ul>
           </Card>
-
-          <Card className="gap-0 p-0 shadow-elevation-1">
-            <div className="flex items-center justify-between border-b border-border/70 px-5 py-4">
-              <h2 className="font-heading text-base font-semibold">Popular skills</h2>
-              <Link href="/skill-matrix" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
-                Open Skill Matrix <ArrowRight className="size-3.5" />
-              </Link>
-            </div>
-            <div className="px-5 py-5">
-              <HorizontalBarList items={skillCounts} />
-            </div>
-          </Card>
         </div>
 
         <div className="flex flex-col gap-6">
@@ -201,6 +189,18 @@ export default function DashboardPage() {
                 })}
               </ul>
             )}
+          </Card>
+
+          <Card className="gap-0 p-0 shadow-elevation-1">
+            <div className="flex items-center justify-between border-b border-border/70 px-5 py-4">
+              <h2 className="font-heading text-base font-semibold">Popular skills</h2>
+              <Link href="/skill-matrix" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                Open <ArrowRight className="size-3.5" />
+              </Link>
+            </div>
+            <div className="px-5 py-5">
+              <HorizontalBarList items={skillCounts} />
+            </div>
           </Card>
         </div>
       </div>
