@@ -13,13 +13,7 @@ import {
   initials,
 } from "@/lib/data/queries";
 import { formatDate, formatCompactCurrency } from "@/lib/format";
-import {
-  getAllocationStatus,
-  ALLOCATION_STATUS_STYLES,
-  getAllocationForPersonMonth,
-  getProjectChartMonths,
-  formatMonthLabel,
-} from "@/lib/data/capacity";
+import { getAllocationForPersonMonth, getProjectChartMonths, formatMonthLabel } from "@/lib/data/capacity";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
@@ -168,15 +162,11 @@ export default function ProjectDetailPage() {
             )}
             <div className="mt-1 flex flex-col divide-y divide-border/70">
               {members.map(({ person, roleOnProject }) => {
-                const chartData = chartMonths.map((m) => {
-                  const value = getAllocationForPersonMonth(resourceAllocations, person.id, m);
-                  return {
-                    key: m,
-                    label: formatMonthLabel(m, { month: "short" }),
-                    value,
-                    colorClass: ALLOCATION_STATUS_STYLES[getAllocationStatus(value)].bar,
-                  };
-                });
+                const chartData = chartMonths.map((m) => ({
+                  key: m,
+                  label: formatMonthLabel(m, { month: "short" }),
+                  value: getAllocationForPersonMonth(resourceAllocations, person.id, m),
+                }));
                 return (
                   <Link
                     key={person.id}

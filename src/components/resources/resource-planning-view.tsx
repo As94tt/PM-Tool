@@ -18,15 +18,78 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { DEPARTMENTS, type AllocationStatus } from "@/lib/types";
+import { DEPARTMENTS, type AllocationStatus, type Project, type ResourceAllocation } from "@/lib/types";
 
 const UNDERALLOCATED_THRESHOLD = 75;
+
+/** Read-only — shows which project(s) make up a person's allocation for a
+ * month. No add/remove controls; edit allocations from a project's own
+ * planning dialog instead. */
+function AllocationDetailCell({
+  person,
+  month,
+  allocations,
+  projects,
+}: {
+  person: { id: string; };
+  month: string;
+  allocations: ResourceAllocation[];
+  projects: Project[];
+}) {
+  const rows = allocations.filter((a) => a.personId === person.id && a.month === month);
+  const total = rows.reduce((sum, r) => sum + r.allocationPercent, 0);
+  const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
+
+  if (total === 0) {
+    return <div className="flex h-8 w-full items-center justify-center text-xs text-border">–</div>;
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger
+        render={
+          <button
+            className={cn(
+              "flex h-8 w-full items-center justify-center rounded-md text-xs font-semibold tabular-nums transition-opacity hover:opacity-80",
+              styles.bar
+            )}
+          >
+            {total}%
+          </button>
+        }
+      />
+      <PopoverContent className="w-64" align="center">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-sm font-semibold">{formatMonthLabel(month, { month: "long", year: "numeric" })}</p>
+          <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", styles.badge)}>{total}%</span>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          {rows.map((r) => {
+            const project = projects.find((p) => p.id === r.projectId);
+            return (
+              <Link
+                key={r.id}
+                href={`/projects/${r.projectId}`}
+                className="flex items-center justify-between gap-2 rounded-lg border border-border px-2.5 py-1.5 text-xs hover:bg-secondary/50"
+              >
+                <span className="min-w-0 flex-1 truncate">{project?.name ?? "Unknown project"}</span>
+                <span className="shrink-0 font-medium tabular-nums">{r.allocationPercent}%</span>
+              </Link>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export function ResourcePlanningView() {
   const people = useAppStore((s) => s.people);
   const locations = useAppStore((s) => s.locations);
+  const projects = useAppStore((s) => s.projects);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
 
   const [query, setQuery] = useState("");
@@ -55,8 +118,9 @@ export function ResourcePlanningView() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xs text-muted-foreground">
-        Read-only summary of monthly allocation, rolled up from each project&apos;s own resource & budget plan. Edit
-        allocations from a project&apos;s planning page.
+        Read-only summary of monthly allocation, rolled up from each project&apos;s own resource & budget plan.
+        Click a cell to see which project(s) it comes from — edit allocations from a project&apos;s planning
+        dialog instead.
       </p>
 
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">
@@ -142,22 +206,11 @@ export function ResourcePlanningView() {
                       </span>
                     </Link>
                   </td>
-                  {horizon.map((month) => {
-                    const total = getAllocationForPersonMonth(resourceAllocations, person.id, month);
-                    const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
-                    return (
-                      <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
-                        <div
-                          className={cn(
-                            "flex h-8 w-full items-center justify-center rounded-md text-xs font-semibold tabular-nums",
-                            total > 0 ? styles.bar : "bg-transparent text-border"
-                          )}
-                        >
-                          {total > 0 ? `${total}%` : "–"}
-                        </div>
-                      </td>
-                    );
-                  })}
+                  {horizon.map((month) => (
+                    <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
+                      <AllocationDetailCell person={person} month={month} allocations={resourceAllocations} projects={projects} />
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>

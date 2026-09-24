@@ -3,108 +3,27 @@
     "id": "client-meridian-automotive-group",
     "name": "Meridian Automotive Group",
     "industryId": "ind-automotive",
-    "contactName": "Lea Constantin",
-    "contactEmail": "lea.constantin@meridianautomotivegroup.example",
-    "contactPhone": "+49 51 6253595",
-    "notes": "Head of Procurement at Meridian Automotive Group; primary point of contact for the engagements with Nexus."
-  },
-  {
-    "id": "client-nordkom-telecommunications",
-    "name": "Nordkom Telecommunications",
-    "industryId": "ind-telco",
-    "contactName": "Noah Wojcik",
-    "contactEmail": "noah.wojcik@nordkomtelecommunications.example",
-    "contactPhone": "+49 38 6885953",
-    "notes": "Chief Information Officer at Nordkom Telecommunications; primary point of contact for the engagement with Nexus."
-  },
-  {
-    "id": "client-silverlake-banking-group",
-    "name": "Silverlake Banking Group",
-    "industryId": "ind-banking",
-    "contactName": "Andrei Koch",
-    "contactEmail": "andrei.koch@silverlakebankinggroup.example",
-    "contactPhone": "+49 88 9703949",
-    "notes": "Head of Procurement at Silverlake Banking Group; primary point of contact for the engagement with Nexus."
-  },
-  {
-    "id": "client-continental-assurance",
-    "name": "Continental Assurance",
-    "industryId": "ind-insurance",
-    "contactName": "Jan Fischer",
-    "contactEmail": "jan.fischer@continentalassurance.example",
-    "contactPhone": "+49 38 8542475",
-    "notes": "Head of Procurement at Continental Assurance; primary point of contact for the engagement with Nexus."
-  },
-  {
-    "id": "client-harbor-finch-retail",
-    "name": "Harbor & Finch Retail",
-    "industryId": "ind-retail",
-    "contactName": "Elena Koch",
-    "contactEmail": "elena.koch@harborfinchretail.example",
-    "contactPhone": "+49 52 7950559",
-    "notes": "VP Technology at Harbor & Finch Retail; primary point of contact for the engagement with Nexus."
+    "contactName": "Simon Wojcik",
+    "contactEmail": "simon.wojcik@meridianautomotivegroup.example",
+    "contactPhone": "+49 72 7407941",
+    "notes": "Head of Digital at Meridian Automotive Group; primary point of contact for the engagements with Nexus."
   },
   {
     "id": "client-union-health-network",
     "name": "Union Health Network",
     "industryId": "ind-healthcare",
-    "contactName": "Mia Ionescu",
-    "contactEmail": "mia.ionescu@unionhealthnetwork.example",
-    "contactPhone": "+49 57 1484191",
-    "notes": "IT Director at Union Health Network; primary point of contact for the engagement with Nexus."
-  },
-  {
-    "id": "client-skyline-energy-networks",
-    "name": "Skyline Energy Networks",
-    "industryId": "ind-energy",
-    "contactName": "Moritz Lange",
-    "contactEmail": "moritz.lange@skylineenergynetworks.example",
-    "contactPhone": "+49 64 9826599",
-    "notes": "Programme Director at Skyline Energy Networks; primary point of contact for the engagement with Nexus."
+    "contactName": "Max Koch",
+    "contactEmail": "max.koch@unionhealthnetwork.example",
+    "contactPhone": "+49 60 8656184",
+    "notes": "Director of Operations at Union Health Network; primary point of contact for the engagement with Nexus."
   },
   {
     "id": "client-vantage-freight-logistics",
     "name": "Vantage Freight & Logistics",
     "industryId": "ind-logistics",
-    "contactName": "Lea Santos",
-    "contactEmail": "lea.santos@vantagefreightlogistics.example",
-    "contactPhone": "+49 79 8070263",
-    "notes": "VP Technology at Vantage Freight & Logistics; primary point of contact for the engagements with Nexus."
-  },
-  {
-    "id": "client-solon-metropolitan-council",
-    "name": "Solon Metropolitan Council",
-    "industryId": "ind-public",
-    "contactName": "Anna Dumitru",
-    "contactEmail": "anna.dumitru@solonmetropolitancouncil.example",
-    "contactPhone": "+49 61 1177900",
-    "notes": "IT Director at Solon Metropolitan Council; primary point of contact for the engagements with Nexus."
-  },
-  {
-    "id": "client-northgate-financial-services",
-    "name": "Northgate Financial Services",
-    "industryId": "ind-banking",
-    "contactName": "Nina Berg",
-    "contactEmail": "nina.berg@northgatefinancialservices.example",
-    "contactPhone": "+49 63 9816776",
-    "notes": "Head of Procurement at Northgate Financial Services; primary point of contact for the engagements with Nexus."
-  },
-  {
-    "id": "client-aurora-precision-manufacturing",
-    "name": "Aurora Precision Manufacturing",
-    "industryId": "ind-manufacturing",
-    "contactName": "Katharina Bianchi",
-    "contactEmail": "katharina.bianchi@auroraprecisionmanufacturing.example",
-    "contactPhone": "+49 36 8773020",
-    "notes": "Director of Operations at Aurora Precision Manufacturing; primary point of contact for the engagements with Nexus."
-  },
-  {
-    "id": "client-beacon-mutual-insurance",
-    "name": "Beacon Mutual Insurance",
-    "industryId": "ind-insurance",
-    "contactName": "Youssef Schulz",
-    "contactEmail": "youssef.schulz@beaconmutualinsurance.example",
-    "contactPhone": "+49 83 7658972",
-    "notes": "Head of Digital at Beacon Mutual Insurance; primary point of contact for the engagement with Nexus."
+    "contactName": "Nina Werner",
+    "contactEmail": "nina.werner@vantagefreightlogistics.example",
+    "contactPhone": "+49 87 9937394",
+    "notes": "Head of Procurement at Vantage Freight & Logistics; primary point of contact for the engagements with Nexus."
   }
 ]

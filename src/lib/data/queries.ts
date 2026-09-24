@@ -387,7 +387,12 @@ export function getProjectCostSummary(
   if (reqs.length > 0) {
     const plannedCost = reqs.reduce((s, r) => s + totalCost(r.ftePerWeek, r.dayRate), 0);
     const asgs = assignments.filter((a) => a.projectId === project.id);
-    const actualCost = asgs.reduce((s, a) => s + totalCost(a.ftePerWeek, a.dayRate), 0);
+    // An assignment's FTE is its linked requirement's — it fills a specific
+    // planned seat rather than tracking an independent schedule.
+    const actualCost = asgs.reduce((s, a) => {
+      const req = reqs.find((r) => r.id === a.roleRequirementId);
+      return s + totalCost(req?.ftePerWeek ?? {}, a.dayRate);
+    }, 0);
     return { plannedCost, actualCost, hasDetailedPlan: true };
   }
   const plan = budgetPlans.find((b) => b.projectId === project.id);

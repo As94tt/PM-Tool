@@ -164,10 +164,13 @@ export interface BudgetPlan {
   monthlyPlannedCost: BudgetMonth[];
 }
 
-/** A planned role on a project's staffing plan — the "demand" side of
- * project-level resource & budget planning. FTE is tracked per week (keyed
- * by that week's Monday, "YYYY-MM-DD") since staffing plans are typically
- * drawn up at finer grain than the app's month-based allocation grid. */
+/** A single planned seat on a project's staffing plan — the "demand" side
+ * of project-level resource & budget planning. One row = one seat, with
+ * FTE between 0 and 1 per week; needing two Business Analysts means two
+ * separate rows both named "Business Analyst", not one row at FTE 2. FTE
+ * is tracked per week (keyed by that week's Monday, "YYYY-MM-DD") since
+ * staffing plans are typically drawn up at finer grain than the app's
+ * month-based allocation grid. */
 export interface ProjectRoleRequirement {
   id: string;
   projectId: string;
@@ -176,18 +179,20 @@ export interface ProjectRoleRequirement {
   ftePerWeek: Record<string, number>;
 }
 
-/** A real person filling (part of) a required role — the "actual staffing"
- * side. Carries its own day rate (may differ from the role's planned rate,
- * which is what makes a role's blended rate meaningful) and its own
- * per-week FTE, independent of the person's month-based ResourceAllocation
- * rows elsewhere in the app. */
+/** The real person filling one required seat — at most one assignment per
+ * ProjectRoleRequirement. Carries its own day rate (may differ from the
+ * seat's planned rate — this is what makes a "blended rate" meaningful);
+ * FTE is *not* stored here — it's the linked requirement's ftePerWeek,
+ * since an assignment fills a specific seat rather than tracking its own
+ * independent schedule. Weekly cost = requirement.ftePerWeek[week] *
+ * assignment.dayRate * 5, so plan and actual never drift apart by
+ * construction. */
 export interface ProjectRoleAssignment {
   id: string;
   projectId: string;
   roleRequirementId: string;
   personId: string;
   dayRate: number;
-  ftePerWeek: Record<string, number>;
 }
 
 export type AllocationStatus =

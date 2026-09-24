@@ -149,50 +149,38 @@
   },
   {
     "id": "role-38",
-    "name": "Senior Machine Learning Engineer"
-  },
-  {
-    "id": "role-39",
-    "name": "Senior Network Architect"
-  },
-  {
-    "id": "role-40",
     "name": "Senior Product Designer"
   },
   {
-    "id": "role-41",
+    "id": "role-39",
     "name": "Senior Project Manager"
   },
   {
-    "id": "role-42",
-    "name": "Senior Site Reliability Engineer"
-  },
-  {
-    "id": "role-43",
+    "id": "role-40",
     "name": "Senior Software Engineer"
   },
   {
-    "id": "role-44",
+    "id": "role-41",
     "name": "Site Reliability Engineer"
   },
   {
-    "id": "role-45",
+    "id": "role-42",
     "name": "Software Engineer"
   },
   {
-    "id": "role-46",
+    "id": "role-43",
     "name": "Systems Administrator"
   },
   {
-    "id": "role-47",
+    "id": "role-44",
     "name": "Telco Network Engineer"
   },
   {
-    "id": "role-48",
+    "id": "role-45",
     "name": "UI Designer"
   },
   {
-    "id": "role-49",
+    "id": "role-46",
     "name": "UX Designer"
   }
 ]

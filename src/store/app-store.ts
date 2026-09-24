@@ -127,7 +127,6 @@ export interface AppState {
   }) => void;
   removeRoleAssignment: (assignmentId: string) => void;
   updateRoleAssignmentDayRate: (assignmentId: string, dayRate: number) => void;
-  setRoleAssignmentWeekFte: (assignmentId: string, week: string, fte: number) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -466,14 +465,7 @@ export function createAppStore() {
               "asg",
               state.projectRoleAssignments.map((a) => a.id)
             );
-            state.projectRoleAssignments.push({
-              id,
-              projectId,
-              roleRequirementId,
-              personId,
-              dayRate,
-              ftePerWeek: {},
-            });
+            state.projectRoleAssignments.push({ id, projectId, roleRequirementId, personId, dayRate });
           }),
 
         removeRoleAssignment: (assignmentId) =>
@@ -485,14 +477,6 @@ export function createAppStore() {
           set((state) => {
             const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
             if (assignment) assignment.dayRate = dayRate;
-          }),
-
-        setRoleAssignmentWeekFte: (assignmentId, week, fte) =>
-          set((state) => {
-            const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
-            if (!assignment) return;
-            if (fte > 0) assignment.ftePerWeek[week] = fte;
-            else delete assignment.ftePerWeek[week];
           }),
       })),
       {

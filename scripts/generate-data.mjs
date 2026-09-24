@@ -271,7 +271,7 @@ const users = [];
 const personSkills = [];
 const personCertifications = [];
 
-const PERSON_COUNT = 40;
+const PERSON_COUNT = 10;
 for (let i = 0; i < PERSON_COUNT; i++) {
   let firstName, lastName, key;
   do {
@@ -369,61 +369,24 @@ for (let i = 0; i < PERSON_COUNT; i++) {
 
 // ================= projects =================
 
+// A small, easy-to-verify-by-eye dataset: 5 projects across just 3 clients
+// (two clients get a second engagement each), spanning completed/active/planned.
 const PROJECT_DEFS = [
   { name: "Orion Cloud Migration", client: "Meridian Automotive Group", industryId: "ind-automotive", type: "Cloud Migration", track: "cloud",
     desc: "Migrated a fleet-telemetry platform from on-prem data centers to a multi-region AWS landing zone.",
     outcomes: ["Cut infrastructure cost by 34% within two quarters", "Reduced deployment lead time from days to hours", "Zero-downtime cutover for 2.1M connected vehicles"] },
-  { name: "Helios 5G Core Rollout", client: "Nordkom Telecommunications", industryId: "ind-telco", type: "Network Rollout", track: "telco",
-    desc: "Designed and deployed a cloud-native 5G standalone core across three metropolitan regions.",
-    outcomes: ["Launched commercial 5G SA service six weeks ahead of schedule", "Achieved 99.995% core network availability", "Enabled network slicing for two enterprise private-network pilots"] },
-  { name: "Atlas Core Banking Modernization", client: "Silverlake Banking Group", industryId: "ind-banking", type: "Platform Modernization", track: "dev",
-    desc: "Re-platformed a legacy core banking module to a microservices architecture with event-driven integration.",
-    outcomes: ["Reduced batch settlement time from 6 hours to 40 minutes", "Passed regulatory audit with zero critical findings", "Enabled real-time payments for retail customers"] },
-  { name: "Continental Claims AI Assistant", client: "Continental Assurance", industryId: "ind-insurance", type: "Data Platform Build", track: "data",
-    desc: "Built a machine-learning claims triage assistant integrated into the existing claims workbench.",
-    outcomes: ["Cut average triage time by 58%", "Improved fraud-flag precision to 91%", "Deployed to 340 claims handlers company-wide"] },
-  { name: "Harbor Retail Commerce Platform", client: "Harbor & Finch Retail", industryId: "ind-retail", type: "Digital Transformation", track: "dev",
-    desc: "Delivered a headless commerce platform unifying in-store and online inventory for a European retailer.",
-    outcomes: ["Grew online conversion rate by 22%", "Unified inventory across 180 stores", "Cut checkout page load time by 65%"] },
   { name: "Meridian Connected Diagnostics", client: "Meridian Automotive Group", industryId: "ind-automotive", type: "Implementation", track: "cloud",
     desc: "Implemented a predictive-maintenance data pipeline consuming vehicle sensor telemetry in near real time.",
     outcomes: ["Reduced unplanned downtime for fleet customers by 19%", "Processed 40TB of telemetry data per day", "Delivered self-service diagnostics dashboard"] },
   { name: "Union Health Records Interop", client: "Union Health Network", industryId: "ind-healthcare", type: "Systems Integration", track: "business",
     desc: "Integrated regional patient-record systems onto a standards-based interoperability layer.",
     outcomes: ["Connected 12 hospital systems on a shared FHIR API", "Cut duplicate patient-record incidents by 76%", "Delivered GDPR-compliant consent management"] },
-  { name: "Skyline Energy Grid Analytics", client: "Skyline Energy Networks", industryId: "ind-energy", type: "Data Platform Build", track: "data",
-    desc: "Built a real-time analytics platform for smart-grid load balancing and outage prediction.",
-    outcomes: ["Reduced unplanned outage duration by 27%", "Forecasted peak load within 3% accuracy", "Rolled out to 1.4M smart meters"] },
   { name: "Vantage Logistics Network Optimization", client: "Vantage Freight & Logistics", industryId: "ind-logistics", type: "Consulting Engagement", track: "business",
     desc: "Advised on route and warehouse network optimization backed by a new demand-forecasting model.",
     outcomes: ["Cut average delivery distance by 12%", "Reduced warehouse overflow incidents by 40%", "Delivered a reusable forecasting model for planning teams"] },
-  { name: "Solon Public Services Portal", client: "Solon Metropolitan Council", industryId: "ind-public", type: "Digital Transformation", track: "dev",
-    desc: "Delivered a citizen-facing services portal consolidating 40+ municipal application forms.",
-    outcomes: ["Digitized 40+ paper-based citizen services", "Cut average processing time from 12 days to 3", "Reached 65% citizen self-service adoption in year one"] },
-  { name: "Northgate Fraud Detection Uplift", client: "Northgate Financial Services", industryId: "ind-banking", type: "Security Assessment", track: "security",
-    desc: "Assessed and re-architected fraud-detection controls across card and online-banking channels.",
-    outcomes: ["Reduced false-positive fraud alerts by 31%", "Closed 14 high-severity findings pre-audit", "Implemented continuous SIEM-based monitoring"] },
-  { name: "Aurora Manufacturing IoT Backbone", client: "Aurora Precision Manufacturing", industryId: "ind-manufacturing", type: "Implementation", track: "infra",
-    desc: "Rolled out an edge-to-cloud IoT backbone connecting shop-floor sensors across four production sites.",
-    outcomes: ["Connected 6,200 shop-floor sensors", "Reduced unplanned line stoppages by 21%", "Delivered predictive-maintenance dashboards to plant managers"] },
-  { name: "Beacon Insurance Self-Service App", client: "Beacon Mutual Insurance", industryId: "ind-insurance", type: "Implementation", track: "design",
-    desc: "Designed and built a policyholder self-service mobile app covering claims, billing, and document upload.",
-    outcomes: ["Reached 120K active app users within six months", "Cut inbound call volume by 24%", "Achieved a 4.6/5 app store rating"] },
-  { name: "Meridian Dealer Experience Redesign", client: "Meridian Automotive Group", industryId: "ind-automotive", type: "Consulting Engagement", track: "design",
-    desc: "Redesigned the dealer-facing configurator and ordering experience for a premium vehicle brand.",
-    outcomes: ["Cut order configuration time by 45%", "Improved dealer NPS by 18 points", "Rolled out to 210 dealerships across Europe"] },
   { name: "Vantage Warehouse Robotics Pilot", client: "Vantage Freight & Logistics", industryId: "ind-logistics", type: "Implementation", track: "infra",
     desc: "Piloted an automated storage and retrieval system integration across two distribution centers.",
     outcomes: ["Increased pick rate by 38% in pilot sites", "Validated ROI case for national rollout", "Integrated WMS with robotics control layer"] },
-  { name: "Northgate Private 5G Campus Network", client: "Northgate Financial Services", industryId: "ind-banking", type: "Network Rollout", track: "telco",
-    desc: "Deployed a private 5G campus network securing a new corporate headquarters and data operations floor.",
-    outcomes: ["Delivered sub-10ms latency for trading-floor use cases", "Passed independent security penetration test", "Reduced Wi-Fi related helpdesk tickets by 52%"] },
-  { name: "Aurora Sustainability Reporting Platform", client: "Aurora Precision Manufacturing", industryId: "ind-manufacturing", type: "Data Platform Build", track: "data",
-    desc: "Building an ESG data platform consolidating emissions and energy data ahead of new reporting mandates.",
-    outcomes: ["On track to automate 80% of CSRD data collection", "Unified emissions data from 9 production sites", "Cutover planned for next fiscal quarter"] },
-  { name: "Solon Grid Modernization Roadmap", client: "Solon Metropolitan Council", industryId: "ind-public", type: "Consulting Engagement", track: "pm",
-    desc: "Defining a five-year modernization roadmap and delivery governance model for municipal grid infrastructure.",
-    outcomes: ["Roadmap presented to city council for FY approval", "Established a joint PMO with three delivery partners", "Business case validated by independent audit"] },
 ];
 
 const DAY_RATE = { junior: 480, mid: 780, senior: 1150 };
@@ -447,15 +410,15 @@ let allocIdSeq = 1;
 PROJECT_DEFS.forEach((def, idx) => {
   const id = `project-${String(idx + 1).padStart(2, "0")}`;
 
-  // status distribution: first ~6 completed, next ~8 active, last ~4 planned
+  // status distribution across 5 projects: 1 completed, 3 active, 1 planned
   let status, startDate, endDate;
-  if (idx < 6) {
+  if (idx < 1) {
     status = "completed";
     const durationMonths = rndInt(4, 10);
     const endOffset = -rndInt(1, 5);
     startDate = addMonths(TODAY, endOffset - durationMonths);
     endDate = addMonths(TODAY, endOffset);
-  } else if (idx < 14) {
+  } else if (idx < 4) {
     status = "active";
     const startOffset = -rndInt(1, 9);
     const durationMonths = rndInt(6, 16);
@@ -492,11 +455,12 @@ PROJECT_DEFS.forEach((def, idx) => {
     totalBudget: 0, // filled after allocations are computed
   });
 
-  // team: lead + 3-6 additional members from primary/secondary track pools
+  // team: lead + 2-4 additional members from primary/secondary track pools
+  // (kept small since the whole company is only 10 people)
   const candidatePool = people.filter(
     (p) => p.id !== lead.id && (p._track === def.track || reqSkills.some((s) => personSkills.some((ps) => ps.personId === p.id && ps.skillId === s.id)))
   );
-  const teamSize = rndInt(3, 6);
+  const teamSize = rndInt(2, 4);
   const team = sampleUnique(candidatePool.length >= teamSize ? candidatePool : people.filter((p) => p.id !== lead.id), teamSize);
 
   const rolesOnProject = ["Solution Architect", "Lead Developer", "Business Analyst", "QA Engineer", "Data Engineer", "UX Designer", "DevOps Engineer", "Consultant"];
@@ -599,43 +563,51 @@ PROJECT_DEFS.forEach((def, idx) => {
       }
     }
 
+    // One requirement row per seat (per team member), not per role group —
+    // two Business Analysts means two separate "Business Analyst" rows,
+    // each at FTE <= 1. Assignments carry no FTE of their own; they fill a
+    // specific seat, so their cost is the seat's FTE * their own day rate.
     for (const [roleOnProject, members] of roleGroups) {
-      const dominantSeniority = members.some((p) => p._seniority === "senior")
-        ? "senior"
-        : members.some((p) => p._seniority === "mid")
-          ? "mid"
-          : "junior";
-      const reqId = `req-${projectRoleRequirements.length + 1}`;
-      const targetFte = Math.round(members.length * (0.5 + rnd() * 0.5) * 20) / 20;
-      const ftePerWeek = {};
-      for (const w of planWeeks) ftePerWeek[w] = targetFte;
-      projectRoleRequirements.push({
-        id: reqId,
-        projectId: id,
-        roleName: roleOnProject,
-        dayRate: DAY_RATE[dominantSeniority],
-        ftePerWeek,
-      });
+      members.forEach((member) => {
+        const reqId = `req-${projectRoleRequirements.length + 1}`;
+        const seatFte = chance(0.75) ? 1 : Math.round((0.5 + rnd() * 0.4) * 20) / 20;
+        const ftePerWeek = {};
+        for (const w of planWeeks) ftePerWeek[w] = seatFte;
+        const planDayRate = DAY_RATE[member._seniority];
+        projectRoleRequirements.push({
+          id: reqId,
+          projectId: id,
+          roleName: roleOnProject,
+          dayRate: planDayRate,
+          ftePerWeek,
+        });
 
-      if (status === "active") {
-        members.forEach((member) => {
-          const ownRate = Math.round((DAY_RATE[member._seniority] * (0.9 + rnd() * 0.2)) / 5) * 5;
-          const memberFteBase = targetFte / members.length;
-          const asgFtePerWeek = {};
-          for (const w of planWeeks) {
-            const jitter = (rnd() - 0.5) * 0.3;
-            asgFtePerWeek[w] = Math.max(0.1, Math.round((memberFteBase + jitter) * 20) / 20);
-          }
+        if (status === "active") {
+          const ownRate = Math.round((planDayRate * (0.9 + rnd() * 0.2)) / 5) * 5;
           projectRoleAssignments.push({
             id: `asg-${projectRoleAssignments.length + 1}`,
             projectId: id,
             roleRequirementId: reqId,
             personId: member.id,
             dayRate: ownRate,
-            ftePerWeek: asgFtePerWeek,
           });
-        });
-      }
+        }
+      });
+    }
+
+    // The detailed weekly plan is the more authoritative cost source for a
+    // project that has one — recompute totalBudget from it (+ margin) so
+    // "Budget" and "Planned" stay in the same ballpark instead of the old
+    // monthly-allocation-based figure (a much coarser estimate) wandering
+    // arbitrarily far from the new weekly plan's own total.
+    const thisProjectReqs = projectRoleRequirements.filter((r) => r.projectId === id);
+    const planCost = thisProjectReqs.reduce((sum, r) => {
+      const fteSum = Object.values(r.ftePerWeek).reduce((s, v) => s + v, 0);
+      return sum + fteSum * r.dayRate * 5;
+    }, 0);
+    if (planCost > 0) {
+      const planMargin = 1 + rndInt(8, 22) / 100;
+      projects[projects.length - 1].totalBudget = Math.round(planCost * planMargin);
     }
   }
 });
