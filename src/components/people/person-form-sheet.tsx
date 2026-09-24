@@ -30,11 +30,12 @@ export function PersonFormSheet() {
   const locations = useAppStore((s) => s.locations);
   const industries = useAppStore((s) => s.industries);
   const interests = useAppStore((s) => s.interests);
+  const roles = useAppStore((s) => s.roles);
   const importPeople = useAppStore((s) => s.importPeople);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
+  const [jobTitle, setJobTitle] = useState(roles[0]?.name ?? "");
   const [department, setDepartment] = useState<Department>(DEPARTMENTS[0]);
   const [locationId, setLocationId] = useState(locations[0]?.id ?? "");
   const [bio, setBio] = useState("");
@@ -42,6 +43,7 @@ export function PersonFormSheet() {
   const [industryIds, setIndustryIds] = useState<string[]>([]);
 
   const locationOptions = locations.map((l) => ({ value: l.id, label: l.city }));
+  const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
 
   function toggleInterest(id: string) {
     setInterestIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
@@ -53,7 +55,7 @@ export function PersonFormSheet() {
   function reset() {
     setFirstName("");
     setLastName("");
-    setJobTitle("");
+    setJobTitle(roles[0]?.name ?? "");
     setBio("");
     setInterestIds([]);
     setIndustryIds([]);
@@ -114,15 +116,19 @@ export function PersonFormSheet() {
                 <Input id="np-last" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" />
               </div>
               <div className="col-span-2">
-                <Label htmlFor="np-title" className="mb-1.5">
-                  Job title
-                </Label>
-                <Input
-                  id="np-title"
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                  placeholder="Cloud Solutions Architect"
-                />
+                <Label className="mb-1.5">Job title / role</Label>
+                <Select value={jobTitle} onValueChange={(v) => v && setJobTitle(v)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{selectLabel(roleOptions, "Select a role")}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roles.map((r) => (
+                      <SelectItem key={r.id} value={r.name}>
+                        {r.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label className="mb-1.5">Department</Label>

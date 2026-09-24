@@ -1,0 +1,198 @@
+[
+  {
+    "id": "role-1",
+    "name": "5G Solutions Consultant"
+  },
+  {
+    "id": "role-2",
+    "name": "Account Manager"
+  },
+  {
+    "id": "role-3",
+    "name": "Analytics Consultant"
+  },
+  {
+    "id": "role-4",
+    "name": "Backend Developer"
+  },
+  {
+    "id": "role-5",
+    "name": "BI Consultant"
+  },
+  {
+    "id": "role-6",
+    "name": "Bid Manager"
+  },
+  {
+    "id": "role-7",
+    "name": "Business Analyst"
+  },
+  {
+    "id": "role-8",
+    "name": "Business Development Manager"
+  },
+  {
+    "id": "role-9",
+    "name": "Change Manager"
+  },
+  {
+    "id": "role-10",
+    "name": "Cloud Engineer"
+  },
+  {
+    "id": "role-11",
+    "name": "Cloud Solutions Architect"
+  },
+  {
+    "id": "role-12",
+    "name": "Data Engineer"
+  },
+  {
+    "id": "role-13",
+    "name": "Data Scientist"
+  },
+  {
+    "id": "role-14",
+    "name": "Delivery Lead"
+  },
+  {
+    "id": "role-15",
+    "name": "Design Lead"
+  },
+  {
+    "id": "role-16",
+    "name": "DevOps Engineer"
+  },
+  {
+    "id": "role-17",
+    "name": "Engineering Lead"
+  },
+  {
+    "id": "role-18",
+    "name": "Frontend Developer"
+  },
+  {
+    "id": "role-19",
+    "name": "Full-Stack Engineer"
+  },
+  {
+    "id": "role-20",
+    "name": "GRC Consultant"
+  },
+  {
+    "id": "role-21",
+    "name": "Infrastructure Engineer"
+  },
+  {
+    "id": "role-22",
+    "name": "Machine Learning Engineer"
+  },
+  {
+    "id": "role-23",
+    "name": "Management Consultant"
+  },
+  {
+    "id": "role-24",
+    "name": "Network Architect"
+  },
+  {
+    "id": "role-25",
+    "name": "Network Engineer"
+  },
+  {
+    "id": "role-26",
+    "name": "OSS/BSS Consultant"
+  },
+  {
+    "id": "role-27",
+    "name": "Penetration Tester"
+  },
+  {
+    "id": "role-28",
+    "name": "Platform Engineer"
+  },
+  {
+    "id": "role-29",
+    "name": "Program Manager"
+  },
+  {
+    "id": "role-30",
+    "name": "Project Manager"
+  },
+  {
+    "id": "role-31",
+    "name": "Sales Director"
+  },
+  {
+    "id": "role-32",
+    "name": "Scrum Master"
+  },
+  {
+    "id": "role-33",
+    "name": "Security Architect"
+  },
+  {
+    "id": "role-34",
+    "name": "Security Consultant"
+  },
+  {
+    "id": "role-35",
+    "name": "Senior Business Analyst"
+  },
+  {
+    "id": "role-36",
+    "name": "Senior Cloud Architect"
+  },
+  {
+    "id": "role-37",
+    "name": "Senior Data Scientist"
+  },
+  {
+    "id": "role-38",
+    "name": "Senior Machine Learning Engineer"
+  },
+  {
+    "id": "role-39",
+    "name": "Senior Network Architect"
+  },
+  {
+    "id": "role-40",
+    "name": "Senior Product Designer"
+  },
+  {
+    "id": "role-41",
+    "name": "Senior Project Manager"
+  },
+  {
+    "id": "role-42",
+    "name": "Senior Site Reliability Engineer"
+  },
+  {
+    "id": "role-43",
+    "name": "Senior Software Engineer"
+  },
+  {
+    "id": "role-44",
+    "name": "Site Reliability Engineer"
+  },
+  {
+    "id": "role-45",
+    "name": "Software Engineer"
+  },
+  {
+    "id": "role-46",
+    "name": "Systems Administrator"
+  },
+  {
+    "id": "role-47",
+    "name": "Telco Network Engineer"
+  },
+  {
+    "id": "role-48",
+    "name": "UI Designer"
+  },
+  {
+    "id": "role-49",
+    "name": "UX Designer"
+  }
+]

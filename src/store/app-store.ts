@@ -14,6 +14,10 @@ import type {
   SkillLevel,
   Skill,
   Client,
+  Location,
+  Certification,
+  Interest,
+  Role,
 } from "@/lib/types";
 import {
   INITIAL_LOCATIONS,
@@ -21,6 +25,7 @@ import {
   INITIAL_SKILLS,
   INITIAL_CERTIFICATIONS,
   INITIAL_INTERESTS,
+  INITIAL_ROLES,
   INITIAL_USERS,
   INITIAL_PEOPLE,
   INITIAL_PERSON_SKILLS,
@@ -44,6 +49,7 @@ export interface AppState {
   skills: typeof INITIAL_SKILLS;
   certifications: typeof INITIAL_CERTIFICATIONS;
   interests: typeof INITIAL_INTERESTS;
+  roles: typeof INITIAL_ROLES;
   users: typeof INITIAL_USERS;
 
   // core entities
@@ -92,6 +98,15 @@ export interface AppState {
   importProjects: (projects: Project[]) => void;
   addSkill: (skill: { id: string; name: string; category: Skill["category"]; description?: string }) => void;
   removeSkill: (skillId: string) => void;
+
+  addLocation: (location: Omit<Location, "id">) => void;
+  removeLocation: (locationId: string) => void;
+  addCertification: (certification: Omit<Certification, "id">) => void;
+  removeCertification: (certificationId: string) => void;
+  addInterest: (interest: Omit<Interest, "id">) => void;
+  removeInterest: (interestId: string) => void;
+  addRole: (role: Omit<Role, "id">) => void;
+  removeRole: (roleId: string) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -116,6 +131,7 @@ export function createAppStore() {
         skills: INITIAL_SKILLS,
         certifications: INITIAL_CERTIFICATIONS,
         interests: INITIAL_INTERESTS,
+        roles: INITIAL_ROLES,
         users: INITIAL_USERS,
 
         people: INITIAL_PEOPLE,
@@ -322,6 +338,68 @@ export function createAppStore() {
             state.personSkills = state.personSkills.filter((ps) => ps.skillId !== skillId);
             state.projectSkills = state.projectSkills.filter((ps) => ps.skillId !== skillId);
           }),
+
+        addLocation: (location) =>
+          set((state) => {
+            const id = nextId(
+              "loc-custom",
+              state.locations.map((l) => l.id)
+            );
+            state.locations.push({ ...location, id });
+          }),
+
+        removeLocation: (locationId) =>
+          set((state) => {
+            state.locations = state.locations.filter((l) => l.id !== locationId);
+          }),
+
+        addCertification: (certification) =>
+          set((state) => {
+            const id = nextId(
+              "cert-custom",
+              state.certifications.map((c) => c.id)
+            );
+            state.certifications.push({ ...certification, id });
+          }),
+
+        removeCertification: (certificationId) =>
+          set((state) => {
+            state.certifications = state.certifications.filter((c) => c.id !== certificationId);
+            state.personCertifications = state.personCertifications.filter(
+              (pc) => pc.certificationId !== certificationId
+            );
+          }),
+
+        addInterest: (interest) =>
+          set((state) => {
+            const id = nextId(
+              "int-custom",
+              state.interests.map((i) => i.id)
+            );
+            state.interests.push({ ...interest, id });
+          }),
+
+        removeInterest: (interestId) =>
+          set((state) => {
+            state.interests = state.interests.filter((i) => i.id !== interestId);
+            for (const person of state.people) {
+              person.interestIds = person.interestIds.filter((id) => id !== interestId);
+            }
+          }),
+
+        addRole: (role) =>
+          set((state) => {
+            const id = nextId(
+              "role-custom",
+              state.roles.map((r) => r.id)
+            );
+            state.roles.push({ ...role, id });
+          }),
+
+        removeRole: (roleId) =>
+          set((state) => {
+            state.roles = state.roles.filter((r) => r.id !== roleId);
+          }),
       })),
       {
         name: "nexus-pm-tool-store",
@@ -330,6 +408,11 @@ export function createAppStore() {
         partialize: (state) => ({
           currentUserId: state.currentUserId,
           viewAsRole: state.viewAsRole,
+          locations: state.locations,
+          skills: state.skills,
+          certifications: state.certifications,
+          interests: state.interests,
+          roles: state.roles,
           people: state.people,
           personSkills: state.personSkills,
           personCertifications: state.personCertifications,

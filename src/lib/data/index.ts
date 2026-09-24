@@ -4,6 +4,7 @@ import type {
   Skill,
   Certification,
   Interest,
+  Role,
   User,
   Person,
   PersonSkill,
@@ -21,6 +22,7 @@ import industriesJson from "./generated/industries.json";
 import skillsJson from "./generated/skills.json";
 import certificationsJson from "./generated/certifications.json";
 import interestsJson from "./generated/interests.json";
+import rolesJson from "./generated/roles.json";
 import usersJson from "./generated/users.json";
 import peopleJson from "./generated/people.json";
 import personSkillsJson from "./generated/person-skills.json";
@@ -37,6 +39,7 @@ export const INITIAL_INDUSTRIES = industriesJson as Industry[];
 export const INITIAL_SKILLS = skillsJson as Skill[];
 export const INITIAL_CERTIFICATIONS = certificationsJson as Certification[];
 export const INITIAL_INTERESTS = interestsJson as Interest[];
+export const INITIAL_ROLES = rolesJson as Role[];
 export const INITIAL_USERS = usersJson as User[];
 export const INITIAL_PEOPLE = peopleJson as Person[];
 export const INITIAL_PERSON_SKILLS = personSkillsJson as PersonSkill[];

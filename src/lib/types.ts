@@ -62,6 +62,14 @@ export interface Interest {
   name: string;
 }
 
+/** The catalog of allowed job-title values for Person.jobTitle — an admin-
+ * managed master-data list, like Skill/Interest/Certification, rather than
+ * free text. */
+export interface Role {
+  id: string;
+  name: string;
+}
+
 export interface User {
   id: string;
   personId: string;
@@ -168,6 +176,7 @@ export interface Dataset {
   skills: Skill[];
   certifications: Certification[];
   interests: Interest[];
+  roles: Role[];
   users: User[];
   people: Person[];
   personSkills: PersonSkill[];

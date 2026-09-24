@@ -55,6 +55,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const interests = useAppStore((s) => s.interests);
   const industries = useAppStore((s) => s.industries);
   const locations = useAppStore((s) => s.locations);
+  const roles = useAppStore((s) => s.roles);
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
   const projects = useAppStore((s) => s.projects);
@@ -70,7 +71,6 @@ export function EditProfileSheet({ person }: { person: Person }) {
 
   const [firstName, setFirstName] = useState(person.firstName);
   const [lastName, setLastName] = useState(person.lastName);
-  const [jobTitle, setJobTitle] = useState(person.jobTitle);
   const [bio, setBio] = useState(person.bio);
   const [addSkillId, setAddSkillId] = useState("");
   const [addSkillLevel, setAddSkillLevel] = useState("3");
@@ -117,12 +117,12 @@ export function EditProfileSheet({ person }: { person: Person }) {
     ...availableProjectsForAdd.map((p) => ({ value: p.id, label: p.name })),
   ];
   const locationOptions = locations.map((l) => ({ value: l.id, label: l.city }));
+  const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
 
   function saveBasics() {
     const patch: Partial<Person> = {};
     if (firstName.trim() && firstName !== person.firstName) patch.firstName = firstName.trim();
     if (lastName.trim() && lastName !== person.lastName) patch.lastName = lastName.trim();
-    if (jobTitle.trim() && jobTitle !== person.jobTitle) patch.jobTitle = jobTitle.trim();
     if (Object.keys(patch).length > 0) {
       updatePerson(person.id, patch);
       toast.success("Profile updated");
@@ -218,15 +218,22 @@ export function EditProfileSheet({ person }: { person: Person }) {
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label htmlFor="ep-title" className="mb-1.5">
-                    Job title
-                  </Label>
-                  <Input
-                    id="ep-title"
-                    value={jobTitle}
-                    onChange={(e) => setJobTitle(e.target.value)}
-                    onBlur={saveBasics}
-                  />
+                  <Label className="mb-1.5">Job title / role</Label>
+                  <Select
+                    value={person.jobTitle}
+                    onValueChange={(v) => v && updatePerson(person.id, { jobTitle: v })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue>{selectLabel(roleOptions, "Select a role")}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roles.map((r) => (
+                        <SelectItem key={r.id} value={r.name}>
+                          {r.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label className="mb-1.5">Department</Label>

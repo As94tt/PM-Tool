@@ -612,6 +612,15 @@ for (const rows of byPersonMonth.values()) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit them from the rest spread
 const cleanPeople = people.map(({ _track, _seniority, ...p }) => p);
 
+// Role catalog: every title defined across TRACKS, plus any actually-used
+// jobTitle (covers the "Senior X" variants seniority prefixing produces),
+// so no generated person ever has a jobTitle missing from its own catalog.
+// Static/derived only — no RNG calls, so it can't shift the seeded sequence.
+const roleNames = [...new Set([...Object.values(TRACKS).flatMap((t) => t.titles), ...cleanPeople.map((p) => p.jobTitle)])].sort(
+  (a, b) => a.localeCompare(b)
+);
+const roles = roleNames.map((name, i) => ({ id: `role-${i + 1}`, name }));
+
 // ================= write output =================
 const files = {
   "locations.json": locations,
@@ -620,6 +629,7 @@ const files = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to omit it from the rest spread
   "certifications.json": certifications.map(({ category, ...c }) => c),
   "interests.json": interests,
+  "roles.json": roles,
   "users.json": users,
   "people.json": cleanPeople,
   "person-skills.json": personSkills,
