@@ -58,6 +58,18 @@ function isoDate(d) {
   // local-calendar-date formatting; avoids toISOString()'s UTC shift for local midnight dates
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
+function startOfWeek(d) {
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1) - day;
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff);
+}
+function weekKey(d) {
+  return isoDate(startOfWeek(d));
+}
+function addWeeks(d, n) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n * 7);
+}
+
 const HORIZON_START = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
 const HORIZON_MONTHS = Array.from({ length: 12 }, (_, i) =>
   monthKey(addMonths(HORIZON_START, i))
@@ -420,6 +432,8 @@ const projectMembers = [];
 const projectSkills = [];
 const resourceAllocations = [];
 const budgetPlans = [];
+const projectRoleRequirements = [];
+const projectRoleAssignments = [];
 
 function peopleByTrack(trackKey) {
   return people.filter((p) => p._track === trackKey);
@@ -555,6 +569,75 @@ PROJECT_DEFS.forEach((def, idx) => {
     plannedPersonnelCost: projectPersonnelCost,
     monthlyPlannedCost,
   });
+
+  // ---- project-level role requirements & staffing plan (weekly FTE) ----
+  // Active projects get a full plan-vs-actual demo (a required role per
+  // distinct roleOnProject already on the team, then the real members
+  // staffed against it). The first two planned projects get a staffing
+  // PLAN only (no assignments yet) to demo the "not yet staffed" state.
+  const wantsRolePlan = status === "active" || (status === "planned" && idx <= 15);
+  if (wantsRolePlan) {
+    const thisProjectMembers = projectMembers.filter((m) => m.projectId === id);
+    const roleGroups = new Map();
+    for (const m of thisProjectMembers) {
+      const person = allMembers.find((p) => p.id === m.personId);
+      if (!person) continue;
+      const list = roleGroups.get(m.roleOnProject) ?? [];
+      list.push(person);
+      roleGroups.set(m.roleOnProject, list);
+    }
+
+    const planWeeks = [];
+    if (relevantMonths.length > 0) {
+      const [fy, fm] = relevantMonths[0].split("-").map(Number);
+      const [ly, lm] = relevantMonths[relevantMonths.length - 1].split("-").map(Number);
+      let wCursor = startOfWeek(new Date(fy, fm - 1, 1));
+      const wEnd = new Date(ly, lm, 0); // last day of last month
+      while (wCursor <= wEnd) {
+        planWeeks.push(weekKey(wCursor));
+        wCursor = addWeeks(wCursor, 1);
+      }
+    }
+
+    for (const [roleOnProject, members] of roleGroups) {
+      const dominantSeniority = members.some((p) => p._seniority === "senior")
+        ? "senior"
+        : members.some((p) => p._seniority === "mid")
+          ? "mid"
+          : "junior";
+      const reqId = `req-${projectRoleRequirements.length + 1}`;
+      const targetFte = Math.round(members.length * (0.5 + rnd() * 0.5) * 20) / 20;
+      const ftePerWeek = {};
+      for (const w of planWeeks) ftePerWeek[w] = targetFte;
+      projectRoleRequirements.push({
+        id: reqId,
+        projectId: id,
+        roleName: roleOnProject,
+        dayRate: DAY_RATE[dominantSeniority],
+        ftePerWeek,
+      });
+
+      if (status === "active") {
+        members.forEach((member) => {
+          const ownRate = Math.round((DAY_RATE[member._seniority] * (0.9 + rnd() * 0.2)) / 5) * 5;
+          const memberFteBase = targetFte / members.length;
+          const asgFtePerWeek = {};
+          for (const w of planWeeks) {
+            const jitter = (rnd() - 0.5) * 0.3;
+            asgFtePerWeek[w] = Math.max(0.1, Math.round((memberFteBase + jitter) * 20) / 20);
+          }
+          projectRoleAssignments.push({
+            id: `asg-${projectRoleAssignments.length + 1}`,
+            projectId: id,
+            roleRequirementId: reqId,
+            personId: member.id,
+            dayRate: ownRate,
+            ftePerWeek: asgFtePerWeek,
+          });
+        });
+      }
+    }
+  }
 });
 
 // ================= clients =================
@@ -640,6 +723,8 @@ const files = {
   "project-skills.json": projectSkills,
   "resource-allocations.json": resourceAllocations,
   "budget-plans.json": budgetPlans,
+  "project-role-requirements.json": projectRoleRequirements,
+  "project-role-assignments.json": projectRoleAssignments,
 };
 
 for (const [filename, data] of Object.entries(files)) {

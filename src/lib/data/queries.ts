@@ -13,8 +13,11 @@ import type {
   ProjectStatus,
   Client,
   Department,
+  ProjectRoleRequirement,
+  ProjectRoleAssignment,
 } from "@/lib/types";
 import { getAllocationForPersonMonth, getHorizonMonths } from "./capacity";
+import { totalCost, weeklyCost, weekToMonthKey } from "./week-planning";
 
 /** Clients are matched to projects by exact name, not a foreign key. */
 export function getClientByName(clients: Client[], clientName: string): Client | undefined {
@@ -360,22 +363,101 @@ export function getDashboardStats(
   };
 }
 
+export interface ProjectCostSummary {
+  plannedCost: number;
+  actualCost: number;
+  /** True when this project has its own weekly role-based staffing plan
+   * (project-level planning); false when it only has the legacy flat
+   * per-project BudgetPlan figure. */
+  hasDetailedPlan: boolean;
+}
+
+/**
+ * A project's planned/actual personnel cost, preferring its own weekly
+ * role-requirement/assignment plan (project-level planning) when one
+ * exists, falling back to the legacy per-project BudgetPlan otherwise.
+ */
+export function getProjectCostSummary(
+  project: Project,
+  budgetPlans: BudgetPlan[],
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[]
+): ProjectCostSummary {
+  const reqs = requirements.filter((r) => r.projectId === project.id);
+  if (reqs.length > 0) {
+    const plannedCost = reqs.reduce((s, r) => s + totalCost(r.ftePerWeek, r.dayRate), 0);
+    const asgs = assignments.filter((a) => a.projectId === project.id);
+    const actualCost = asgs.reduce((s, a) => s + totalCost(a.ftePerWeek, a.dayRate), 0);
+    return { plannedCost, actualCost, hasDetailedPlan: true };
+  }
+  const plan = budgetPlans.find((b) => b.projectId === project.id);
+  return { plannedCost: plan?.plannedPersonnelCost ?? 0, actualCost: 0, hasDetailedPlan: false };
+}
+
 export interface BudgetOverview {
   totalBudget: number;
   totalPlannedPersonnelCost: number;
+  totalActualPersonnelCost: number;
   monthlyTotals: { month: string; plannedCost: number }[];
 }
 
-export function getBudgetOverview(projects: Project[], budgetPlans: BudgetPlan[]): BudgetOverview {
+/**
+ * Company-wide budget rollup. Sums each project's cost via
+ * `getProjectCostSummary` (project-level plan when it exists, legacy
+ * BudgetPlan otherwise) and buckets weekly plan costs into the month
+ * containing each week's Monday for the forecast chart.
+ */
+export function getBudgetOverview(
+  projects: Project[],
+  budgetPlans: BudgetPlan[],
+  requirements: ProjectRoleRequirement[] = [],
+  assignments: ProjectRoleAssignment[] = []
+): BudgetOverview {
   const totalBudget = projects.reduce((s, p) => s + p.totalBudget, 0);
-  const totalPlannedPersonnelCost = budgetPlans.reduce((s, b) => s + b.plannedPersonnelCost, 0);
   const horizon = getHorizonMonths(12);
-  const monthlyTotals = horizon.map((month) => ({
-    month,
-    plannedCost: budgetPlans.reduce(
-      (sum, b) => sum + (b.monthlyPlannedCost.find((m) => m.month === month)?.plannedCost ?? 0),
-      0
-    ),
-  }));
-  return { totalBudget, totalPlannedPersonnelCost, monthlyTotals };
+  const monthlyPlanned = new Map(horizon.map((m) => [m, 0]));
+
+  let totalPlannedPersonnelCost = 0;
+  let totalActualPersonnelCost = 0;
+
+  for (const project of projects) {
+    const summary = getProjectCostSummary(project, budgetPlans, requirements, assignments);
+    totalPlannedPersonnelCost += summary.plannedCost;
+    totalActualPersonnelCost += summary.actualCost;
+
+    if (summary.hasDetailedPlan) {
+      for (const req of requirements.filter((r) => r.projectId === project.id)) {
+        for (const [week, fte] of Object.entries(req.ftePerWeek)) {
+          const mKey = weekToMonthKey(week);
+          if (monthlyPlanned.has(mKey)) monthlyPlanned.set(mKey, monthlyPlanned.get(mKey)! + weeklyCost(fte, req.dayRate));
+        }
+      }
+    } else {
+      const plan = budgetPlans.find((b) => b.projectId === project.id);
+      for (const m of plan?.monthlyPlannedCost ?? []) {
+        if (monthlyPlanned.has(m.month)) monthlyPlanned.set(m.month, monthlyPlanned.get(m.month)! + m.plannedCost);
+      }
+    }
+  }
+
+  const monthlyTotals = horizon.map((month) => ({ month, plannedCost: monthlyPlanned.get(month) ?? 0 }));
+  return { totalBudget, totalPlannedPersonnelCost, totalActualPersonnelCost, monthlyTotals };
+}
+
+export interface BenchPerson {
+  person: Person;
+  currentAllocation: number;
+}
+
+/** People with zero allocation this month across every project — available
+ * capacity management should know about. */
+export function getBenchPeople(people: Person[], resourceAllocations: ResourceAllocation[]): BenchPerson[] {
+  const currentMonth = getHorizonMonths(1)[0];
+  return people
+    .map((person) => ({
+      person,
+      currentAllocation: getAllocationForPersonMonth(resourceAllocations, person.id, currentMonth),
+    }))
+    .filter((r) => r.currentAllocation === 0)
+    .toSorted((a, b) => fullName(a.person).localeCompare(fullName(b.person)));
 }

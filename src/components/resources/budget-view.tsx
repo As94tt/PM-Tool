@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Wallet, TrendingDown, TrendingUp, FolderKanban } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { getBudgetOverview } from "@/lib/data/queries";
+import { getBudgetOverview, getProjectCostSummary } from "@/lib/data/queries";
 import { getHorizonMonths, formatMonthLabel } from "@/lib/data/capacity";
 import { formatCompactCurrency, formatCurrency } from "@/lib/format";
 import { StatCard } from "@/components/shared/stat-card";
@@ -22,9 +22,11 @@ const STATUS_BADGE: Record<ProjectStatus, string> = {
 export function BudgetView() {
   const projects = useAppStore((s) => s.projects);
   const budgetPlans = useAppStore((s) => s.budgetPlans);
+  const projectRoleRequirements = useAppStore((s) => s.projectRoleRequirements);
+  const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
   const clients = useAppStore((s) => s.clients);
 
-  const overview = getBudgetOverview(projects, budgetPlans);
+  const overview = getBudgetOverview(projects, budgetPlans, projectRoleRequirements, projectRoleAssignments);
   const remaining = overview.totalBudget - overview.totalPlannedPersonnelCost;
   const horizon = getHorizonMonths(12);
 
@@ -32,9 +34,15 @@ export function BudgetView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         <StatCard label="Total budget" value={formatCompactCurrency(overview.totalBudget)} icon={Wallet} tone="brand" />
         <StatCard label="Planned personnel cost" value={formatCompactCurrency(overview.totalPlannedPersonnelCost)} icon={TrendingUp} />
+        <StatCard
+          label="Actual cost so far"
+          value={formatCompactCurrency(overview.totalActualPersonnelCost)}
+          icon={TrendingUp}
+          sublabel="From detailed project plans"
+        />
         <StatCard label="Budget remaining" value={formatCompactCurrency(remaining)} icon={TrendingDown} />
         <StatCard label="Projects with budget" value={projects.length} icon={FolderKanban} />
       </div>
@@ -63,8 +71,8 @@ export function BudgetView() {
         </div>
         <div className="divide-y divide-border/70">
           {rows.map((project) => {
-            const plan = budgetPlans.find((b) => b.projectId === project.id);
-            const planned = plan?.plannedPersonnelCost ?? 0;
+            const summary = getProjectCostSummary(project, budgetPlans, projectRoleRequirements, projectRoleAssignments);
+            const planned = summary.plannedCost;
             const projectRemaining = project.totalBudget - planned;
             const usagePercent = project.totalBudget > 0 ? Math.min(100, Math.round((planned / project.totalBudget) * 100)) : 0;
             return (
@@ -82,6 +90,11 @@ export function BudgetView() {
                   <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
                     {project.status}
                   </Badge>
+                  {summary.hasDetailedPlan && (
+                    <Badge variant="secondary" className="bg-primary/10 text-primary">
+                      Detailed plan
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex shrink-0 items-center gap-6 text-right text-xs">
                   <div>
@@ -92,6 +105,12 @@ export function BudgetView() {
                     <p className="text-muted-foreground">Planned</p>
                     <p className="font-medium tabular-nums text-foreground">{formatCurrency(planned)}</p>
                   </div>
+                  {summary.hasDetailedPlan && (
+                    <div>
+                      <p className="text-muted-foreground">Actual</p>
+                      <p className="font-medium tabular-nums text-foreground">{formatCurrency(summary.actualCost)}</p>
+                    </div>
+                  )}
                   <div className="w-24">
                     <p className="text-muted-foreground">Remaining</p>
                     <p className={`font-medium tabular-nums ${projectRemaining < 0 ? "text-destructive" : "text-foreground"}`}>

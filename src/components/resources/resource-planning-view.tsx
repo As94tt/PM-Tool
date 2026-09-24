@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { UserX } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { fullName, initials } from "@/lib/data/queries";
+import { fullName, initials, getBenchPeople } from "@/lib/data/queries";
 import {
   getHorizonMonths,
   formatMonthLabel,
   getAllocationForPersonMonth,
+  getAllocationStatus,
   ALLOCATION_STATUS_LABEL,
   ALLOCATION_STATUS_STYLES,
 } from "@/lib/data/capacity";
@@ -15,8 +17,9 @@ import { selectLabel } from "@/lib/select-utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AllocationCell } from "./allocation-cell";
+import { cn } from "@/lib/utils";
 import { DEPARTMENTS, type AllocationStatus } from "@/lib/types";
 
 const UNDERALLOCATED_THRESHOLD = 75;
@@ -24,7 +27,6 @@ const UNDERALLOCATED_THRESHOLD = 75;
 export function ResourcePlanningView() {
   const people = useAppStore((s) => s.people);
   const locations = useAppStore((s) => s.locations);
-  const projects = useAppStore((s) => s.projects);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
 
   const [query, setQuery] = useState("");
@@ -35,6 +37,7 @@ export function ResourcePlanningView() {
   const horizon = getHorizonMonths(12);
   const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
   const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
+  const bench = getBenchPeople(people, resourceAllocations);
 
   const visiblePeople = people.filter((p) => {
     if (query && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(query.toLowerCase())) return false;
@@ -51,6 +54,11 @@ export function ResourcePlanningView() {
 
   return (
     <div className="flex flex-col gap-4">
+      <p className="text-xs text-muted-foreground">
+        Read-only summary of monthly allocation, rolled up from each project&apos;s own resource & budget plan. Edit
+        allocations from a project&apos;s planning page.
+      </p>
+
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">
         <div className="flex flex-wrap items-center gap-2">
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name or role…" className="w-[220px]" />
@@ -134,11 +142,22 @@ export function ResourcePlanningView() {
                       </span>
                     </Link>
                   </td>
-                  {horizon.map((month) => (
-                    <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
-                      <AllocationCell person={person} month={month} allocations={resourceAllocations} projects={projects} />
-                    </td>
-                  ))}
+                  {horizon.map((month) => {
+                    const total = getAllocationForPersonMonth(resourceAllocations, person.id, month);
+                    const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
+                    return (
+                      <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
+                        <div
+                          className={cn(
+                            "flex h-8 w-full items-center justify-center rounded-md text-xs font-semibold tabular-nums",
+                            total > 0 ? styles.bar : "bg-transparent text-border"
+                          )}
+                        >
+                          {total > 0 ? `${total}%` : "–"}
+                        </div>
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
@@ -148,6 +167,37 @@ export function ResourcePlanningView() {
           )}
         </div>
       </div>
+
+      <Card className="p-5 shadow-elevation-1">
+        <h2 className="flex items-center gap-1.5 font-heading text-sm font-semibold">
+          <UserX className="size-4" /> Bench — not allocated this month ({bench.length})
+        </h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">People with zero allocation across all projects this month.</p>
+        {bench.length === 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">Everyone is allocated to a project this month.</p>
+        ) : (
+          <div className="mt-3 grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+            {bench.map(({ person }) => (
+              <Link
+                key={person.id}
+                href={`/people/${person.id}`}
+                className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-secondary/50"
+              >
+                <Avatar className="size-7">
+                  <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
+                  <AvatarFallback className="text-[10px]">{initials(person)}</AvatarFallback>
+                </Avatar>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium">{fullName(person)}</span>
+                  <span className="block truncate text-[11px] text-muted-foreground">
+                    {person.jobTitle} · {person.department}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </Card>
     </div>
   );
 }

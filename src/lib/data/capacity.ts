@@ -23,6 +23,35 @@ export function getHorizonMonths(count = 12, start: Date = new Date()): string[]
   return Array.from({ length: count }, (_, i) => monthKey(addMonths(startMonth, i)));
 }
 
+/**
+ * Months to chart for a project: starts at the later of the project's own
+ * start month or `lookbackMonths` before now (so a long-running project's
+ * chart doesn't open on ancient history), runs to the project's end month
+ * (or `lookbackMonths` + `maxMonths` out, if still ongoing), capped at
+ * `maxMonths` total columns.
+ */
+export function getProjectChartMonths(
+  startDate: string,
+  endDate: string | null,
+  opts: { maxMonths?: number; lookbackMonths?: number } = {}
+): string[] {
+  const { maxMonths = 10, lookbackMonths = 3 } = opts;
+  const today = new Date();
+  const projStart = monthToDate(startDate.slice(0, 7));
+  const windowStart = addMonths(new Date(today.getFullYear(), today.getMonth(), 1), -lookbackMonths);
+  const rangeStart = projStart > windowStart ? projStart : windowStart;
+  const projEnd = endDate ? monthToDate(endDate.slice(0, 7)) : addMonths(windowStart, lookbackMonths + maxMonths - 1);
+  const endKey = monthKey(projEnd);
+
+  const months: string[] = [];
+  let cursor = rangeStart;
+  while (monthKey(cursor) <= endKey && months.length < maxMonths) {
+    months.push(monthKey(cursor));
+    cursor = addMonths(cursor, 1);
+  }
+  return months;
+}
+
 export function getAllocationForPersonMonth(
   allocations: ResourceAllocation[],
   personId: string,

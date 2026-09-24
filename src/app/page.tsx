@@ -54,6 +54,8 @@ export default function DashboardPage() {
   const personSkills = useAppStore((s) => s.personSkills);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
   const budgetPlans = useAppStore((s) => s.budgetPlans);
+  const projectRoleRequirements = useAppStore((s) => s.projectRoleRequirements);
+  const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
   const locations = useAppStore((s) => s.locations);
   const clients = useAppStore((s) => s.clients);
 
@@ -77,7 +79,7 @@ export default function DashboardPage() {
 
   const canSeeBudget = role === "management" || role === "admin";
   const horizon = getHorizonMonths(12);
-  const budget = getBudgetOverview(projects, budgetPlans);
+  const budget = getBudgetOverview(projects, budgetPlans, projectRoleRequirements, projectRoleAssignments);
   const capacityData = horizon.map((month) => {
     const avg =
       people.reduce((sum, p) => sum + Math.min(100, getAllocationForPersonMonth(resourceAllocations, p.id, month)), 0) /

@@ -20,12 +20,14 @@ export function MiniBarChart({
   height = 96,
   valueFormatter = (v: number) => String(v),
   defaultColorClass = "bg-primary",
+  showLabels = true,
   className,
 }: {
   data: MiniBarDatum[];
   height?: number;
   valueFormatter?: (v: number) => string;
   defaultColorClass?: string;
+  showLabels?: boolean;
   className?: string;
 }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
@@ -61,13 +63,15 @@ export function MiniBarChart({
           </div>
         ))}
       </div>
-      <div className="mt-1.5 flex gap-1 text-[10px] text-muted-foreground">
-        {data.map((d, i) => (
-          <div key={d.key} className="flex-1 text-center">
-            {i % 2 === 0 ? d.label : ""}
-          </div>
-        ))}
-      </div>
+      {showLabels && (
+        <div className="mt-1.5 flex gap-1 text-[10px] text-muted-foreground">
+          {data.map((d, i) => (
+            <div key={d.key} className="flex-1 text-center">
+              {i % 2 === 0 ? d.label : ""}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

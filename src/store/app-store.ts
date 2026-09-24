@@ -18,6 +18,8 @@ import type {
   Certification,
   Interest,
   Role,
+  ProjectRoleRequirement,
+  ProjectRoleAssignment,
 } from "@/lib/types";
 import {
   INITIAL_LOCATIONS,
@@ -36,6 +38,8 @@ import {
   INITIAL_PROJECT_SKILLS,
   INITIAL_RESOURCE_ALLOCATIONS,
   INITIAL_BUDGET_PLANS,
+  INITIAL_PROJECT_ROLE_REQUIREMENTS,
+  INITIAL_PROJECT_ROLE_ASSIGNMENTS,
 } from "@/lib/data";
 
 export interface AppState {
@@ -62,6 +66,8 @@ export interface AppState {
   projectSkills: ProjectSkill[];
   resourceAllocations: ResourceAllocation[];
   budgetPlans: BudgetPlan[];
+  projectRoleRequirements: ProjectRoleRequirement[];
+  projectRoleAssignments: ProjectRoleAssignment[];
 
   // actions
   setViewAsRole: (role: AppRole) => void;
@@ -107,6 +113,21 @@ export interface AppState {
   removeInterest: (interestId: string) => void;
   addRole: (role: Omit<Role, "id">) => void;
   removeRole: (roleId: string) => void;
+
+  addRoleRequirement: (requirement: { projectId: string; roleName: string; dayRate: number }) => void;
+  removeRoleRequirement: (requirementId: string) => void;
+  updateRoleRequirementDayRate: (requirementId: string, dayRate: number) => void;
+  setRoleRequirementWeekFte: (requirementId: string, week: string, fte: number) => void;
+
+  addRoleAssignment: (assignment: {
+    projectId: string;
+    roleRequirementId: string;
+    personId: string;
+    dayRate: number;
+  }) => void;
+  removeRoleAssignment: (assignmentId: string) => void;
+  updateRoleAssignmentDayRate: (assignmentId: string, dayRate: number) => void;
+  setRoleAssignmentWeekFte: (assignmentId: string, week: string, fte: number) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -143,6 +164,8 @@ export function createAppStore() {
         projectSkills: INITIAL_PROJECT_SKILLS,
         resourceAllocations: INITIAL_RESOURCE_ALLOCATIONS,
         budgetPlans: INITIAL_BUDGET_PLANS,
+        projectRoleRequirements: INITIAL_PROJECT_ROLE_REQUIREMENTS,
+        projectRoleAssignments: INITIAL_PROJECT_ROLE_ASSIGNMENTS,
 
         setViewAsRole: (role) =>
           set((state) => {
@@ -400,6 +423,77 @@ export function createAppStore() {
           set((state) => {
             state.roles = state.roles.filter((r) => r.id !== roleId);
           }),
+
+        addRoleRequirement: ({ projectId, roleName, dayRate }) =>
+          set((state) => {
+            const id = nextId(
+              "req",
+              state.projectRoleRequirements.map((r) => r.id)
+            );
+            state.projectRoleRequirements.push({ id, projectId, roleName, dayRate, ftePerWeek: {} });
+          }),
+
+        removeRoleRequirement: (requirementId) =>
+          set((state) => {
+            state.projectRoleRequirements = state.projectRoleRequirements.filter((r) => r.id !== requirementId);
+            const droppedAssignmentIds = new Set(
+              state.projectRoleAssignments
+                .filter((a) => a.roleRequirementId === requirementId)
+                .map((a) => a.id)
+            );
+            state.projectRoleAssignments = state.projectRoleAssignments.filter(
+              (a) => !droppedAssignmentIds.has(a.id)
+            );
+          }),
+
+        updateRoleRequirementDayRate: (requirementId, dayRate) =>
+          set((state) => {
+            const req = state.projectRoleRequirements.find((r) => r.id === requirementId);
+            if (req) req.dayRate = dayRate;
+          }),
+
+        setRoleRequirementWeekFte: (requirementId, week, fte) =>
+          set((state) => {
+            const req = state.projectRoleRequirements.find((r) => r.id === requirementId);
+            if (!req) return;
+            if (fte > 0) req.ftePerWeek[week] = fte;
+            else delete req.ftePerWeek[week];
+          }),
+
+        addRoleAssignment: ({ projectId, roleRequirementId, personId, dayRate }) =>
+          set((state) => {
+            const id = nextId(
+              "asg",
+              state.projectRoleAssignments.map((a) => a.id)
+            );
+            state.projectRoleAssignments.push({
+              id,
+              projectId,
+              roleRequirementId,
+              personId,
+              dayRate,
+              ftePerWeek: {},
+            });
+          }),
+
+        removeRoleAssignment: (assignmentId) =>
+          set((state) => {
+            state.projectRoleAssignments = state.projectRoleAssignments.filter((a) => a.id !== assignmentId);
+          }),
+
+        updateRoleAssignmentDayRate: (assignmentId, dayRate) =>
+          set((state) => {
+            const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
+            if (assignment) assignment.dayRate = dayRate;
+          }),
+
+        setRoleAssignmentWeekFte: (assignmentId, week, fte) =>
+          set((state) => {
+            const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
+            if (!assignment) return;
+            if (fte > 0) assignment.ftePerWeek[week] = fte;
+            else delete assignment.ftePerWeek[week];
+          }),
       })),
       {
         name: "nexus-pm-tool-store",
@@ -422,6 +516,8 @@ export function createAppStore() {
           projectSkills: state.projectSkills,
           resourceAllocations: state.resourceAllocations,
           budgetPlans: state.budgetPlans,
+          projectRoleRequirements: state.projectRoleRequirements,
+          projectRoleAssignments: state.projectRoleAssignments,
         }),
       }
     )

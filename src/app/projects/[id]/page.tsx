@@ -2,24 +2,31 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet } from "lucide-react";
+import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet, CalendarClock } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import {
   getProjectMemberDetails,
   getProjectSkillDetails,
   getSimilarProjects,
-  getProjectMemberAllocationAverage,
   getClientByName,
   fullName,
   initials,
 } from "@/lib/data/queries";
 import { formatDate, formatCompactCurrency } from "@/lib/format";
-import { getAllocationStatus, ALLOCATION_STATUS_STYLES } from "@/lib/data/capacity";
+import {
+  getAllocationStatus,
+  ALLOCATION_STATUS_STYLES,
+  getAllocationForPersonMonth,
+  getProjectChartMonths,
+  formatMonthLabel,
+} from "@/lib/data/capacity";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MiniBarChart } from "@/components/charts/mini-bar-chart";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
 import type { ProjectStatus } from "@/lib/types";
@@ -61,6 +68,7 @@ export default function ProjectDetailPage() {
   const industry = industries.find((i) => i.id === project.industryId);
   const client = getClientByName(clients, project.clientName);
   const members = getProjectMemberDetails(projectMembers, people, project.id);
+  const chartMonths = getProjectChartMonths(project.startDate, project.endDate);
   const lead = people.find((p) => p.id === project.leadPersonId);
   const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
@@ -144,13 +152,39 @@ export default function ProjectDetailPage() {
           </Card>
 
           <Card className="p-6 shadow-elevation-1">
-            <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
-              <Users className="size-4" /> Team & resource allocation
-            </h2>
-            <div className="mt-4 flex flex-col divide-y divide-border/70">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
+                <Users className="size-4" /> Team & resource allocation
+              </h2>
+              {canSeeBudget && (
+                <Link
+                  href={`/projects/${project.id}/planning`}
+                  className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+                >
+                  <CalendarClock className="size-3.5" /> Resource & Budget Planning
+                </Link>
+              )}
+            </div>
+            {chartMonths.length > 0 && (
+              <div className="mt-3 flex items-center gap-1 pl-12 text-[10px] text-muted-foreground">
+                {chartMonths.map((m, i) => (
+                  <span key={m} className="flex-1 text-center">
+                    {i % 2 === 0 ? formatMonthLabel(m, { month: "short" }) : ""}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div className="mt-1 flex flex-col divide-y divide-border/70">
               {members.map(({ person, roleOnProject }) => {
-                const avg = getProjectMemberAllocationAverage(resourceAllocations, project.id, person.id);
-                const statusStyles = ALLOCATION_STATUS_STYLES[getAllocationStatus(avg)];
+                const chartData = chartMonths.map((m) => {
+                  const value = getAllocationForPersonMonth(resourceAllocations, person.id, m);
+                  return {
+                    key: m,
+                    label: formatMonthLabel(m, { month: "short" }),
+                    value,
+                    colorClass: ALLOCATION_STATUS_STYLES[getAllocationStatus(value)].bar,
+                  };
+                });
                 return (
                   <Link
                     key={person.id}
@@ -161,14 +195,17 @@ export default function ProjectDetailPage() {
                       <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
                       <AvatarFallback>{initials(person)}</AvatarFallback>
                     </Avatar>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 w-32 shrink-0">
                       <p className="truncate text-sm font-medium">{fullName(person)}</p>
                       <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
                     </div>
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span className={cn("size-1.5 rounded-full", statusStyles.dot)} />
-                      ~{avg}% allocated
-                    </span>
+                    <MiniBarChart
+                      data={chartData}
+                      height={26}
+                      showLabels={false}
+                      valueFormatter={(v) => `${v}% allocated`}
+                      className="min-w-0 flex-1"
+                    />
                   </Link>
                 );
               })}

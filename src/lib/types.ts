@@ -164,6 +164,32 @@ export interface BudgetPlan {
   monthlyPlannedCost: BudgetMonth[];
 }
 
+/** A planned role on a project's staffing plan — the "demand" side of
+ * project-level resource & budget planning. FTE is tracked per week (keyed
+ * by that week's Monday, "YYYY-MM-DD") since staffing plans are typically
+ * drawn up at finer grain than the app's month-based allocation grid. */
+export interface ProjectRoleRequirement {
+  id: string;
+  projectId: string;
+  roleName: string;
+  dayRate: number;
+  ftePerWeek: Record<string, number>;
+}
+
+/** A real person filling (part of) a required role — the "actual staffing"
+ * side. Carries its own day rate (may differ from the role's planned rate,
+ * which is what makes a role's blended rate meaningful) and its own
+ * per-week FTE, independent of the person's month-based ResourceAllocation
+ * rows elsewhere in the app. */
+export interface ProjectRoleAssignment {
+  id: string;
+  projectId: string;
+  roleRequirementId: string;
+  personId: string;
+  dayRate: number;
+  ftePerWeek: Record<string, number>;
+}
+
 export type AllocationStatus =
   | "underallocated"
   | "partial"
@@ -187,4 +213,6 @@ export interface Dataset {
   projectSkills: ProjectSkill[];
   resourceAllocations: ResourceAllocation[];
   budgetPlans: BudgetPlan[];
+  projectRoleRequirements: ProjectRoleRequirement[];
+  projectRoleAssignments: ProjectRoleAssignment[];
 }

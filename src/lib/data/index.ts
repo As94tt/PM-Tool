@@ -15,6 +15,8 @@ import type {
   ResourceAllocation,
   BudgetPlan,
   Client,
+  ProjectRoleRequirement,
+  ProjectRoleAssignment,
 } from "@/lib/types";
 
 import locationsJson from "./generated/locations.json";
@@ -33,6 +35,8 @@ import projectMembersJson from "./generated/project-members.json";
 import projectSkillsJson from "./generated/project-skills.json";
 import resourceAllocationsJson from "./generated/resource-allocations.json";
 import budgetPlansJson from "./generated/budget-plans.json";
+import projectRoleRequirementsJson from "./generated/project-role-requirements.json";
+import projectRoleAssignmentsJson from "./generated/project-role-assignments.json";
 
 export const INITIAL_LOCATIONS = locationsJson as Location[];
 export const INITIAL_INDUSTRIES = industriesJson as Industry[];
@@ -50,6 +54,11 @@ export const INITIAL_PROJECT_MEMBERS = projectMembersJson as ProjectMember[];
 export const INITIAL_PROJECT_SKILLS = projectSkillsJson as ProjectSkill[];
 export const INITIAL_RESOURCE_ALLOCATIONS = resourceAllocationsJson as ResourceAllocation[];
 export const INITIAL_BUDGET_PLANS = budgetPlansJson as BudgetPlan[];
+// Each generated object's ftePerWeek has different literal week keys, so TS
+// infers a union where keys missing from one object are optional — cast
+// through unknown since the runtime shape (Record<string, number>) is fine.
+export const INITIAL_PROJECT_ROLE_REQUIREMENTS = projectRoleRequirementsJson as unknown as ProjectRoleRequirement[];
+export const INITIAL_PROJECT_ROLE_ASSIGNMENTS = projectRoleAssignmentsJson as unknown as ProjectRoleAssignment[];
 
 export function indexById<T extends { id: string }>(items: T[]): Record<string, T> {
   return Object.fromEntries(items.map((i) => [i.id, i]));

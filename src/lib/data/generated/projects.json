@@ -144,8 +144,8 @@
     "industryId": "ind-energy",
     "shortDescription": "Built a real-time analytics platform for smart-grid load balancing and outage prediction.",
     "projectType": "Data Platform Build",
-    "startDate": "2026-06-01",
-    "endDate": "2027-07-01",
+    "startDate": "2026-01-01",
+    "endDate": "2026-08-01",
     "status": "active",
     "leadPersonId": "person-003",
     "outcomes": [
@@ -154,8 +154,8 @@
       "Rolled out to 1.4M smart meters"
     ],
     "currency": "EUR",
-    "totalBudget": 752084,
-    "deliveryResponsiblePersonId": "person-033"
+    "totalBudget": 230962,
+    "deliveryResponsiblePersonId": "person-013"
   },
   {
     "id": "project-09",
@@ -164,8 +164,8 @@
     "industryId": "ind-logistics",
     "shortDescription": "Advised on route and warehouse network optimization backed by a new demand-forecasting model.",
     "projectType": "Consulting Engagement",
-    "startDate": "2026-04-01",
-    "endDate": "2027-07-01",
+    "startDate": "2026-05-01",
+    "endDate": "2027-06-01",
     "status": "active",
     "leadPersonId": "person-028",
     "outcomes": [
@@ -174,8 +174,8 @@
       "Delivered a reusable forecasting model for planning teams"
     ],
     "currency": "EUR",
-    "totalBudget": 538382,
-    "deliveryResponsiblePersonId": "person-026"
+    "totalBudget": 674389,
+    "deliveryResponsiblePersonId": "person-033"
   },
   {
     "id": "project-10",
@@ -184,7 +184,7 @@
     "industryId": "ind-public",
     "shortDescription": "Delivered a citizen-facing services portal consolidating 40+ municipal application forms.",
     "projectType": "Digital Transformation",
-    "startDate": "2026-01-01",
+    "startDate": "2026-05-01",
     "endDate": "2027-04-01",
     "status": "active",
     "leadPersonId": "person-002",
@@ -194,8 +194,7 @@
       "Reached 65% citizen self-service adoption in year one"
     ],
     "currency": "EUR",
-    "totalBudget": 915271,
-    "deliveryResponsiblePersonId": "person-034"
+    "totalBudget": 681379
   },
   {
     "id": "project-11",
@@ -204,18 +203,17 @@
     "industryId": "ind-banking",
     "shortDescription": "Assessed and re-architected fraud-detection controls across card and online-banking channels.",
     "projectType": "Security Assessment",
-    "startDate": "2026-01-01",
-    "endDate": "2026-08-01",
+    "startDate": "2026-04-01",
+    "endDate": "2027-08-01",
     "status": "active",
-    "leadPersonId": "person-026",
+    "leadPersonId": "person-016",
     "outcomes": [
       "Reduced false-positive fraud alerts by 31%",
       "Closed 14 high-severity findings pre-audit",
       "Implemented continuous SIEM-based monitoring"
     ],
     "currency": "EUR",
-    "totalBudget": 192807,
-    "deliveryResponsiblePersonId": "person-036"
+    "totalBudget": 1251016
   },
   {
     "id": "project-12",
@@ -224,8 +222,8 @@
     "industryId": "ind-manufacturing",
     "shortDescription": "Rolled out an edge-to-cloud IoT backbone connecting shop-floor sensors across four production sites.",
     "projectType": "Implementation",
-    "startDate": "2026-04-01",
-    "endDate": "2026-12-01",
+    "startDate": "2026-06-01",
+    "endDate": "2027-02-01",
     "status": "active",
     "leadPersonId": "person-015",
     "outcomes": [
@@ -234,8 +232,7 @@
       "Delivered predictive-maintenance dashboards to plant managers"
     ],
     "currency": "EUR",
-    "totalBudget": 564821,
-    "deliveryResponsiblePersonId": "person-001"
+    "totalBudget": 618841
   },
   {
     "id": "project-13",
@@ -244,17 +241,17 @@
     "industryId": "ind-insurance",
     "shortDescription": "Designed and built a policyholder self-service mobile app covering claims, billing, and document upload.",
     "projectType": "Implementation",
-    "startDate": "2026-06-01",
-    "endDate": "2026-12-01",
+    "startDate": "2026-05-01",
+    "endDate": "2027-03-01",
     "status": "active",
-    "leadPersonId": "person-010",
+    "leadPersonId": "person-020",
     "outcomes": [
       "Reached 120K active app users within six months",
       "Cut inbound call volume by 24%",
       "Achieved a 4.6/5 app store rating"
     ],
     "currency": "EUR",
-    "totalBudget": 431121
+    "totalBudget": 541806
   },
   {
     "id": "project-14",
@@ -263,18 +260,18 @@
     "industryId": "ind-automotive",
     "shortDescription": "Redesigned the dealer-facing configurator and ordering experience for a premium vehicle brand.",
     "projectType": "Consulting Engagement",
-    "startDate": "2026-08-01",
-    "endDate": "2027-10-01",
+    "startDate": "2026-07-01",
+    "endDate": "2027-03-01",
     "status": "active",
-    "leadPersonId": "person-010",
+    "leadPersonId": "person-020",
     "outcomes": [
       "Cut order configuration time by 45%",
       "Improved dealer NPS by 18 points",
       "Rolled out to 210 dealerships across Europe"
     ],
     "currency": "EUR",
-    "totalBudget": 543514,
-    "deliveryResponsiblePersonId": "person-023"
+    "totalBudget": 543615,
+    "deliveryResponsiblePersonId": "person-040"
   },
   {
     "id": "project-15",
@@ -284,7 +281,7 @@
     "shortDescription": "Piloted an automated storage and retrieval system integration across two distribution centers.",
     "projectType": "Implementation",
     "startDate": "2026-10-01",
-    "endDate": "2027-04-01",
+    "endDate": "2027-05-01",
     "status": "planned",
     "leadPersonId": "person-015",
     "outcomes": [
@@ -293,7 +290,8 @@
       "Integrated WMS with robotics control layer"
     ],
     "currency": "EUR",
-    "totalBudget": 242981
+    "totalBudget": 454308,
+    "deliveryResponsiblePersonId": "person-001"
   },
   {
     "id": "project-16",
@@ -302,8 +300,8 @@
     "industryId": "ind-banking",
     "shortDescription": "Deployed a private 5G campus network securing a new corporate headquarters and data operations floor.",
     "projectType": "Network Rollout",
-    "startDate": "2027-01-01",
-    "endDate": "2027-08-01",
+    "startDate": "2027-02-01",
+    "endDate": "2027-09-01",
     "status": "planned",
     "leadPersonId": "person-034",
     "outcomes": [
@@ -312,7 +310,8 @@
       "Reduced Wi-Fi related helpdesk tickets by 52%"
     ],
     "currency": "EUR",
-    "totalBudget": 602934
+    "totalBudget": 281112,
+    "deliveryResponsiblePersonId": "person-026"
   },
   {
     "id": "project-17",
@@ -321,18 +320,17 @@
     "industryId": "ind-manufacturing",
     "shortDescription": "Building an ESG data platform consolidating emissions and energy data ahead of new reporting mandates.",
     "projectType": "Data Platform Build",
-    "startDate": "2026-11-01",
-    "endDate": "2027-10-01",
+    "startDate": "2027-01-01",
+    "endDate": "2027-12-01",
     "status": "planned",
-    "leadPersonId": "person-003",
+    "leadPersonId": "person-033",
     "outcomes": [
       "On track to automate 80% of CSRD data collection",
       "Unified emissions data from 9 production sites",
       "Cutover planned for next fiscal quarter"
     ],
     "currency": "EUR",
-    "totalBudget": 535174,
-    "deliveryResponsiblePersonId": "person-011"
+    "totalBudget": 677168
   },
   {
     "id": "project-18",
@@ -342,7 +340,7 @@
     "shortDescription": "Defining a five-year modernization roadmap and delivery governance model for municipal grid infrastructure.",
     "projectType": "Consulting Engagement",
     "startDate": "2026-11-01",
-    "endDate": "2027-10-01",
+    "endDate": "2027-05-01",
     "status": "planned",
     "leadPersonId": "person-037",
     "outcomes": [
@@ -351,6 +349,7 @@
       "Business case validated by independent audit"
     ],
     "currency": "EUR",
-    "totalBudget": 678506
+    "totalBudget": 229721,
+    "deliveryResponsiblePersonId": "person-027"
   }
 ]
