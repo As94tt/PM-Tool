@@ -35,45 +35,47 @@ export function getAllocationForPersonMonth(
 
 export function getAllocationStatus(percent: number): AllocationStatus {
   if (percent > 100) return "overallocated";
-  if (percent >= 90) return "full";
-  if (percent >= 50) return "healthy";
+  if (percent === 100) return "full";
+  if (percent >= 75) return "partial";
   return "underallocated";
 }
 
 export const ALLOCATION_STATUS_LABEL: Record<AllocationStatus, string> = {
-  underallocated: "Underallocated",
-  healthy: "Healthy allocation",
-  full: "Fully allocated",
-  overallocated: "Overallocated",
+  underallocated: "Underallocated (<75%)",
+  partial: "Partially allocated (75–99%)",
+  full: "Fully allocated (100%)",
+  overallocated: "Overallocated (>100%)",
 };
 
 /**
  * Tailwind class fragments keyed by status, used for bars / badges / dots.
- * Colors are the validated status-* tokens (dataviz palette validator: all 4
+ * Colors are the validated alloc-* tokens (dataviz palette validator: all 4
  * pass lightness band, chroma floor, and CVD separation in light + dark).
+ * Kept separate from --status-under/--status-healthy, which are a different,
+ * general-purpose palette reused for project-status badges & department dots.
  */
 export const ALLOCATION_STATUS_STYLES: Record<
   AllocationStatus,
   { bar: string; badge: string; dot: string }
 > = {
   underallocated: {
-    bar: "bg-status-under",
-    badge: "bg-status-under/15 text-status-under",
-    dot: "bg-status-under",
+    bar: "bg-alloc-under",
+    badge: "bg-alloc-under/15 text-alloc-under",
+    dot: "bg-alloc-under",
   },
-  healthy: {
-    bar: "bg-status-healthy",
-    badge: "bg-status-healthy/15 text-status-healthy",
-    dot: "bg-status-healthy",
+  partial: {
+    bar: "bg-alloc-partial",
+    badge: "bg-alloc-partial/15 text-alloc-partial",
+    dot: "bg-alloc-partial",
   },
   full: {
-    bar: "bg-status-full",
-    badge: "bg-status-full/15 text-status-full",
-    dot: "bg-status-full",
+    bar: "bg-alloc-full",
+    badge: "bg-alloc-full/15 text-alloc-full",
+    dot: "bg-alloc-full",
   },
   overallocated: {
-    bar: "bg-status-over",
-    badge: "bg-status-over/15 text-status-over",
-    dot: "bg-status-over",
+    bar: "bg-alloc-over",
+    badge: "bg-alloc-over/15 text-alloc-over",
+    dot: "bg-alloc-over",
   },
 };

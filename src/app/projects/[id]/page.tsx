@@ -9,12 +9,14 @@ import {
   getProjectSkillDetails,
   getSimilarProjects,
   getProjectMemberAllocationAverage,
+  getClientByName,
   fullName,
   initials,
 } from "@/lib/data/queries";
 import { formatDate, formatCompactCurrency } from "@/lib/format";
 import { getAllocationStatus, ALLOCATION_STATUS_STYLES } from "@/lib/data/capacity";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
+import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -57,6 +59,7 @@ export default function ProjectDetailPage() {
   }
 
   const industry = industries.find((i) => i.id === project.industryId);
+  const client = getClientByName(clients, project.clientName);
   const members = getProjectMemberDetails(projectMembers, people, project.id);
   const lead = people.find((p) => p.id === project.leadPersonId);
   const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
@@ -72,31 +75,34 @@ export default function ProjectDetailPage() {
         <ArrowLeft className="size-3.5" /> Back to Projects
       </Link>
 
-      <div className="flex flex-col items-start gap-5 rounded-2xl border border-border bg-card p-6 shadow-elevation-1 sm:flex-row sm:items-center">
-        <ProjectAvatar project={project} clients={clients} size="lg" />
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="font-heading text-2xl font-semibold tracking-tight">{project.name}</h1>
-            <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
-              {project.status}
-            </Badge>
+      <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+        <ProjectAvatar project={project} clients={clients} size="xl" />
+        <div className="flex min-w-0 flex-1 flex-col items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-elevation-1 sm:flex-row sm:items-center">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <ClientLogo name={project.clientName} logoUrl={client?.logoUrl} size="sm" />
+              <h1 className="font-heading text-2xl font-semibold tracking-tight">{project.name}</h1>
+              <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
+                {project.status}
+              </Badge>
+            </div>
+            <p className="mt-1 text-muted-foreground">{project.clientName}</p>
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <Building2 className="size-3.5" /> {industry?.name}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarRange className="size-3.5" />
+                {formatDate(project.startDate)}
+                {project.endDate ? ` – ${formatDate(project.endDate)}` : " – ongoing"}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Sparkles className="size-3.5" /> {project.projectType}
+              </span>
+            </div>
           </div>
-          <p className="mt-1 text-muted-foreground">{project.clientName}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5">
-              <Building2 className="size-3.5" /> {industry?.name}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <CalendarRange className="size-3.5" />
-              {formatDate(project.startDate)}
-              {project.endDate ? ` – ${formatDate(project.endDate)}` : " – ongoing"}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Sparkles className="size-3.5" /> {project.projectType}
-            </span>
-          </div>
+          {canEdit && <ProjectFormSheet project={project} />}
         </div>
-        {canEdit && <ProjectFormSheet project={project} />}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

@@ -7,6 +7,13 @@ function clientInitials(name: string): string {
   return (words[0][0] + words[1][0]).toUpperCase();
 }
 
+const SIZE_CLASS = {
+  sm: "size-8 text-xs",
+  md: "size-10 text-sm",
+  lg: "size-14 text-lg",
+  xl: "size-28 text-3xl",
+};
+
 export function ClientLogo({
   name,
   logoUrl,
@@ -15,10 +22,10 @@ export function ClientLogo({
 }: {
   name: string;
   logoUrl?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   className?: string;
 }) {
-  const sizeClass = size === "sm" ? "size-8 text-xs" : size === "lg" ? "size-14 text-lg" : "size-10 text-sm";
+  const sizeClass = SIZE_CLASS[size];
 
   if (logoUrl) {
     return (

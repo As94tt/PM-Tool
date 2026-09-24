@@ -158,7 +158,7 @@ export interface BudgetPlan {
 
 export type AllocationStatus =
   | "underallocated"
-  | "healthy"
+  | "partial"
   | "full"
   | "overallocated";
 

@@ -70,11 +70,15 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
 
-  /* validated allocation-status ramp (dataviz-checked, all 4 pass CVD + lightness) */
+  /* general status colors reused across project-status badges & department dots */
   --color-status-under: var(--status-under);
   --color-status-healthy: var(--status-healthy);
-  --color-status-full: var(--status-full);
-  --color-status-over: var(--status-over);
+
+  /* validated allocation-status ramp (dataviz-checked, all 4 pass CVD + lightness) */
+  --color-alloc-under: var(--alloc-under);
+  --color-alloc-partial: var(--alloc-partial);
+  --color-alloc-full: var(--alloc-full);
+  --color-alloc-over: var(--alloc-over);
 
   --radius-sm: calc(var(--radius) * 0.55);
   --radius-md: calc(var(--radius) * 0.8);
@@ -125,8 +129,14 @@
 
   --status-under: #4f5a9e;
   --status-healthy: #1f9d6f;
-  --status-full: #d99515;
-  --status-over: #d6455a;
+
+  /* allocation-specific ramp (Resource Planning & other %-based views) — kept
+     separate from --status-under/--status-healthy above, which double as
+     general project-status/department colors elsewhere and must stay put */
+  --alloc-under: #d6455a;
+  --alloc-partial: #d99515;
+  --alloc-full: #1f9d6f;
+  --alloc-over: #2a78d6;
 
   --radius: 0.75rem;
 
@@ -202,8 +212,11 @@
 
   --status-under: #7c87d6;
   --status-healthy: #2baa7e;
-  --status-full: #bb841e;
-  --status-over: #e3627a;
+
+  --alloc-under: #e3627a;
+  --alloc-partial: #bb841e;
+  --alloc-full: #2baa7e;
+  --alloc-over: #3987e5;
 
   --sidebar: #16171d;
   --sidebar-foreground: #e7e8ee;
