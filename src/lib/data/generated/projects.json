@@ -1,0 +1,344 @@
+[
+  {
+    "id": "project-01",
+    "name": "Orion Cloud Migration",
+    "clientName": "Meridian Automotive Group",
+    "industryId": "ind-automotive",
+    "shortDescription": "Migrated a fleet-telemetry platform from on-prem data centers to a multi-region AWS landing zone.",
+    "projectType": "Cloud Migration",
+    "startDate": "2025-08-01",
+    "endDate": "2026-06-01",
+    "status": "completed",
+    "leadPersonId": "person-031",
+    "outcomes": [
+      "Cut infrastructure cost by 34% within two quarters",
+      "Reduced deployment lead time from days to hours",
+      "Zero-downtime cutover for 2.1M connected vehicles"
+    ],
+    "currency": "EUR",
+    "totalBudget": 163468
+  },
+  {
+    "id": "project-02",
+    "name": "Helios 5G Core Rollout",
+    "clientName": "Nordkom Telecommunications",
+    "industryId": "ind-telco",
+    "shortDescription": "Designed and deployed a cloud-native 5G standalone core across three metropolitan regions.",
+    "projectType": "Network Rollout",
+    "startDate": "2025-10-01",
+    "endDate": "2026-04-01",
+    "status": "completed",
+    "leadPersonId": "person-034",
+    "outcomes": [
+      "Launched commercial 5G SA service six weeks ahead of schedule",
+      "Achieved 99.995% core network availability",
+      "Enabled network slicing for two enterprise private-network pilots"
+    ],
+    "currency": "EUR",
+    "totalBudget": 62261
+  },
+  {
+    "id": "project-03",
+    "name": "Atlas Core Banking Modernization",
+    "clientName": "Silverlake Banking Group",
+    "industryId": "ind-banking",
+    "shortDescription": "Re-platformed a legacy core banking module to a microservices architecture with event-driven integration.",
+    "projectType": "Platform Modernization",
+    "startDate": "2025-10-01",
+    "endDate": "2026-05-01",
+    "status": "completed",
+    "leadPersonId": "person-002",
+    "outcomes": [
+      "Reduced batch settlement time from 6 hours to 40 minutes",
+      "Passed regulatory audit with zero critical findings",
+      "Enabled real-time payments for retail customers"
+    ],
+    "currency": "EUR",
+    "totalBudget": 180147
+  },
+  {
+    "id": "project-04",
+    "name": "Continental Claims AI Assistant",
+    "clientName": "Continental Assurance",
+    "industryId": "ind-insurance",
+    "shortDescription": "Built a machine-learning claims triage assistant integrated into the existing claims workbench.",
+    "projectType": "Data Platform Build",
+    "startDate": "2026-01-01",
+    "endDate": "2026-08-01",
+    "status": "completed",
+    "leadPersonId": "person-003",
+    "outcomes": [
+      "Cut average triage time by 58%",
+      "Improved fraud-flag precision to 91%",
+      "Deployed to 340 claims handlers company-wide"
+    ],
+    "currency": "EUR",
+    "totalBudget": 325864
+  },
+  {
+    "id": "project-05",
+    "name": "Harbor Retail Commerce Platform",
+    "clientName": "Harbor & Finch Retail",
+    "industryId": "ind-retail",
+    "shortDescription": "Delivered a headless commerce platform unifying in-store and online inventory for a European retailer.",
+    "projectType": "Digital Transformation",
+    "startDate": "2025-08-01",
+    "endDate": "2026-04-01",
+    "status": "completed",
+    "leadPersonId": "person-002",
+    "outcomes": [
+      "Grew online conversion rate by 22%",
+      "Unified inventory across 180 stores",
+      "Cut checkout page load time by 65%"
+    ],
+    "currency": "EUR",
+    "totalBudget": 70427
+  },
+  {
+    "id": "project-06",
+    "name": "Meridian Connected Diagnostics",
+    "clientName": "Meridian Automotive Group",
+    "industryId": "ind-automotive",
+    "shortDescription": "Implemented a predictive-maintenance data pipeline consuming vehicle sensor telemetry in near real time.",
+    "projectType": "Implementation",
+    "startDate": "2025-11-01",
+    "endDate": "2026-04-01",
+    "status": "completed",
+    "leadPersonId": "person-001",
+    "outcomes": [
+      "Reduced unplanned downtime for fleet customers by 19%",
+      "Processed 40TB of telemetry data per day",
+      "Delivered self-service diagnostics dashboard"
+    ],
+    "currency": "EUR",
+    "totalBudget": 115507
+  },
+  {
+    "id": "project-07",
+    "name": "Union Health Records Interop",
+    "clientName": "Union Health Network",
+    "industryId": "ind-healthcare",
+    "shortDescription": "Integrated regional patient-record systems onto a standards-based interoperability layer.",
+    "projectType": "Systems Integration",
+    "startDate": "2026-03-01",
+    "endDate": "2027-05-01",
+    "status": "active",
+    "leadPersonId": "person-028",
+    "outcomes": [
+      "Connected 12 hospital systems on a shared FHIR API",
+      "Cut duplicate patient-record incidents by 76%",
+      "Delivered GDPR-compliant consent management"
+    ],
+    "currency": "EUR",
+    "totalBudget": 1158401
+  },
+  {
+    "id": "project-08",
+    "name": "Skyline Energy Grid Analytics",
+    "clientName": "Skyline Energy Networks",
+    "industryId": "ind-energy",
+    "shortDescription": "Built a real-time analytics platform for smart-grid load balancing and outage prediction.",
+    "projectType": "Data Platform Build",
+    "startDate": "2026-07-01",
+    "endDate": "2027-04-01",
+    "status": "active",
+    "leadPersonId": "person-003",
+    "outcomes": [
+      "Reduced unplanned outage duration by 27%",
+      "Forecasted peak load within 3% accuracy",
+      "Rolled out to 1.4M smart meters"
+    ],
+    "currency": "EUR",
+    "totalBudget": 447934
+  },
+  {
+    "id": "project-09",
+    "name": "Vantage Logistics Network Optimization",
+    "clientName": "Vantage Freight & Logistics",
+    "industryId": "ind-logistics",
+    "shortDescription": "Advised on route and warehouse network optimization backed by a new demand-forecasting model.",
+    "projectType": "Consulting Engagement",
+    "startDate": "2026-06-01",
+    "endDate": "2026-12-01",
+    "status": "active",
+    "leadPersonId": "person-028",
+    "outcomes": [
+      "Cut average delivery distance by 12%",
+      "Reduced warehouse overflow incidents by 40%",
+      "Delivered a reusable forecasting model for planning teams"
+    ],
+    "currency": "EUR",
+    "totalBudget": 357656
+  },
+  {
+    "id": "project-10",
+    "name": "Solon Public Services Portal",
+    "clientName": "Solon Metropolitan Council",
+    "industryId": "ind-public",
+    "shortDescription": "Delivered a citizen-facing services portal consolidating 40+ municipal application forms.",
+    "projectType": "Digital Transformation",
+    "startDate": "2026-06-01",
+    "endDate": "2027-08-01",
+    "status": "active",
+    "leadPersonId": "person-002",
+    "outcomes": [
+      "Digitized 40+ paper-based citizen services",
+      "Cut average processing time from 12 days to 3",
+      "Reached 65% citizen self-service adoption in year one"
+    ],
+    "currency": "EUR",
+    "totalBudget": 591229
+  },
+  {
+    "id": "project-11",
+    "name": "Northgate Fraud Detection Uplift",
+    "clientName": "Northgate Financial Services",
+    "industryId": "ind-banking",
+    "shortDescription": "Assessed and re-architected fraud-detection controls across card and online-banking channels.",
+    "projectType": "Security Assessment",
+    "startDate": "2026-01-01",
+    "endDate": "2027-04-01",
+    "status": "active",
+    "leadPersonId": "person-026",
+    "outcomes": [
+      "Reduced false-positive fraud alerts by 31%",
+      "Closed 14 high-severity findings pre-audit",
+      "Implemented continuous SIEM-based monitoring"
+    ],
+    "currency": "EUR",
+    "totalBudget": 654169
+  },
+  {
+    "id": "project-12",
+    "name": "Aurora Manufacturing IoT Backbone",
+    "clientName": "Aurora Precision Manufacturing",
+    "industryId": "ind-manufacturing",
+    "shortDescription": "Rolled out an edge-to-cloud IoT backbone connecting shop-floor sensors across four production sites.",
+    "projectType": "Implementation",
+    "startDate": "2026-06-01",
+    "endDate": "2027-02-01",
+    "status": "active",
+    "leadPersonId": "person-015",
+    "outcomes": [
+      "Connected 6,200 shop-floor sensors",
+      "Reduced unplanned line stoppages by 21%",
+      "Delivered predictive-maintenance dashboards to plant managers"
+    ],
+    "currency": "EUR",
+    "totalBudget": 477137
+  },
+  {
+    "id": "project-13",
+    "name": "Beacon Insurance Self-Service App",
+    "clientName": "Beacon Mutual Insurance",
+    "industryId": "ind-insurance",
+    "shortDescription": "Designed and built a policyholder self-service mobile app covering claims, billing, and document upload.",
+    "projectType": "Implementation",
+    "startDate": "2026-06-01",
+    "endDate": "2027-06-01",
+    "status": "active",
+    "leadPersonId": "person-010",
+    "outcomes": [
+      "Reached 120K active app users within six months",
+      "Cut inbound call volume by 24%",
+      "Achieved a 4.6/5 app store rating"
+    ],
+    "currency": "EUR",
+    "totalBudget": 560189
+  },
+  {
+    "id": "project-14",
+    "name": "Meridian Dealer Experience Redesign",
+    "clientName": "Meridian Automotive Group",
+    "industryId": "ind-automotive",
+    "shortDescription": "Redesigned the dealer-facing configurator and ordering experience for a premium vehicle brand.",
+    "projectType": "Consulting Engagement",
+    "startDate": "2026-05-01",
+    "endDate": "2027-06-01",
+    "status": "active",
+    "leadPersonId": "person-010",
+    "outcomes": [
+      "Cut order configuration time by 45%",
+      "Improved dealer NPS by 18 points",
+      "Rolled out to 210 dealerships across Europe"
+    ],
+    "currency": "EUR",
+    "totalBudget": 689014
+  },
+  {
+    "id": "project-15",
+    "name": "Vantage Warehouse Robotics Pilot",
+    "clientName": "Vantage Freight & Logistics",
+    "industryId": "ind-logistics",
+    "shortDescription": "Piloted an automated storage and retrieval system integration across two distribution centers.",
+    "projectType": "Implementation",
+    "startDate": "2027-01-01",
+    "endDate": "2027-12-01",
+    "status": "planned",
+    "leadPersonId": "person-015",
+    "outcomes": [
+      "Increased pick rate by 38% in pilot sites",
+      "Validated ROI case for national rollout",
+      "Integrated WMS with robotics control layer"
+    ],
+    "currency": "EUR",
+    "totalBudget": 464303
+  },
+  {
+    "id": "project-16",
+    "name": "Northgate Private 5G Campus Network",
+    "clientName": "Northgate Financial Services",
+    "industryId": "ind-banking",
+    "shortDescription": "Deployed a private 5G campus network securing a new corporate headquarters and data operations floor.",
+    "projectType": "Network Rollout",
+    "startDate": "2026-10-01",
+    "endDate": "2027-08-01",
+    "status": "planned",
+    "leadPersonId": "person-034",
+    "outcomes": [
+      "Delivered sub-10ms latency for trading-floor use cases",
+      "Passed independent security penetration test",
+      "Reduced Wi-Fi related helpdesk tickets by 52%"
+    ],
+    "currency": "EUR",
+    "totalBudget": 734821
+  },
+  {
+    "id": "project-17",
+    "name": "Aurora Sustainability Reporting Platform",
+    "clientName": "Aurora Precision Manufacturing",
+    "industryId": "ind-manufacturing",
+    "shortDescription": "Building an ESG data platform consolidating emissions and energy data ahead of new reporting mandates.",
+    "projectType": "Data Platform Build",
+    "startDate": "2026-11-01",
+    "endDate": "2027-07-01",
+    "status": "planned",
+    "leadPersonId": "person-003",
+    "outcomes": [
+      "On track to automate 80% of CSRD data collection",
+      "Unified emissions data from 9 production sites",
+      "Cutover planned for next fiscal quarter"
+    ],
+    "currency": "EUR",
+    "totalBudget": 868788
+  },
+  {
+    "id": "project-18",
+    "name": "Solon Grid Modernization Roadmap",
+    "clientName": "Solon Metropolitan Council",
+    "industryId": "ind-public",
+    "shortDescription": "Defining a five-year modernization roadmap and delivery governance model for municipal grid infrastructure.",
+    "projectType": "Consulting Engagement",
+    "startDate": "2027-01-01",
+    "endDate": "2028-01-01",
+    "status": "planned",
+    "leadPersonId": "person-037",
+    "outcomes": [
+      "Roadmap presented to city council for FY approval",
+      "Established a joint PMO with three delivery partners",
+      "Business case validated by independent audit"
+    ],
+    "currency": "EUR",
+    "totalBudget": 657591
+  }
+]

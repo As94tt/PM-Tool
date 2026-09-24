@@ -1,0 +1,98 @@
+[
+  {
+    "id": "int-mountain-biking",
+    "name": "Mountain biking"
+  },
+  {
+    "id": "int-photography",
+    "name": "Photography"
+  },
+  {
+    "id": "int-cooking",
+    "name": "Cooking"
+  },
+  {
+    "id": "int-running-marathons",
+    "name": "Running & marathons"
+  },
+  {
+    "id": "int-chess",
+    "name": "Chess"
+  },
+  {
+    "id": "int-playing-guitar",
+    "name": "Playing guitar"
+  },
+  {
+    "id": "int-padel",
+    "name": "Padel"
+  },
+  {
+    "id": "int-yoga",
+    "name": "Yoga"
+  },
+  {
+    "id": "int-sci-fi-novels",
+    "name": "Sci-fi novels"
+  },
+  {
+    "id": "int-board-games",
+    "name": "Board games"
+  },
+  {
+    "id": "int-travel",
+    "name": "Travel"
+  },
+  {
+    "id": "int-home-brewing",
+    "name": "Home-brewing"
+  },
+  {
+    "id": "int-ceramics",
+    "name": "Ceramics"
+  },
+  {
+    "id": "int-snowboarding",
+    "name": "Snowboarding"
+  },
+  {
+    "id": "int-volunteering",
+    "name": "Volunteering"
+  },
+  {
+    "id": "int-amateur-astronomy",
+    "name": "Amateur astronomy"
+  },
+  {
+    "id": "int-home-automation-diy-electronics",
+    "name": "Home automation & DIY electronics"
+  },
+  {
+    "id": "int-sailing",
+    "name": "Sailing"
+  },
+  {
+    "id": "int-rock-climbing",
+    "name": "Rock climbing"
+  },
+  {
+    "id": "int-podcasting",
+    "name": "Podcasting"
+  },
+  {
+    "id": "int-urban-gardening",
+    "name": "Urban gardening"
+  },
+  {
+    "id": "int-vinyl-records",
+    "name": "Vinyl records"
+  },
+  {
+    "id": "int-trail-running",
+    "name": "Trail running"
+  },
+  {
+    "id": "int-woodworking",
+    "name": "Woodworking"
+  }
+]

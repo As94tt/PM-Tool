@@ -1,0 +1,242 @@
+[
+  {
+    "id": "user-person-001",
+    "personId": "person-001",
+    "email": "thomas.richter@nexuscorp.example",
+    "role": "admin"
+  },
+  {
+    "id": "user-person-002",
+    "personId": "person-002",
+    "email": "felix.dubois@nexuscorp.example",
+    "role": "management"
+  },
+  {
+    "id": "user-person-003",
+    "personId": "person-003",
+    "email": "ioana.devries@nexuscorp.example",
+    "role": "management"
+  },
+  {
+    "id": "user-person-004",
+    "personId": "person-004",
+    "email": "beatriz.sharma@nexuscorp.example",
+    "role": "management"
+  },
+  {
+    "id": "user-person-005",
+    "personId": "person-005",
+    "email": "rui.santos@nexuscorp.example",
+    "role": "management"
+  },
+  {
+    "id": "user-person-006",
+    "personId": "person-006",
+    "email": "sebastian.mendes@nexuscorp.example",
+    "role": "management"
+  },
+  {
+    "id": "user-person-007",
+    "personId": "person-007",
+    "email": "franziska.becker@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-008",
+    "personId": "person-008",
+    "email": "noah.costa@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-009",
+    "personId": "person-009",
+    "email": "david.laurent@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-010",
+    "personId": "person-010",
+    "email": "moritz.radu@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-011",
+    "personId": "person-011",
+    "email": "thomas.schmidt@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-012",
+    "personId": "person-012",
+    "email": "mia.richter@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-013",
+    "personId": "person-013",
+    "email": "felix.meyer@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-014",
+    "personId": "person-014",
+    "email": "katarzyna.wojcik@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-015",
+    "personId": "person-015",
+    "email": "david.dumitru@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-016",
+    "personId": "person-016",
+    "email": "marie.novak@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-017",
+    "personId": "person-017",
+    "email": "noah.wojcik@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-018",
+    "personId": "person-018",
+    "email": "sebastian.mller@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-019",
+    "personId": "person-019",
+    "email": "anna.santos@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-020",
+    "personId": "person-020",
+    "email": "max.khan@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-021",
+    "personId": "person-021",
+    "email": "chloe.constantin@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-022",
+    "personId": "person-022",
+    "email": "chloe.dumitru@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-023",
+    "personId": "person-023",
+    "email": "jonas.berg@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-024",
+    "personId": "person-024",
+    "email": "daniel.schmidt@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-025",
+    "personId": "person-025",
+    "email": "daniel.koch@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-026",
+    "personId": "person-026",
+    "email": "youssef.patel@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-027",
+    "personId": "person-027",
+    "email": "hannah.bianchi@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-028",
+    "personId": "person-028",
+    "email": "elena.devries@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-029",
+    "personId": "person-029",
+    "email": "beatriz.werner@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-030",
+    "personId": "person-030",
+    "email": "chloe.wojcik@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-031",
+    "personId": "person-031",
+    "email": "julia.richter@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-032",
+    "personId": "person-032",
+    "email": "rui.fischer@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-033",
+    "personId": "person-033",
+    "email": "arjun.patel@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-034",
+    "personId": "person-034",
+    "email": "anna.richter@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-035",
+    "personId": "person-035",
+    "email": "david.silva@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-036",
+    "personId": "person-036",
+    "email": "sebastian.jansen@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-037",
+    "personId": "person-037",
+    "email": "arjun.laurent@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-038",
+    "personId": "person-038",
+    "email": "simon.conti@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-039",
+    "personId": "person-039",
+    "email": "jonas.rossi@nexuscorp.example",
+    "role": "user"
+  },
+  {
+    "id": "user-person-040",
+    "personId": "person-040",
+    "email": "andrei.larsen@nexuscorp.example",
+    "role": "user"
+  }
+]

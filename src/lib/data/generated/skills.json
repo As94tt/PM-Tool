@@ -1,0 +1,272 @@
+[
+  {
+    "id": "skill-aws",
+    "category": "Cloud",
+    "name": "AWS"
+  },
+  {
+    "id": "skill-azure",
+    "category": "Cloud",
+    "name": "Azure"
+  },
+  {
+    "id": "skill-google-cloud-platform",
+    "category": "Cloud",
+    "name": "Google Cloud Platform"
+  },
+  {
+    "id": "skill-kubernetes",
+    "category": "Cloud",
+    "name": "Kubernetes"
+  },
+  {
+    "id": "skill-terraform",
+    "category": "Cloud",
+    "name": "Terraform"
+  },
+  {
+    "id": "skill-docker",
+    "category": "Cloud",
+    "name": "Docker"
+  },
+  {
+    "id": "skill-cloud-security",
+    "category": "Cloud",
+    "name": "Cloud Security"
+  },
+  {
+    "id": "skill-java",
+    "category": "Software Development",
+    "name": "Java"
+  },
+  {
+    "id": "skill-python",
+    "category": "Software Development",
+    "name": "Python"
+  },
+  {
+    "id": "skill-typescript",
+    "category": "Software Development",
+    "name": "TypeScript"
+  },
+  {
+    "id": "skill-react",
+    "category": "Software Development",
+    "name": "React"
+  },
+  {
+    "id": "skill-node-js",
+    "category": "Software Development",
+    "name": "Node.js"
+  },
+  {
+    "id": "skill-net-c",
+    "category": "Software Development",
+    "name": ".NET / C#"
+  },
+  {
+    "id": "skill-go",
+    "category": "Software Development",
+    "name": "Go"
+  },
+  {
+    "id": "skill-rest-api-design",
+    "category": "Software Development",
+    "name": "REST API Design"
+  },
+  {
+    "id": "skill-microservices",
+    "category": "Software Development",
+    "name": "Microservices"
+  },
+  {
+    "id": "skill-machine-learning",
+    "category": "Data & AI",
+    "name": "Machine Learning"
+  },
+  {
+    "id": "skill-data-engineering",
+    "category": "Data & AI",
+    "name": "Data Engineering"
+  },
+  {
+    "id": "skill-data-science",
+    "category": "Data & AI",
+    "name": "Data Science"
+  },
+  {
+    "id": "skill-power-bi",
+    "category": "Data & AI",
+    "name": "Power BI"
+  },
+  {
+    "id": "skill-sql",
+    "category": "Data & AI",
+    "name": "SQL"
+  },
+  {
+    "id": "skill-apache-spark",
+    "category": "Data & AI",
+    "name": "Apache Spark"
+  },
+  {
+    "id": "skill-generative-ai-llms",
+    "category": "Data & AI",
+    "name": "Generative AI / LLMs"
+  },
+  {
+    "id": "skill-5g",
+    "category": "Telco",
+    "name": "5G"
+  },
+  {
+    "id": "skill-private-networks",
+    "category": "Telco",
+    "name": "Private Networks"
+  },
+  {
+    "id": "skill-network-function-virtualization",
+    "category": "Telco",
+    "name": "Network Function Virtualization"
+  },
+  {
+    "id": "skill-oss-bss",
+    "category": "Telco",
+    "name": "OSS/BSS"
+  },
+  {
+    "id": "skill-linux-administration",
+    "category": "Infrastructure",
+    "name": "Linux Administration"
+  },
+  {
+    "id": "skill-network-engineering",
+    "category": "Infrastructure",
+    "name": "Network Engineering"
+  },
+  {
+    "id": "skill-vmware",
+    "category": "Infrastructure",
+    "name": "VMware"
+  },
+  {
+    "id": "skill-ansible",
+    "category": "Infrastructure",
+    "name": "Ansible"
+  },
+  {
+    "id": "skill-ci-cd",
+    "category": "Infrastructure",
+    "name": "CI/CD"
+  },
+  {
+    "id": "skill-site-reliability-engineering",
+    "category": "Infrastructure",
+    "name": "Site Reliability Engineering"
+  },
+  {
+    "id": "skill-penetration-testing",
+    "category": "Cybersecurity",
+    "name": "Penetration Testing"
+  },
+  {
+    "id": "skill-identity-access-management",
+    "category": "Cybersecurity",
+    "name": "Identity & Access Management"
+  },
+  {
+    "id": "skill-siem",
+    "category": "Cybersecurity",
+    "name": "SIEM"
+  },
+  {
+    "id": "skill-security-architecture",
+    "category": "Cybersecurity",
+    "name": "Security Architecture"
+  },
+  {
+    "id": "skill-grc-compliance",
+    "category": "Cybersecurity",
+    "name": "GRC & Compliance"
+  },
+  {
+    "id": "skill-scrum",
+    "category": "Project Management",
+    "name": "Scrum"
+  },
+  {
+    "id": "skill-kanban",
+    "category": "Project Management",
+    "name": "Kanban"
+  },
+  {
+    "id": "skill-prince2",
+    "category": "Project Management",
+    "name": "PRINCE2"
+  },
+  {
+    "id": "skill-stakeholder-management",
+    "category": "Project Management",
+    "name": "Stakeholder Management"
+  },
+  {
+    "id": "skill-business-analysis",
+    "category": "Business",
+    "name": "Business Analysis"
+  },
+  {
+    "id": "skill-requirements-engineering",
+    "category": "Business",
+    "name": "Requirements Engineering"
+  },
+  {
+    "id": "skill-change-management",
+    "category": "Business",
+    "name": "Change Management"
+  },
+  {
+    "id": "skill-financial-modeling",
+    "category": "Business",
+    "name": "Financial Modeling"
+  },
+  {
+    "id": "skill-salesforce",
+    "category": "Sales",
+    "name": "Salesforce"
+  },
+  {
+    "id": "skill-solution-selling",
+    "category": "Sales",
+    "name": "Solution Selling"
+  },
+  {
+    "id": "skill-account-management",
+    "category": "Sales",
+    "name": "Account Management"
+  },
+  {
+    "id": "skill-bid-management",
+    "category": "Sales",
+    "name": "Bid Management"
+  },
+  {
+    "id": "skill-ux-research",
+    "category": "Design / UX",
+    "name": "UX Research"
+  },
+  {
+    "id": "skill-ui-design",
+    "category": "Design / UX",
+    "name": "UI Design"
+  },
+  {
+    "id": "skill-figma",
+    "category": "Design / UX",
+    "name": "Figma"
+  },
+  {
+    "id": "skill-design-systems",
+    "category": "Design / UX",
+    "name": "Design Systems"
+  }
+]

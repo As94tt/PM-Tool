@@ -1,0 +1,758 @@
+[
+  {
+    "id": "person-001",
+    "firstName": "Thomas",
+    "lastName": "Richter",
+    "avatarUrl": "https://i.pravatar.cc/300?img=41",
+    "jobTitle": "Senior Cloud Architect",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Thomas is a Senior Cloud Architect on the delivery team, with 7 years of experience across automotive engagements. Recently focused on Terraform work for enterprise clients.",
+    "interestIds": [
+      "int-sailing",
+      "int-mountain-biking",
+      "int-padel",
+      "int-amateur-astronomy"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing",
+      "ind-healthcare",
+      "ind-retail"
+    ],
+    "joinedDate": "2021-05-01"
+  },
+  {
+    "id": "person-002",
+    "firstName": "Felix",
+    "lastName": "Dubois",
+    "avatarUrl": "https://i.pravatar.cc/300?img=26",
+    "jobTitle": "Senior Software Engineer",
+    "locationId": "loc-ham",
+    "bio": "Felix works as a Senior Software Engineer out of the Hamburg office, with 10 years of experience across public sector engagements. Enjoys mentoring on Cloud Security topics whenever possible.",
+    "interestIds": [
+      "int-chess",
+      "int-photography"
+    ],
+    "industryExperienceIds": [
+      "ind-retail",
+      "ind-automotive"
+    ],
+    "joinedDate": "2017-03-01"
+  },
+  {
+    "id": "person-003",
+    "firstName": "Ioana",
+    "lastName": "de Vries",
+    "avatarUrl": "https://i.pravatar.cc/300?img=42",
+    "jobTitle": "Senior Data Scientist",
+    "locationId": "loc-ber",
+    "bio": "Based in Berlin, Ioana is a Senior Data Scientist on the delivery team, with a 10-year track record delivering automotive initiatives. Currently deepening expertise in Microservices.",
+    "interestIds": [
+      "int-home-brewing",
+      "int-rock-climbing",
+      "int-urban-gardening",
+      "int-woodworking"
+    ],
+    "industryExperienceIds": [
+      "ind-public"
+    ],
+    "joinedDate": "2025-05-01"
+  },
+  {
+    "id": "person-004",
+    "firstName": "Beatriz",
+    "lastName": "Sharma",
+    "avatarUrl": "https://i.pravatar.cc/300?img=48",
+    "jobTitle": "OSS/BSS Consultant",
+    "locationId": "loc-cluj",
+    "bio": "Beatriz works as a OSS/BSS Consultant out of the Cluj-Napoca office, with a 5-year track record delivering insurance initiatives. Enjoys mentoring on VMware topics whenever possible.",
+    "interestIds": [
+      "int-woodworking",
+      "int-urban-gardening",
+      "int-podcasting"
+    ],
+    "industryExperienceIds": [
+      "ind-energy",
+      "ind-retail",
+      "ind-banking"
+    ],
+    "joinedDate": "2024-09-01"
+  },
+  {
+    "id": "person-005",
+    "firstName": "Rui",
+    "lastName": "Santos",
+    "avatarUrl": "https://i.pravatar.cc/300?img=68",
+    "jobTitle": "Site Reliability Engineer",
+    "locationId": "loc-muc",
+    "bio": "Rui works as a Site Reliability Engineer out of the Munich office, with a 3-year track record delivering banking & financial services initiatives. Enjoys mentoring on Azure topics whenever possible.",
+    "interestIds": [
+      "int-ceramics",
+      "int-rock-climbing",
+      "int-sailing",
+      "int-vinyl-records"
+    ],
+    "industryExperienceIds": [
+      "ind-insurance",
+      "ind-logistics",
+      "ind-public"
+    ],
+    "joinedDate": "2026-05-01"
+  },
+  {
+    "id": "person-006",
+    "firstName": "Sebastian",
+    "lastName": "Mendes",
+    "avatarUrl": "https://i.pravatar.cc/300?img=55",
+    "jobTitle": "Security Architect",
+    "locationId": "loc-col",
+    "bio": "Sebastian works as a Security Architect out of the Cologne office, bringing 2 years of hands-on work in banking & financial services projects. Recently focused on SIEM work for enterprise clients.",
+    "interestIds": [
+      "int-podcasting",
+      "int-snowboarding"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing"
+    ],
+    "joinedDate": "2026-07-01"
+  },
+  {
+    "id": "person-007",
+    "firstName": "Franziska",
+    "lastName": "Becker",
+    "avatarUrl": "https://i.pravatar.cc/300?img=63",
+    "jobTitle": "Delivery Lead",
+    "locationId": "loc-lon",
+    "bio": "Based in London, Franziska is a Delivery Lead on the delivery team, with a 5-year track record delivering manufacturing initiatives. Enjoys mentoring on Business Analysis topics whenever possible.",
+    "interestIds": [
+      "int-volunteering",
+      "int-vinyl-records"
+    ],
+    "industryExperienceIds": [
+      "ind-retail"
+    ],
+    "joinedDate": "2024-11-01"
+  },
+  {
+    "id": "person-008",
+    "firstName": "Noah",
+    "lastName": "Costa",
+    "avatarUrl": "https://i.pravatar.cc/300?img=45",
+    "jobTitle": "Change Manager",
+    "locationId": "loc-waw",
+    "bio": "Noah works as a Change Manager out of the Warsaw office, with 4 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Business Analysis topics whenever possible.",
+    "interestIds": [
+      "int-woodworking",
+      "int-rock-climbing",
+      "int-home-brewing"
+    ],
+    "industryExperienceIds": [
+      "ind-telco",
+      "ind-manufacturing"
+    ],
+    "joinedDate": "2024-12-01"
+  },
+  {
+    "id": "person-009",
+    "firstName": "David",
+    "lastName": "Laurent",
+    "avatarUrl": "https://i.pravatar.cc/300?img=7",
+    "jobTitle": "Sales Director",
+    "locationId": "loc-lis",
+    "bio": "David works as a Sales Director out of the Lisbon office, with a 16-year track record delivering logistics & transportation initiatives. Currently deepening expertise in Financial Modeling.",
+    "interestIds": [
+      "int-cooking",
+      "int-running-marathons",
+      "int-vinyl-records",
+      "int-woodworking"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing"
+    ],
+    "joinedDate": "2020-01-01"
+  },
+  {
+    "id": "person-010",
+    "firstName": "Moritz",
+    "lastName": "Radu",
+    "avatarUrl": "https://i.pravatar.cc/300?img=57",
+    "jobTitle": "Senior Product Designer",
+    "locationId": "loc-fra",
+    "bio": "Based in Frankfurt, Moritz is a Senior Product Designer on the delivery team, with a 8-year track record delivering energy & utilities initiatives. Recently focused on UX Research work for enterprise clients.",
+    "interestIds": [
+      "int-volunteering",
+      "int-mountain-biking",
+      "int-running-marathons"
+    ],
+    "industryExperienceIds": [
+      "ind-logistics"
+    ],
+    "joinedDate": "2024-07-01"
+  },
+  {
+    "id": "person-011",
+    "firstName": "Thomas",
+    "lastName": "Schmidt",
+    "avatarUrl": "https://i.pravatar.cc/300?img=65",
+    "jobTitle": "Senior Cloud Architect",
+    "locationId": "loc-stu",
+    "bio": "Thomas is a Senior Cloud Architect, based in Stuttgart, bringing 8 years of hands-on work in automotive projects. Recently focused on Linux Administration work for enterprise clients.",
+    "interestIds": [
+      "int-yoga",
+      "int-volunteering",
+      "int-ceramics",
+      "int-mountain-biking"
+    ],
+    "industryExperienceIds": [
+      "ind-healthcare"
+    ],
+    "joinedDate": "2025-03-01"
+  },
+  {
+    "id": "person-012",
+    "firstName": "Mia",
+    "lastName": "Richter",
+    "avatarUrl": "https://i.pravatar.cc/300?img=58",
+    "jobTitle": "Full-Stack Engineer",
+    "locationId": "loc-ams",
+    "bio": "Based in Amsterdam, Mia is a Full-Stack Engineer on the delivery team, with 2 years of experience across public sector engagements. Currently deepening expertise in Microservices.",
+    "interestIds": [
+      "int-home-automation-diy-electronics",
+      "int-vinyl-records"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing",
+      "ind-energy",
+      "ind-retail"
+    ],
+    "joinedDate": "2026-06-01"
+  },
+  {
+    "id": "person-013",
+    "firstName": "Felix",
+    "lastName": "Meyer",
+    "avatarUrl": "https://i.pravatar.cc/300?img=17",
+    "jobTitle": "Analytics Consultant",
+    "locationId": "loc-ber",
+    "bio": "Felix is a Analytics Consultant, based in Berlin, with a 3-year track record delivering manufacturing initiatives. Currently deepening expertise in Python.",
+    "interestIds": [
+      "int-playing-guitar",
+      "int-travel",
+      "int-snowboarding"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive",
+      "ind-banking"
+    ],
+    "joinedDate": "2024-05-01"
+  },
+  {
+    "id": "person-014",
+    "firstName": "Katarzyna",
+    "lastName": "Wojcik",
+    "avatarUrl": "https://i.pravatar.cc/300?img=4",
+    "jobTitle": "OSS/BSS Consultant",
+    "locationId": "loc-col",
+    "bio": "Katarzyna works as a OSS/BSS Consultant out of the Cologne office, bringing 8 years of hands-on work in banking & financial services projects. Currently deepening expertise in CI/CD.",
+    "interestIds": [
+      "int-sailing",
+      "int-podcasting",
+      "int-mountain-biking"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive"
+    ],
+    "joinedDate": "2023-03-01"
+  },
+  {
+    "id": "person-015",
+    "firstName": "David",
+    "lastName": "Dumitru",
+    "avatarUrl": "https://i.pravatar.cc/300?img=36",
+    "jobTitle": "Senior Site Reliability Engineer",
+    "locationId": "loc-ham",
+    "bio": "Based in Hamburg, David is a Senior Site Reliability Engineer on the delivery team, with a 9-year track record delivering banking & financial services initiatives. Enjoys mentoring on Docker topics whenever possible.",
+    "interestIds": [
+      "int-home-brewing",
+      "int-board-games"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive"
+    ],
+    "joinedDate": "2023-06-01"
+  },
+  {
+    "id": "person-016",
+    "firstName": "Marie",
+    "lastName": "Novak",
+    "avatarUrl": "https://i.pravatar.cc/300?img=18",
+    "jobTitle": "Security Architect",
+    "locationId": "loc-lis",
+    "bio": "Marie is a Security Architect, based in Lisbon, bringing 1 years of hands-on work in logistics & transportation projects. Recently focused on VMware work for enterprise clients.",
+    "interestIds": [
+      "int-sci-fi-novels",
+      "int-travel",
+      "int-board-games"
+    ],
+    "industryExperienceIds": [
+      "ind-insurance",
+      "ind-logistics"
+    ],
+    "joinedDate": "2026-03-01"
+  },
+  {
+    "id": "person-017",
+    "firstName": "Noah",
+    "lastName": "Wojcik",
+    "avatarUrl": "https://i.pravatar.cc/300?img=37",
+    "jobTitle": "Program Manager",
+    "locationId": "loc-ber",
+    "bio": "Based in Berlin, Noah is a Program Manager on the delivery team, bringing 7 years of hands-on work in automotive projects. Recently focused on Kanban work for enterprise clients.",
+    "interestIds": [
+      "int-board-games",
+      "int-chess"
+    ],
+    "industryExperienceIds": [
+      "ind-healthcare"
+    ],
+    "joinedDate": "2025-04-01"
+  },
+  {
+    "id": "person-018",
+    "firstName": "Sebastian",
+    "lastName": "Müller",
+    "avatarUrl": "https://i.pravatar.cc/300?img=3",
+    "jobTitle": "Change Manager",
+    "locationId": "loc-waw",
+    "bio": "Sebastian is a Change Manager, based in Warsaw, with a 6-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Kanban.",
+    "interestIds": [
+      "int-sailing",
+      "int-rock-climbing"
+    ],
+    "industryExperienceIds": [
+      "ind-retail",
+      "ind-automotive"
+    ],
+    "joinedDate": "2023-08-01"
+  },
+  {
+    "id": "person-019",
+    "firstName": "Anna",
+    "lastName": "Santos",
+    "avatarUrl": "https://i.pravatar.cc/300?img=54",
+    "jobTitle": "Sales Director",
+    "locationId": "loc-ber",
+    "bio": "Based in Berlin, Anna is a Sales Director on the delivery team, with a 18-year track record delivering retail & e-commerce initiatives. Enjoys mentoring on Account Management topics whenever possible.",
+    "interestIds": [
+      "int-ceramics",
+      "int-yoga",
+      "int-woodworking",
+      "int-amateur-astronomy"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive"
+    ],
+    "joinedDate": "2018-11-01"
+  },
+  {
+    "id": "person-020",
+    "firstName": "Max",
+    "lastName": "Khan",
+    "avatarUrl": "https://i.pravatar.cc/300?img=47",
+    "jobTitle": "Senior Product Designer",
+    "locationId": "loc-buc",
+    "bio": "Based in Bucharest, Max is a Senior Product Designer on the delivery team, with 7 years of experience across logistics & transportation engagements. Recently focused on Go work for enterprise clients.",
+    "interestIds": [
+      "int-podcasting",
+      "int-mountain-biking",
+      "int-padel"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-healthcare"
+    ],
+    "joinedDate": "2023-07-01"
+  },
+  {
+    "id": "person-021",
+    "firstName": "Chloe",
+    "lastName": "Constantin",
+    "avatarUrl": "https://i.pravatar.cc/300?img=21",
+    "jobTitle": "Cloud Solutions Architect",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Chloe is a Cloud Solutions Architect on the delivery team, with 3 years of experience across logistics & transportation engagements. Recently focused on VMware work for enterprise clients.",
+    "interestIds": [
+      "int-board-games",
+      "int-playing-guitar",
+      "int-home-automation-diy-electronics",
+      "int-sailing"
+    ],
+    "industryExperienceIds": [
+      "ind-banking"
+    ],
+    "joinedDate": "2024-10-01"
+  },
+  {
+    "id": "person-022",
+    "firstName": "Chloe",
+    "lastName": "Dumitru",
+    "avatarUrl": "https://i.pravatar.cc/300?img=46",
+    "jobTitle": "Software Engineer",
+    "locationId": "loc-cluj",
+    "bio": "Chloe is a Software Engineer, based in Cluj-Napoca, bringing 1 years of hands-on work in banking & financial services projects. Recently focused on Docker work for enterprise clients.",
+    "interestIds": [
+      "int-home-automation-diy-electronics",
+      "int-board-games"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing",
+      "ind-retail",
+      "ind-banking"
+    ],
+    "joinedDate": "2026-06-01"
+  },
+  {
+    "id": "person-023",
+    "firstName": "Jonas",
+    "lastName": "Berg",
+    "avatarUrl": "https://i.pravatar.cc/300?img=24",
+    "jobTitle": "Analytics Consultant",
+    "locationId": "loc-lis",
+    "bio": "Jonas is a Analytics Consultant, based in Lisbon, bringing 4 years of hands-on work in public sector projects. Recently focused on TypeScript work for enterprise clients.",
+    "interestIds": [
+      "int-snowboarding",
+      "int-home-brewing",
+      "int-urban-gardening"
+    ],
+    "industryExperienceIds": [
+      "ind-energy",
+      "ind-manufacturing",
+      "ind-healthcare"
+    ],
+    "joinedDate": "2023-11-01"
+  },
+  {
+    "id": "person-024",
+    "firstName": "Daniel",
+    "lastName": "Schmidt",
+    "avatarUrl": "https://i.pravatar.cc/300?img=49",
+    "jobTitle": "Telco Network Engineer",
+    "locationId": "loc-waw",
+    "bio": "Based in Warsaw, Daniel is a Telco Network Engineer on the delivery team, with 4 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Private Networks topics whenever possible.",
+    "interestIds": [
+      "int-home-automation-diy-electronics",
+      "int-amateur-astronomy",
+      "int-volunteering",
+      "int-urban-gardening"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive",
+      "ind-healthcare"
+    ],
+    "joinedDate": "2026-05-01"
+  },
+  {
+    "id": "person-025",
+    "firstName": "Daniel",
+    "lastName": "Koch",
+    "avatarUrl": "https://i.pravatar.cc/300?img=61",
+    "jobTitle": "Network Engineer",
+    "locationId": "loc-muc",
+    "bio": "Daniel is a Network Engineer, based in Munich, with 1 years of experience across healthcare & life sciences engagements. Currently deepening expertise in Google Cloud Platform.",
+    "interestIds": [
+      "int-home-brewing",
+      "int-chess",
+      "int-rock-climbing",
+      "int-amateur-astronomy"
+    ],
+    "industryExperienceIds": [
+      "ind-automotive"
+    ],
+    "joinedDate": "2026-07-01"
+  },
+  {
+    "id": "person-026",
+    "firstName": "Youssef",
+    "lastName": "Patel",
+    "avatarUrl": "https://i.pravatar.cc/300?img=66",
+    "jobTitle": "GRC Consultant",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Youssef is a GRC Consultant on the delivery team, bringing 4 years of hands-on work in logistics & transportation projects. Recently focused on Penetration Testing work for enterprise clients.",
+    "interestIds": [
+      "int-volunteering",
+      "int-travel",
+      "int-trail-running"
+    ],
+    "industryExperienceIds": [
+      "ind-banking",
+      "ind-healthcare"
+    ],
+    "joinedDate": "2024-09-01"
+  },
+  {
+    "id": "person-027",
+    "firstName": "Hannah",
+    "lastName": "Bianchi",
+    "avatarUrl": "https://i.pravatar.cc/300?img=16",
+    "jobTitle": "Scrum Master",
+    "locationId": "loc-ham",
+    "bio": "Hannah is a Scrum Master, based in Hamburg, with 1 years of experience across logistics & transportation engagements. Recently focused on PRINCE2 work for enterprise clients.",
+    "interestIds": [
+      "int-volunteering",
+      "int-rock-climbing",
+      "int-woodworking",
+      "int-podcasting"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-retail",
+      "ind-insurance"
+    ],
+    "joinedDate": "2026-04-01"
+  },
+  {
+    "id": "person-028",
+    "firstName": "Elena",
+    "lastName": "de Vries",
+    "avatarUrl": "https://i.pravatar.cc/300?img=53",
+    "jobTitle": "Senior Business Analyst",
+    "locationId": "loc-muc",
+    "bio": "Elena is a Senior Business Analyst, based in Munich, bringing 17 years of hands-on work in telecommunications projects. Recently focused on Business Analysis work for enterprise clients.",
+    "interestIds": [
+      "int-yoga",
+      "int-woodworking",
+      "int-rock-climbing",
+      "int-chess"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-retail",
+      "ind-automotive"
+    ],
+    "joinedDate": "2021-09-01"
+  },
+  {
+    "id": "person-029",
+    "firstName": "Beatriz",
+    "lastName": "Werner",
+    "avatarUrl": "https://i.pravatar.cc/300?img=38",
+    "jobTitle": "Sales Director",
+    "locationId": "loc-waw",
+    "bio": "Beatriz is a Sales Director, based in Warsaw, with 10 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Financial Modeling topics whenever possible.",
+    "interestIds": [
+      "int-volunteering",
+      "int-board-games"
+    ],
+    "industryExperienceIds": [
+      "ind-insurance",
+      "ind-banking"
+    ],
+    "joinedDate": "2022-02-01"
+  },
+  {
+    "id": "person-030",
+    "firstName": "Chloe",
+    "lastName": "Wojcik",
+    "avatarUrl": "https://i.pravatar.cc/300?img=51",
+    "jobTitle": "UX Designer",
+    "locationId": "loc-ber",
+    "bio": "Based in Berlin, Chloe is a UX Designer on the delivery team, with 5 years of experience across manufacturing engagements. Enjoys mentoring on Microservices topics whenever possible.",
+    "interestIds": [
+      "int-chess",
+      "int-padel"
+    ],
+    "industryExperienceIds": [
+      "ind-insurance"
+    ],
+    "joinedDate": "2025-10-01"
+  },
+  {
+    "id": "person-031",
+    "firstName": "Julia",
+    "lastName": "Richter",
+    "avatarUrl": "https://i.pravatar.cc/300?img=1",
+    "jobTitle": "Senior Cloud Architect",
+    "locationId": "loc-fra",
+    "bio": "Based in Frankfurt, Julia is a Senior Cloud Architect on the delivery team, with 6 years of experience across logistics & transportation engagements. Recently focused on Terraform work for enterprise clients.",
+    "interestIds": [
+      "int-travel",
+      "int-trail-running"
+    ],
+    "industryExperienceIds": [
+      "ind-insurance",
+      "ind-healthcare",
+      "ind-automotive"
+    ],
+    "joinedDate": "2026-05-01"
+  },
+  {
+    "id": "person-032",
+    "firstName": "Rui",
+    "lastName": "Fischer",
+    "avatarUrl": "https://i.pravatar.cc/300?img=43",
+    "jobTitle": "Backend Developer",
+    "locationId": "loc-lon",
+    "bio": "Based in London, Rui is a Backend Developer on the delivery team, bringing 3 years of hands-on work in banking & financial services projects. Currently deepening expertise in Python.",
+    "interestIds": [
+      "int-playing-guitar",
+      "int-chess",
+      "int-volunteering"
+    ],
+    "industryExperienceIds": [
+      "ind-manufacturing",
+      "ind-energy"
+    ],
+    "joinedDate": "2024-03-01"
+  },
+  {
+    "id": "person-033",
+    "firstName": "Arjun",
+    "lastName": "Patel",
+    "avatarUrl": "https://i.pravatar.cc/300?img=70",
+    "jobTitle": "Senior Machine Learning Engineer",
+    "locationId": "loc-ham",
+    "bio": "Based in Hamburg, Arjun is a Senior Machine Learning Engineer on the delivery team, with a 12-year track record delivering insurance initiatives. Enjoys mentoring on REST API Design topics whenever possible.",
+    "interestIds": [
+      "int-ceramics",
+      "int-podcasting",
+      "int-board-games"
+    ],
+    "industryExperienceIds": [
+      "ind-banking",
+      "ind-insurance"
+    ],
+    "joinedDate": "2022-05-01"
+  },
+  {
+    "id": "person-034",
+    "firstName": "Anna",
+    "lastName": "Richter",
+    "avatarUrl": "https://i.pravatar.cc/300?img=15",
+    "jobTitle": "Senior Network Architect",
+    "locationId": "loc-col",
+    "bio": "Anna is a Senior Network Architect, based in Cologne, with a 16-year track record delivering telecommunications initiatives. Recently focused on 5G work for enterprise clients.",
+    "interestIds": [
+      "int-yoga",
+      "int-board-games",
+      "int-podcasting",
+      "int-playing-guitar"
+    ],
+    "industryExperienceIds": [
+      "ind-telco",
+      "ind-insurance"
+    ],
+    "joinedDate": "2019-06-01"
+  },
+  {
+    "id": "person-035",
+    "firstName": "David",
+    "lastName": "Silva",
+    "avatarUrl": "https://i.pravatar.cc/300?img=20",
+    "jobTitle": "Site Reliability Engineer",
+    "locationId": "loc-ham",
+    "bio": "Based in Hamburg, David is a Site Reliability Engineer on the delivery team, bringing 6 years of hands-on work in energy & utilities projects. Enjoys mentoring on Docker topics whenever possible.",
+    "interestIds": [
+      "int-snowboarding",
+      "int-sailing"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-banking",
+      "ind-retail"
+    ],
+    "joinedDate": "2021-05-01"
+  },
+  {
+    "id": "person-036",
+    "firstName": "Sebastian",
+    "lastName": "Jansen",
+    "avatarUrl": "https://i.pravatar.cc/300?img=2",
+    "jobTitle": "Security Consultant",
+    "locationId": "loc-ham",
+    "bio": "Sebastian works as a Security Consultant out of the Hamburg office, bringing 4 years of hands-on work in manufacturing projects. Currently deepening expertise in Ansible.",
+    "interestIds": [
+      "int-cooking",
+      "int-padel",
+      "int-sailing"
+    ],
+    "industryExperienceIds": [
+      "ind-energy",
+      "ind-manufacturing"
+    ],
+    "joinedDate": "2026-02-01"
+  },
+  {
+    "id": "person-037",
+    "firstName": "Arjun",
+    "lastName": "Laurent",
+    "avatarUrl": "https://i.pravatar.cc/300?img=39",
+    "jobTitle": "Delivery Lead",
+    "locationId": "loc-waw",
+    "bio": "Arjun is a Delivery Lead, based in Warsaw, bringing 17 years of hands-on work in telecommunications projects. Recently focused on Kanban work for enterprise clients.",
+    "interestIds": [
+      "int-volunteering",
+      "int-rock-climbing"
+    ],
+    "industryExperienceIds": [
+      "ind-energy"
+    ],
+    "joinedDate": "2026-06-01"
+  },
+  {
+    "id": "person-038",
+    "firstName": "Simon",
+    "lastName": "Conti",
+    "avatarUrl": "https://i.pravatar.cc/300?img=60",
+    "jobTitle": "Change Manager",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Simon is a Change Manager on the delivery team, bringing 2 years of hands-on work in public sector projects. Recently focused on PRINCE2 work for enterprise clients.",
+    "interestIds": [
+      "int-sci-fi-novels",
+      "int-vinyl-records",
+      "int-ceramics"
+    ],
+    "industryExperienceIds": [
+      "ind-public"
+    ],
+    "joinedDate": "2026-05-01"
+  },
+  {
+    "id": "person-039",
+    "firstName": "Jonas",
+    "lastName": "Rossi",
+    "avatarUrl": "https://i.pravatar.cc/300?img=30",
+    "jobTitle": "Bid Manager",
+    "locationId": "loc-muc",
+    "bio": "Based in Munich, Jonas is a Bid Manager on the delivery team, with a 8-year track record delivering insurance initiatives. Enjoys mentoring on Change Management topics whenever possible.",
+    "interestIds": [
+      "int-rock-climbing",
+      "int-cooking",
+      "int-home-automation-diy-electronics",
+      "int-amateur-astronomy"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-logistics"
+    ],
+    "joinedDate": "2023-02-01"
+  },
+  {
+    "id": "person-040",
+    "firstName": "Andrei",
+    "lastName": "Larsen",
+    "avatarUrl": "https://i.pravatar.cc/300?img=8",
+    "jobTitle": "UI Designer",
+    "locationId": "loc-ber",
+    "bio": "Based in Berlin, Andrei is a UI Designer on the delivery team, bringing 4 years of hands-on work in banking & financial services projects. Currently deepening expertise in Microservices.",
+    "interestIds": [
+      "int-home-brewing",
+      "int-amateur-astronomy",
+      "int-ceramics"
+    ],
+    "industryExperienceIds": [
+      "ind-banking",
+      "ind-insurance",
+      "ind-automotive"
+    ],
+    "joinedDate": "2025-02-01"
+  }
+]

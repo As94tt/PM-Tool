@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ind-automotive",
+    "name": "Automotive"
+  },
+  {
+    "id": "ind-telco",
+    "name": "Telecommunications"
+  },
+  {
+    "id": "ind-banking",
+    "name": "Banking & Financial Services"
+  },
+  {
+    "id": "ind-insurance",
+    "name": "Insurance"
+  },
+  {
+    "id": "ind-retail",
+    "name": "Retail & E-Commerce"
+  },
+  {
+    "id": "ind-healthcare",
+    "name": "Healthcare & Life Sciences"
+  },
+  {
+    "id": "ind-manufacturing",
+    "name": "Manufacturing"
+  },
+  {
+    "id": "ind-energy",
+    "name": "Energy & Utilities"
+  },
+  {
+    "id": "ind-public",
+    "name": "Public Sector"
+  },
+  {
+    "id": "ind-logistics",
+    "name": "Logistics & Transportation"
+  }
+]

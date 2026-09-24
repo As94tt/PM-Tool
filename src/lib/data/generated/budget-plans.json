@@ -1,0 +1,718 @@
+[
+  {
+    "projectId": "project-01",
+    "plannedPersonnelCost": 139716,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 32796
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 35892
+      },
+      {
+        "month": "2026-05",
+        "plannedCost": 37068
+      },
+      {
+        "month": "2026-06",
+        "plannedCost": 33960
+      }
+    ]
+  },
+  {
+    "projectId": "project-02",
+    "plannedPersonnelCost": 54140,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 26510
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 27630
+      }
+    ]
+  },
+  {
+    "projectId": "project-03",
+    "plannedPersonnelCost": 163770,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 51702
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 61942
+      },
+      {
+        "month": "2026-05",
+        "plannedCost": 50126
+      }
+    ]
+  },
+  {
+    "projectId": "project-04",
+    "plannedPersonnelCost": 290950,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 41170
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 53820
+      },
+      {
+        "month": "2026-05",
+        "plannedCost": 53130
+      },
+      {
+        "month": "2026-06",
+        "plannedCost": 46690
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 50370
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 45770
+      }
+    ]
+  },
+  {
+    "projectId": "project-05",
+    "plannedPersonnelCost": 61778,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 30362
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 31416
+      }
+    ]
+  },
+  {
+    "projectId": "project-06",
+    "plannedPersonnelCost": 98724,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 51542
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 47182
+      }
+    ]
+  },
+  {
+    "projectId": "project-07",
+    "plannedPersonnelCost": 981696,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 59942
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 65880
+      },
+      {
+        "month": "2026-05",
+        "plannedCost": 72372
+      },
+      {
+        "month": "2026-06",
+        "plannedCost": 67982
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 61948
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 67692
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 60504
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 65018
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 67088
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 67448
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 67756
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 68744
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 63408
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 66724
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 59190
+      }
+    ]
+  },
+  {
+    "projectId": "project-08",
+    "plannedPersonnelCost": 403544,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-07",
+        "plannedCost": 36108
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 38702
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 40698
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 38792
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 39572
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 42940
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 45460
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 44114
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 43218
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 33940
+      }
+    ]
+  },
+  {
+    "projectId": "project-09",
+    "plannedPersonnelCost": 325142,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-06",
+        "plannedCost": 44784
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 44632
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 51612
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 46782
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 47162
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 47240
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 42930
+      }
+    ]
+  },
+  {
+    "projectId": "project-10",
+    "plannedPersonnelCost": 484614,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-06",
+        "plannedCost": 29216
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 31528
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 31782
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 33974
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 31036
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 33844
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 31120
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 30604
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 28442
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 36220
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 33060
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 35724
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 35712
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 32890
+      },
+      {
+        "month": "2027-08",
+        "plannedCost": 29462
+      }
+    ]
+  },
+  {
+    "projectId": "project-11",
+    "plannedPersonnelCost": 605712,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-03",
+        "plannedCost": 36900
+      },
+      {
+        "month": "2026-04",
+        "plannedCost": 45720
+      },
+      {
+        "month": "2026-05",
+        "plannedCost": 44832
+      },
+      {
+        "month": "2026-06",
+        "plannedCost": 44028
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 41916
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 42264
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 43392
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 43380
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 43308
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 43104
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 45852
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 46584
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 47484
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 36948
+      }
+    ]
+  },
+  {
+    "projectId": "project-12",
+    "plannedPersonnelCost": 437740,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-06",
+        "plannedCost": 44886
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 51206
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 47168
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 48752
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 50712
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 53394
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 46846
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 50980
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 43796
+      }
+    ]
+  },
+  {
+    "projectId": "project-13",
+    "plannedPersonnelCost": 466824,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-06",
+        "plannedCost": 31848
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 36300
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 34692
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 38340
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 38220
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 35580
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 33348
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 35376
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 38280
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 36564
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 37200
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 38112
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 32964
+      }
+    ]
+  },
+  {
+    "projectId": "project-14",
+    "plannedPersonnelCost": 593978,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-05",
+        "plannedCost": 36578
+      },
+      {
+        "month": "2026-06",
+        "plannedCost": 40470
+      },
+      {
+        "month": "2026-07",
+        "plannedCost": 44586
+      },
+      {
+        "month": "2026-08",
+        "plannedCost": 41514
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 45202
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 45620
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 45456
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 45096
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 42844
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 41342
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 45268
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 40710
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 41334
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 37958
+      }
+    ]
+  },
+  {
+    "projectId": "project-15",
+    "plannedPersonnelCost": 380576,
+    "monthlyPlannedCost": [
+      {
+        "month": "2027-01",
+        "plannedCost": 41600
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 52302
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 52580
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 50462
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 48606
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 52500
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 42084
+      },
+      {
+        "month": "2027-08",
+        "plannedCost": 40442
+      }
+    ]
+  },
+  {
+    "projectId": "project-16",
+    "plannedPersonnelCost": 607290,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-10",
+        "plannedCost": 51042
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 58424
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 52774
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 56224
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 48406
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 58170
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 56264
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 60658
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 57520
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 58326
+      },
+      {
+        "month": "2027-08",
+        "plannedCost": 49482
+      }
+    ]
+  },
+  {
+    "projectId": "project-17",
+    "plannedPersonnelCost": 730074,
+    "monthlyPlannedCost": [
+      {
+        "month": "2026-11",
+        "plannedCost": 78182
+      },
+      {
+        "month": "2026-12",
+        "plannedCost": 84686
+      },
+      {
+        "month": "2027-01",
+        "plannedCost": 81390
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 82898
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 80648
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 85106
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 80598
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 82998
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 73568
+      }
+    ]
+  },
+  {
+    "projectId": "project-18",
+    "plannedPersonnelCost": 592424,
+    "monthlyPlannedCost": [
+      {
+        "month": "2027-01",
+        "plannedCost": 65564
+      },
+      {
+        "month": "2027-02",
+        "plannedCost": 79434
+      },
+      {
+        "month": "2027-03",
+        "plannedCost": 75684
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 82272
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 79426
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 70732
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 69924
+      },
+      {
+        "month": "2027-08",
+        "plannedCost": 69388
+      }
+    ]
+  }
+]

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "cert-aws-saa",
+    "name": "AWS Certified Solutions Architect",
+    "issuer": "Amazon Web Services"
+  },
+  {
+    "id": "cert-aws-devops",
+    "name": "AWS Certified DevOps Engineer",
+    "issuer": "Amazon Web Services"
+  },
+  {
+    "id": "cert-az-arch",
+    "name": "Microsoft Certified: Azure Solutions Architect Expert",
+    "issuer": "Microsoft"
+  },
+  {
+    "id": "cert-gcp-arch",
+    "name": "Google Professional Cloud Architect",
+    "issuer": "Google Cloud"
+  },
+  {
+    "id": "cert-cka",
+    "name": "Certified Kubernetes Administrator",
+    "issuer": "CNCF"
+  },
+  {
+    "id": "cert-pmp",
+    "name": "Project Management Professional (PMP)",
+    "issuer": "PMI"
+  },
+  {
+    "id": "cert-psm",
+    "name": "Professional Scrum Master I",
+    "issuer": "Scrum.org"
+  },
+  {
+    "id": "cert-prince2",
+    "name": "PRINCE2 Practitioner",
+    "issuer": "AXELOS"
+  },
+  {
+    "id": "cert-cissp",
+    "name": "CISSP",
+    "issuer": "(ISC)²"
+  },
+  {
+    "id": "cert-cism",
+    "name": "CISM",
+    "issuer": "ISACA"
+  },
+  {
+    "id": "cert-itil",
+    "name": "ITIL 4 Foundation",
+    "issuer": "AXELOS"
+  },
+  {
+    "id": "cert-togaf",
+    "name": "TOGAF 9 Certified",
+    "issuer": "The Open Group"
+  },
+  {
+    "id": "cert-sfdc-admin",
+    "name": "Salesforce Certified Administrator",
+    "issuer": "Salesforce"
+  },
+  {
+    "id": "cert-databricks",
+    "name": "Databricks Certified Data Engineer",
+    "issuer": "Databricks"
+  },
+  {
+    "id": "cert-ccnp",
+    "name": "CCNP Enterprise",
+    "issuer": "Cisco"
+  },
+  {
+    "id": "cert-comptia-sec",
+    "name": "CompTIA Security+",
+    "issuer": "CompTIA"
+  },
+  {
+    "id": "cert-iso27001",
+    "name": "ISO 27001 Lead Auditor",
+    "issuer": "PECB"
+  }
+]

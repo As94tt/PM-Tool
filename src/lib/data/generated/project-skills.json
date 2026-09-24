@@ -1,0 +1,374 @@
+[
+  {
+    "projectId": "project-01",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-cloud-security"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-aws"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-ansible"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-site-reliability-engineering"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-oss-bss"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-5g"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-03",
+    "skillId": "skill-java"
+  },
+  {
+    "projectId": "project-03",
+    "skillId": "skill-react"
+  },
+  {
+    "projectId": "project-03",
+    "skillId": "skill-rest-api-design"
+  },
+  {
+    "projectId": "project-03",
+    "skillId": "skill-azure"
+  },
+  {
+    "projectId": "project-03",
+    "skillId": "skill-net-c"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-java"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-data-engineering"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-machine-learning"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-typescript"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-terraform"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-rest-api-design"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-azure"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-typescript"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-react"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-node-js"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-network-engineering"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-azure"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-aws"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-docker"
+  },
+  {
+    "projectId": "project-06",
+    "skillId": "skill-ansible"
+  },
+  {
+    "projectId": "project-07",
+    "skillId": "skill-stakeholder-management"
+  },
+  {
+    "projectId": "project-07",
+    "skillId": "skill-business-analysis"
+  },
+  {
+    "projectId": "project-07",
+    "skillId": "skill-kanban"
+  },
+  {
+    "projectId": "project-07",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-08",
+    "skillId": "skill-python"
+  },
+  {
+    "projectId": "project-08",
+    "skillId": "skill-typescript"
+  },
+  {
+    "projectId": "project-08",
+    "skillId": "skill-power-bi"
+  },
+  {
+    "projectId": "project-08",
+    "skillId": "skill-sql"
+  },
+  {
+    "projectId": "project-09",
+    "skillId": "skill-financial-modeling"
+  },
+  {
+    "projectId": "project-09",
+    "skillId": "skill-stakeholder-management"
+  },
+  {
+    "projectId": "project-09",
+    "skillId": "skill-requirements-engineering"
+  },
+  {
+    "projectId": "project-09",
+    "skillId": "skill-scrum"
+  },
+  {
+    "projectId": "project-09",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-microservices"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-azure"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-net-c"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-react"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-typescript"
+  },
+  {
+    "projectId": "project-10",
+    "skillId": "skill-java"
+  },
+  {
+    "projectId": "project-11",
+    "skillId": "skill-grc-compliance"
+  },
+  {
+    "projectId": "project-11",
+    "skillId": "skill-ansible"
+  },
+  {
+    "projectId": "project-11",
+    "skillId": "skill-network-engineering"
+  },
+  {
+    "projectId": "project-11",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-linux-administration"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-ansible"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-docker"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-cloud-security"
+  },
+  {
+    "projectId": "project-12",
+    "skillId": "skill-vmware"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-ui-design"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-react"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-go"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-net-c"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-typescript"
+  },
+  {
+    "projectId": "project-13",
+    "skillId": "skill-rest-api-design"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-microservices"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-design-systems"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-go"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-net-c"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-figma"
+  },
+  {
+    "projectId": "project-14",
+    "skillId": "skill-ui-design"
+  },
+  {
+    "projectId": "project-15",
+    "skillId": "skill-docker"
+  },
+  {
+    "projectId": "project-15",
+    "skillId": "skill-vmware"
+  },
+  {
+    "projectId": "project-15",
+    "skillId": "skill-ansible"
+  },
+  {
+    "projectId": "project-15",
+    "skillId": "skill-linux-administration"
+  },
+  {
+    "projectId": "project-15",
+    "skillId": "skill-network-engineering"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-vmware"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-private-networks"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-oss-bss"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-ci-cd"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-network-engineering"
+  },
+  {
+    "projectId": "project-16",
+    "skillId": "skill-network-function-virtualization"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-node-js"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-sql"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-data-engineering"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-machine-learning"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-java"
+  },
+  {
+    "projectId": "project-17",
+    "skillId": "skill-python"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-prince2"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-requirements-engineering"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-stakeholder-management"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-business-analysis"
+  },
+  {
+    "projectId": "project-18",
+    "skillId": "skill-financial-modeling"
+  }
+]

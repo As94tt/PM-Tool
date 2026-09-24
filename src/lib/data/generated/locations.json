@@ -1,0 +1,74 @@
+[
+  {
+    "id": "loc-muc",
+    "city": "Munich",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-ber",
+    "city": "Berlin",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-ham",
+    "city": "Hamburg",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-fra",
+    "city": "Frankfurt",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-stu",
+    "city": "Stuttgart",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-col",
+    "city": "Cologne",
+    "country": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-buc",
+    "city": "Bucharest",
+    "country": "Romania",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-cluj",
+    "city": "Cluj-Napoca",
+    "country": "Romania",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-lis",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-waw",
+    "city": "Warsaw",
+    "country": "Poland",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-lon",
+    "city": "London",
+    "country": "United Kingdom",
+    "region": "EMEA"
+  },
+  {
+    "id": "loc-ams",
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "region": "EMEA"
+  }
+]

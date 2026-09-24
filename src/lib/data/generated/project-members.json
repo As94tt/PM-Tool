@@ -1,0 +1,467 @@
+[
+  {
+    "projectId": "project-01",
+    "personId": "person-031",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-01",
+    "personId": "person-007",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-01",
+    "personId": "person-036",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-01",
+    "personId": "person-022",
+    "roleOnProject": "QA Engineer"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-034",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-014",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-006",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-035",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-002",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-010",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-023",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-016",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-030",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-015",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-04",
+    "personId": "person-003",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-04",
+    "personId": "person-009",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-04",
+    "personId": "person-033",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-04",
+    "personId": "person-002",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-002",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-016",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-040",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-032",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-001",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-012",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-006",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-009",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-034",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-06",
+    "personId": "person-032",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-028",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-007",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-008",
+    "roleOnProject": "QA Engineer"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-033",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-038",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-017",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-07",
+    "personId": "person-039",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-08",
+    "personId": "person-003",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-08",
+    "personId": "person-014",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-08",
+    "personId": "person-040",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-08",
+    "personId": "person-030",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-08",
+    "personId": "person-010",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-09",
+    "personId": "person-028",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-09",
+    "personId": "person-006",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-09",
+    "personId": "person-039",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-09",
+    "personId": "person-019",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-09",
+    "personId": "person-037",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-10",
+    "personId": "person-002",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-10",
+    "personId": "person-025",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-10",
+    "personId": "person-012",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-10",
+    "personId": "person-020",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-026",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-007",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-012",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-036",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-004",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-11",
+    "personId": "person-014",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-12",
+    "personId": "person-015",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-12",
+    "personId": "person-004",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-12",
+    "personId": "person-021",
+    "roleOnProject": "QA Engineer"
+  },
+  {
+    "projectId": "project-12",
+    "personId": "person-026",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-12",
+    "personId": "person-034",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-13",
+    "personId": "person-010",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-13",
+    "personId": "person-035",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-13",
+    "personId": "person-022",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-13",
+    "personId": "person-013",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-13",
+    "personId": "person-030",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-14",
+    "personId": "person-010",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-14",
+    "personId": "person-029",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-14",
+    "personId": "person-034",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-14",
+    "personId": "person-040",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-15",
+    "personId": "person-015",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-15",
+    "personId": "person-026",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-15",
+    "personId": "person-009",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-15",
+    "personId": "person-028",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-15",
+    "personId": "person-031",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-034",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-007",
+    "roleOnProject": "QA Engineer"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-031",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-011",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-036",
+    "roleOnProject": "UX Designer"
+  },
+  {
+    "projectId": "project-16",
+    "personId": "person-026",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-003",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-013",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-002",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-020",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-009",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-032",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-17",
+    "personId": "person-033",
+    "roleOnProject": "Lead Developer"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-037",
+    "roleOnProject": "Project Lead"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-009",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-029",
+    "roleOnProject": "DevOps Engineer"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-028",
+    "roleOnProject": "Consultant"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-027",
+    "roleOnProject": "Solution Architect"
+  },
+  {
+    "projectId": "project-18",
+    "personId": "person-036",
+    "roleOnProject": "Solution Architect"
+  }
+]
