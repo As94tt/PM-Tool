@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet, CalendarClock } from "lucide-react";
+import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import {
   getProjectMemberDetails,
@@ -24,13 +24,12 @@ import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MiniBarChart } from "@/components/charts/mini-bar-chart";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
+import { ProjectPlanningDialog } from "@/components/projects/project-planning-dialog";
 import type { ProjectStatus } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 const STATUS_BADGE: Record<ProjectStatus, string> = {
   active: "bg-status-healthy/15 text-status-healthy",
@@ -68,7 +67,7 @@ export default function ProjectDetailPage() {
   const industry = industries.find((i) => i.id === project.industryId);
   const client = getClientByName(clients, project.clientName);
   const members = getProjectMemberDetails(projectMembers, people, project.id);
-  const chartMonths = getProjectChartMonths(project.startDate, project.endDate);
+  const chartMonths = getProjectChartMonths(project.startDate, project.endDate, resourceAllocations, project.id);
   const lead = people.find((p) => p.id === project.leadPersonId);
   const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
@@ -156,14 +155,7 @@ export default function ProjectDetailPage() {
               <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
                 <Users className="size-4" /> Team & resource allocation
               </h2>
-              {canSeeBudget && (
-                <Link
-                  href={`/projects/${project.id}/planning`}
-                  className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-                >
-                  <CalendarClock className="size-3.5" /> Resource & Budget Planning
-                </Link>
-              )}
+              {canSeeBudget && <ProjectPlanningDialog project={project} />}
             </div>
             {chartMonths.length > 0 && (
               <div className="mt-3 flex items-center gap-1 pl-12 text-[10px] text-muted-foreground">

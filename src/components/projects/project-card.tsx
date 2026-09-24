@@ -32,7 +32,7 @@ export function ProjectCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <ProjectAvatar project={project} clients={clients} />
+          <ProjectAvatar project={project} clients={clients} size="lg" />
           <div className="min-w-0">
             <p className="truncate font-heading text-sm font-semibold text-foreground group-hover:text-primary">
               {project.name}

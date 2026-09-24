@@ -24,32 +24,43 @@ export function getHorizonMonths(count = 12, start: Date = new Date()): string[]
 }
 
 /**
- * Months to chart for a project: starts at the later of the project's own
- * start month or `lookbackMonths` before now (so a long-running project's
- * chart doesn't open on ancient history), runs to the project's end month
- * (or `lookbackMonths` + `maxMonths` out, if still ongoing), capped at
- * `maxMonths` total columns.
+ * Months to chart for a project: starts at the project's own start month,
+ * runs through however far people are actually allocated — the later of
+ * the project's declared end month or the last month with a real
+ * (non-zero) allocation row for this project — so the chart never cuts
+ * off while people still show allocation. Capped at `maxMonths` purely as
+ * a sanity ceiling for pathological data, not a normal display limit.
  */
 export function getProjectChartMonths(
   startDate: string,
   endDate: string | null,
-  opts: { maxMonths?: number; lookbackMonths?: number } = {}
+  allocations: { projectId: string; month: string; allocationPercent: number }[],
+  projectId: string,
+  opts: { maxMonths?: number } = {}
 ): string[] {
-  const { maxMonths = 10, lookbackMonths = 3 } = opts;
-  const today = new Date();
+  const { maxMonths = 30 } = opts;
   const projStart = monthToDate(startDate.slice(0, 7));
-  const windowStart = addMonths(new Date(today.getFullYear(), today.getMonth(), 1), -lookbackMonths);
-  const rangeStart = projStart > windowStart ? projStart : windowStart;
-  const projEnd = endDate ? monthToDate(endDate.slice(0, 7)) : addMonths(windowStart, lookbackMonths + maxMonths - 1);
-  const endKey = monthKey(projEnd);
+
+  const lastAllocatedMonth = allocations
+    .filter((a) => a.projectId === projectId && a.allocationPercent > 0)
+    .map((a) => a.month)
+    .toSorted()
+    .at(-1);
+
+  let endMonth = endDate ? monthToDate(endDate.slice(0, 7)) : projStart;
+  if (lastAllocatedMonth) {
+    const lastDate = monthToDate(lastAllocatedMonth);
+    if (lastDate > endMonth) endMonth = lastDate;
+  }
+  const endKey = monthKey(endMonth);
 
   const months: string[] = [];
-  let cursor = rangeStart;
+  let cursor = projStart;
   while (monthKey(cursor) <= endKey && months.length < maxMonths) {
     months.push(monthKey(cursor));
     cursor = addMonths(cursor, 1);
   }
-  return months;
+  return months.length > 0 ? months : [monthKey(projStart)];
 }
 
 export function getAllocationForPersonMonth(
