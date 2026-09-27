@@ -121,6 +121,60 @@ export function getProjectMemberDetails(
     .filter((d): d is ProjectMemberDetail => d !== null);
 }
 
+export interface PersonProjectHistoryEntry {
+  project: Project;
+  roleOnProject: string;
+  contributionDescription?: string;
+  /** Derived from this person's own ResourceAllocation rows on this
+   * project (not the project's own start/end dates) — the months they
+   * actually had FTE allocated, not how long the project itself ran. */
+  startMonth: string | null;
+  endMonth: string | null;
+  ongoing: boolean;
+}
+
+/**
+ * Every project a person has been a member of, with their *own* tenure on
+ * it (derived from ResourceAllocation, not the project's start/end dates)
+ * and their personal contribution description, if they've written one.
+ * Sorted ongoing-first, then most-recent-first.
+ */
+export function getPersonProjectHistory(
+  projectMembers: ProjectMember[],
+  projects: Project[],
+  resourceAllocations: ResourceAllocation[],
+  personId: string
+): PersonProjectHistoryEntry[] {
+  const currentMonth = getHorizonMonths(1)[0];
+
+  return projectMembers
+    .filter((m) => m.personId === personId)
+    .map((m): PersonProjectHistoryEntry | null => {
+      const project = projects.find((p) => p.id === m.projectId);
+      if (!project) return null;
+      const months = resourceAllocations
+        .filter((a) => a.personId === personId && a.projectId === m.projectId && a.allocationPercent > 0)
+        .map((a) => a.month)
+        .toSorted();
+      const ongoing = months.includes(currentMonth);
+      return {
+        project,
+        roleOnProject: m.roleOnProject,
+        contributionDescription: m.contributionDescription,
+        startMonth: months[0] ?? null,
+        endMonth: ongoing ? null : (months[months.length - 1] ?? null),
+        ongoing,
+      };
+    })
+    .filter((e): e is PersonProjectHistoryEntry => e !== null)
+    .toSorted((a, b) => {
+      if (a.ongoing !== b.ongoing) return a.ongoing ? -1 : 1;
+      const aKey = a.endMonth ?? a.startMonth ?? "";
+      const bKey = b.endMonth ?? b.startMonth ?? "";
+      return bKey.localeCompare(aKey);
+    });
+}
+
 export function getProjectSkillDetails(
   projectSkills: ProjectSkill[],
   skills: Skill[],

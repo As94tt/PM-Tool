@@ -39,7 +39,6 @@ import {
   type Department,
   type LanguageProficiency,
   type Person,
-  type Project,
   type SkillLevel,
 } from "@/lib/types";
 
@@ -76,6 +75,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const removePersonCertification = useAppStore((s) => s.removePersonCertification);
   const addProjectMembership = useAppStore((s) => s.addProjectMembership);
   const removeProjectMembership = useAppStore((s) => s.removeProjectMembership);
+  const updateProjectMemberContribution = useAppStore((s) => s.updateProjectMemberContribution);
 
   const [firstName, setFirstName] = useState(person.firstName);
   const [lastName, setLastName] = useState(person.lastName);
@@ -84,6 +84,8 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const [addSkillLevel, setAddSkillLevel] = useState("3");
   const [addCertId, setAddCertId] = useState("");
   const [addProjectId, setAddProjectId] = useState("");
+  const [expandedContributionIds, setExpandedContributionIds] = useState<Set<string>>(new Set());
+  const [contributionDrafts, setContributionDrafts] = useState<Record<string, string>>({});
   const [addProjectRole, setAddProjectRole] = useState("");
   const [newStrength, setNewStrength] = useState("");
   const [newLanguageName, setNewLanguageName] = useState("");
@@ -116,9 +118,11 @@ export function EditProfileSheet({ person }: { person: Person }) {
     .filter((m) => m.personId === person.id)
     .map((m) => {
       const project = projects.find((p) => p.id === m.projectId);
-      return project ? { project, roleOnProject: m.roleOnProject } : null;
+      return project
+        ? { project, roleOnProject: m.roleOnProject, contributionDescription: m.contributionDescription }
+        : null;
     })
-    .filter((m): m is { project: Project; roleOnProject: string } => m !== null);
+    .filter((m): m is NonNullable<typeof m> => m !== null);
 
   const availableProjectsForAdd = projects.filter(
     (p) => !myMemberships.some((m) => m.project.id === p.id)
@@ -172,6 +176,22 @@ export function EditProfileSheet({ person }: { person: Person }) {
     toast.success("Project added");
     setAddProjectId("");
     setAddProjectRole("");
+  }
+
+  function toggleContributionEditor(projectId: string, currentValue?: string) {
+    setExpandedContributionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(projectId)) next.delete(projectId);
+      else next.add(projectId);
+      return next;
+    });
+    setContributionDrafts((prev) => ({ ...prev, [projectId]: prev[projectId] ?? currentValue ?? "" }));
+  }
+
+  function saveContribution(projectId: string) {
+    const draft = contributionDrafts[projectId] ?? "";
+    updateProjectMemberContribution(person.id, projectId, draft.trim());
+    toast.success("Project details updated");
   }
 
   function toggleInterest(id: string) {
@@ -318,22 +338,51 @@ export function EditProfileSheet({ person }: { person: Person }) {
             <section>
               <h3 className="mb-3 text-sm font-semibold">Projects</h3>
               <div className="flex flex-col gap-2">
-                {myMemberships.map(({ project, roleOnProject }) => (
-                  <div key={project.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm">{project.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
+                {myMemberships.map(({ project, roleOnProject, contributionDescription }) => {
+                  const isExpanded = expandedContributionIds.has(project.id);
+                  return (
+                    <div key={project.id} className="rounded-lg border border-border px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm">{project.name}</p>
+                          <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="shrink-0 text-xs text-muted-foreground"
+                          onClick={() => toggleContributionEditor(project.id, contributionDescription)}
+                        >
+                          {isExpanded ? "Hide" : contributionDescription ? "Edit details" : "Add details"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => removeProjectMembership(person.id, project.id)}
+                          aria-label={`Remove ${project.name}`}
+                        >
+                          <X className="size-3.5" />
+                        </Button>
+                      </div>
+                      {isExpanded && (
+                        <div className="mt-2 border-t border-border/70 pt-2">
+                          <Label className="mb-1.5 text-xs text-muted-foreground">
+                            What I did on this project (shown on my CV)
+                          </Label>
+                          <Textarea
+                            rows={3}
+                            value={contributionDrafts[project.id] ?? contributionDescription ?? ""}
+                            onChange={(e) =>
+                              setContributionDrafts((prev) => ({ ...prev, [project.id]: e.target.value }))
+                            }
+                            onBlur={() => saveContribution(project.id)}
+                            placeholder="Led requirements workshops, delivered the FHIR integration layer…"
+                          />
+                        </div>
+                      )}
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => removeProjectMembership(person.id, project.id)}
-                      aria-label={`Remove ${project.name}`}
-                    >
-                      <X className="size-3.5" />
-                    </Button>
-                  </div>
-                ))}
+                  );
+                })}
                 {myMemberships.length === 0 && <p className="text-sm text-muted-foreground">No projects added yet.</p>}
               </div>
               <div className="mt-3 flex gap-2">

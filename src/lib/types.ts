@@ -158,6 +158,13 @@ export interface ProjectMember {
   projectId: string;
   personId: string;
   roleOnProject: string;
+  /** Free text describing this person's own contribution on this project
+   * ("what I did") — shown on their CV. Optional; falls back to the
+   * project's own shortDescription when not filled in. Dates for this
+   * membership are deliberately not stored here — they're derived from
+   * ResourceAllocation (the months this person actually had FTE on the
+   * project), not typed in by hand. */
+  contributionDescription?: string;
 }
 
 export interface ProjectSkill {

@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Mail, CalendarDays, Award, ArrowLeft, Sparkles, Languages as LanguagesIcon } from "lucide-react";
+import { toast } from "sonner";
+import { MapPin, Mail, CalendarDays, Award, ArrowLeft, Sparkles, Languages as LanguagesIcon, FileDown } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson } from "@/store/hooks";
 import {
@@ -11,6 +13,8 @@ import {
   getPersonSkillDetails,
   getPersonCertificationDetails,
   getPersonProjectsSplit,
+  getPersonProjectHistory,
+  getProjectSkillDetails,
 } from "@/lib/data/queries";
 import {
   getHorizonMonths,
@@ -22,6 +26,7 @@ import {
 import { formatDate } from "@/lib/format";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SkillLevelDots, SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
@@ -30,6 +35,7 @@ import { cn } from "@/lib/utils";
 
 export default function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [generatingCV, setGeneratingCV] = useState(false);
 
   const people = useAppStore((s) => s.people);
   const users = useAppStore((s) => s.users);
@@ -41,6 +47,7 @@ export default function PersonDetailPage() {
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
   const projectMembers = useAppStore((s) => s.projectMembers);
+  const projectSkills = useAppStore((s) => s.projectSkills);
   const projects = useAppStore((s) => s.projects);
   const clients = useAppStore((s) => s.clients);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
@@ -93,6 +100,47 @@ export default function PersonDetailPage() {
     skillsByCategory.set(detail.skill.category, list);
   }
 
+  async function handleGenerateCV() {
+    if (!person) return;
+    setGeneratingCV(true);
+    try {
+      const { downloadCV } = await import("@/lib/pdf/cv-document");
+      const skillGroups = Array.from(skillsByCategory.entries()).map(([category, details]) => ({
+        category,
+        skills: details.map((d) => ({ name: d.skill.name, level: d.level })),
+      }));
+      const history = getPersonProjectHistory(projectMembers, projects, resourceAllocations, person.id);
+      const projectEntries = history.map((entry) => ({
+        projectName: entry.project.name,
+        clientName: entry.project.clientName,
+        roleOnProject: entry.roleOnProject,
+        startMonth: entry.startMonth,
+        endMonth: entry.endMonth,
+        ongoing: entry.ongoing,
+        description: entry.contributionDescription?.trim() || entry.project.shortDescription,
+        outcomes: entry.project.outcomes,
+        technologies: getProjectSkillDetails(projectSkills, skills, entry.project.id).map((s) => s.name),
+      }));
+      await downloadCV({
+        person,
+        location,
+        email: user?.email,
+        skillGroups,
+        certifications: myCerts.map((c) => ({
+          name: c.certification.name,
+          issuer: c.certification.issuer,
+          issuedDate: c.issuedDate,
+          expiryDate: c.expiryDate,
+        })),
+        industries: myIndustries.map((i) => i.name),
+        projects: projectEntries,
+      });
+      toast.success("CV generated");
+    } finally {
+      setGeneratingCV(false);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6 pb-8">
       <Link href="/people" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
@@ -133,7 +181,12 @@ export default function PersonDetailPage() {
             </span>
           </div>
         </div>
-        {canEdit && <EditProfileSheet person={person} />}
+        <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
+          <Button variant="outline" size="sm" onClick={handleGenerateCV} disabled={generatingCV} className="gap-1.5">
+            <FileDown className="size-3.5" /> {generatingCV ? "Generating…" : "Create CV"}
+          </Button>
+          {canEdit && <EditProfileSheet person={person} />}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

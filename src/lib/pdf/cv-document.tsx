@@ -2,23 +2,48 @@ import { Document, Page, View, Text, StyleSheet, pdf } from "@react-pdf/renderer
 import { hashColor } from "@/lib/color-hash";
 import { fullName, initials } from "@/lib/data/queries";
 import { formatDate } from "@/lib/format";
+import { formatMonthLabel } from "@/lib/data/capacity";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { NAVY, ORANGE, AMBER, SLATE, INK, MUTED, PAPER, HAIRLINE } from "@/lib/pdf/brand";
 import type { Person, Location } from "@/lib/types";
 
-export interface ProposalPersonData {
-  person: Person;
-  location?: Location;
+export interface CVSkillGroup {
+  category: string;
   skills: { name: string; level: number }[];
-  certifications: { name: string; issuer: string }[];
-  industries: string[];
-  projects: { name: string; clientName: string; roleOnProject: string; description: string }[];
 }
 
-// Avatars are drawn as color-hashed initials (same scheme as ClientLogo)
-// rather than fetching each person's real photo — avoids depending on
-// third-party image hosts (CORS, latency, load failures) being reachable
-// at PDF-generation time.
+export interface CVCertification {
+  name: string;
+  issuer: string;
+  issuedDate: string;
+  expiryDate?: string;
+}
+
+export interface CVProjectEntry {
+  projectName: string;
+  clientName: string;
+  roleOnProject: string;
+  /** "YYYY-MM" — this person's own tenure on the project, derived from
+   * their ResourceAllocation rows, not the project's own start/end dates.
+   * Null when there's no allocation history to derive from at all. */
+  startMonth: string | null;
+  endMonth: string | null;
+  ongoing: boolean;
+  description: string;
+  outcomes: string[];
+  technologies: string[];
+}
+
+export interface CVData {
+  person: Person;
+  location?: Location;
+  email?: string;
+  skillGroups: CVSkillGroup[];
+  certifications: CVCertification[];
+  industries: string[];
+  projects: CVProjectEntry[];
+}
+
 const styles = StyleSheet.create({
   page: {
     paddingTop: 44,
@@ -29,36 +54,22 @@ const styles = StyleSheet.create({
     color: INK,
     backgroundColor: PAPER,
   },
-  // ---- cover page ----
-  coverPage: {
-    backgroundColor: NAVY,
-    padding: 56,
-    fontFamily: "Helvetica",
-    color: "#ffffff",
-  },
+  // ---- cover ----
+  coverPage: { backgroundColor: NAVY, padding: 56, fontFamily: "Helvetica", color: "#ffffff" },
   coverEyebrow: { fontSize: 10, color: AMBER, fontFamily: "Helvetica-Bold", letterSpacing: 2, textTransform: "uppercase" },
   coverBrand: { fontSize: 15, fontFamily: "Helvetica-Bold", color: ORANGE, marginTop: 6 },
-  coverTitle: { fontSize: 30, fontFamily: "Helvetica-Bold", color: "#ffffff", marginTop: 90, lineHeight: 1.15 },
+  coverTitle: { fontSize: 30, fontFamily: "Helvetica-Bold", color: "#ffffff", marginTop: 70 },
   coverRule: { height: 3, width: 64, backgroundColor: ORANGE, marginTop: 18 },
-  coverMetaRow: { flexDirection: "row", gap: 28, marginTop: 22 },
+  coverAvatarRow: { flexDirection: "row", alignItems: "center", gap: 16, marginTop: 40 },
+  coverAvatar: { width: 64, height: 64, borderRadius: 32, alignItems: "center", justifyContent: "center" },
+  coverAvatarText: { fontFamily: "Helvetica-Bold", fontSize: 22 },
+  coverName: { fontSize: 18, fontFamily: "Helvetica-Bold", color: "#ffffff" },
+  coverRole: { fontSize: 11, color: "#b7bcda", marginTop: 3 },
+  coverMetaRow: { flexDirection: "row", gap: 28, marginTop: 40 },
   coverMetaLabel: { fontSize: 8, color: "#9aa0c8", textTransform: "uppercase", letterSpacing: 1 },
   coverMetaValue: { fontSize: 10.5, color: "#ffffff", marginTop: 3 },
-  coverListWrap: { marginTop: 56, flexGrow: 1 },
-  coverListTitle: { fontSize: 9, color: "#9aa0c8", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 12 },
-  coverRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#3d4152",
-  },
-  coverAvatar: { width: 30, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center" },
-  coverAvatarText: { fontFamily: "Helvetica-Bold", fontSize: 10 },
-  coverRowName: { fontSize: 11, fontFamily: "Helvetica-Bold", color: "#ffffff" },
-  coverRowRole: { fontSize: 9, color: "#b7bcda", marginTop: 1 },
   coverFooter: { position: "absolute", bottom: 40, left: 56, right: 56, fontSize: 8, color: "#9aa0c8" },
-  // ---- one-pager ----
+  // ---- content ----
   headerBar: { height: 5, backgroundColor: ORANGE, marginHorizontal: -44, marginTop: -44, marginBottom: 24 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   avatarWrap: { flexDirection: "row", alignItems: "center", gap: 12 },
@@ -87,6 +98,7 @@ const styles = StyleSheet.create({
   twoColCol: { flex: 1 },
   chipsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   chip: { backgroundColor: "#eef0f4", borderRadius: 4, paddingVertical: 3, paddingHorizontal: 7, fontSize: 8.5, color: NAVY },
+  techChip: { backgroundColor: "#f1f2f5", borderRadius: 4, paddingVertical: 2.5, paddingHorizontal: 6, fontSize: 7.5, color: SLATE },
   strengthChip: {
     backgroundColor: "#fff2df",
     color: "#8a5300",
@@ -99,19 +111,24 @@ const styles = StyleSheet.create({
   langRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },
   langName: { fontSize: 9 },
   langLevel: { fontSize: 8, color: MUTED },
+  skillCategory: { fontSize: 7.5, color: MUTED, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4, marginTop: 8 },
   skillGrid: { flexDirection: "row", flexWrap: "wrap" },
   skillItem: { width: "50%", flexDirection: "row", justifyContent: "space-between", paddingRight: 12, marginBottom: 5 },
   skillName: { fontSize: 9 },
   skillLevel: { fontSize: 8, color: MUTED },
-  certRow: { marginBottom: 4 },
+  certRow: { marginBottom: 6 },
   certName: { fontSize: 9, fontFamily: "Helvetica-Bold" },
-  certIssuer: { fontSize: 8, color: MUTED },
-  projectBlock: { marginBottom: 7, paddingBottom: 7, borderBottomWidth: 1, borderBottomColor: HAIRLINE },
+  certMeta: { fontSize: 8, color: MUTED },
+  projectBlock: { marginBottom: 10, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: HAIRLINE },
   projectTitleRow: { flexDirection: "row", justifyContent: "space-between" },
-  projectName: { fontSize: 9.5, fontFamily: "Helvetica-Bold", color: NAVY },
-  projectRole: { fontSize: 8, color: SLATE },
-  projectClient: { fontSize: 8, color: MUTED, marginTop: 1 },
-  projectDesc: { fontSize: 8.5, color: INK, marginTop: 3, lineHeight: 1.4 },
+  projectName: { fontSize: 10.5, fontFamily: "Helvetica-Bold", color: NAVY },
+  projectDates: { fontSize: 8.5, color: SLATE },
+  projectSubRow: { fontSize: 8.5, color: MUTED, marginTop: 1 },
+  projectDesc: { fontSize: 9, color: INK, marginTop: 4, lineHeight: 1.45 },
+  outcomeRow: { flexDirection: "row", marginTop: 3, gap: 5 },
+  outcomeDot: { width: 3, height: 3, borderRadius: 1.5, backgroundColor: ORANGE, marginTop: 4 },
+  outcomeText: { fontSize: 8.5, color: INK, flex: 1, lineHeight: 1.35 },
+  techRow: { flexDirection: "row", flexWrap: "wrap", gap: 4, marginTop: 5 },
   footer: {
     position: "absolute",
     bottom: 20,
@@ -127,49 +144,52 @@ const styles = StyleSheet.create({
   },
 });
 
-function CoverPage({ people, preparedBy, preparedDate }: { people: ProposalPersonData[]; preparedBy?: string; preparedDate: string }) {
+function tenureLabel(entry: CVProjectEntry): string {
+  const start = entry.startMonth ? formatMonthLabel(entry.startMonth, { month: "short", year: "numeric" }) : "—";
+  const end = entry.ongoing ? "Ongoing" : entry.endMonth ? formatMonthLabel(entry.endMonth, { month: "short", year: "numeric" }) : start;
+  return `${start} – ${end}`;
+}
+
+function CoverPage({ data, preparedDate }: { data: CVData; preparedDate: string }) {
+  const { person, location } = data;
+  const { bg, fg } = hashColor(fullName(person));
+
   return (
     <Page size="A4" style={styles.coverPage}>
       <Text style={styles.coverEyebrow}>Internal Company Platform</Text>
       <Text style={styles.coverBrand}>Nexus</Text>
-      <Text style={styles.coverTitle}>Staffing{"\n"}Proposal</Text>
+      <Text style={styles.coverTitle}>Curriculum Vitae</Text>
       <View style={styles.coverRule} />
 
-      <View style={styles.coverMetaRow}>
-        {preparedBy && (
-          <View>
-            <Text style={styles.coverMetaLabel}>Prepared by</Text>
-            <Text style={styles.coverMetaValue}>{preparedBy}</Text>
-          </View>
-        )}
-        <View>
-          <Text style={styles.coverMetaLabel}>Date</Text>
-          <Text style={styles.coverMetaValue}>{preparedDate}</Text>
+      <View style={styles.coverAvatarRow}>
+        <View style={[styles.coverAvatar, { backgroundColor: bg }]}>
+          <Text style={[styles.coverAvatarText, { color: fg }]}>{initials(person)}</Text>
         </View>
         <View>
-          <Text style={styles.coverMetaLabel}>Candidates</Text>
-          <Text style={styles.coverMetaValue}>{people.length}</Text>
+          <Text style={styles.coverName}>{fullName(person)}</Text>
+          <Text style={styles.coverRole}>
+            {person.jobTitle} · {person.department}
+          </Text>
         </View>
       </View>
 
-      <View style={styles.coverListWrap}>
-        <Text style={styles.coverListTitle}>Included in this proposal</Text>
-        {people.map(({ person }) => {
-          const { bg, fg } = hashColor(fullName(person));
-          return (
-            <View key={person.id} style={styles.coverRow}>
-              <View style={[styles.coverAvatar, { backgroundColor: bg }]}>
-                <Text style={[styles.coverAvatarText, { color: fg }]}>{initials(person)}</Text>
-              </View>
-              <View>
-                <Text style={styles.coverRowName}>{fullName(person)}</Text>
-                <Text style={styles.coverRowRole}>
-                  {person.jobTitle} · {person.department}
-                </Text>
-              </View>
-            </View>
-          );
-        })}
+      <View style={styles.coverMetaRow}>
+        {location && (
+          <View>
+            <Text style={styles.coverMetaLabel}>Location</Text>
+            <Text style={styles.coverMetaValue}>
+              {location.city}, {location.country}
+            </Text>
+          </View>
+        )}
+        <View>
+          <Text style={styles.coverMetaLabel}>With Nexus since</Text>
+          <Text style={styles.coverMetaValue}>{formatDate(person.joinedDate)}</Text>
+        </View>
+        <View>
+          <Text style={styles.coverMetaLabel}>Generated</Text>
+          <Text style={styles.coverMetaValue}>{preparedDate}</Text>
+        </View>
       </View>
 
       <Text style={styles.coverFooter} fixed>
@@ -179,12 +199,12 @@ function CoverPage({ people, preparedBy, preparedDate }: { people: ProposalPerso
   );
 }
 
-function OnePager({ data, preparedBy, preparedDate }: { data: ProposalPersonData; preparedBy?: string; preparedDate: string }) {
-  const { person, location, skills, certifications, industries, projects } = data;
+function ContentPage({ data }: { data: CVData }) {
+  const { person, location, email, skillGroups, certifications, industries, projects } = data;
   const { bg, fg } = hashColor(fullName(person));
 
   return (
-    <Page size="A4" style={styles.page}>
+    <Page size="A4" style={styles.page} wrap>
       <View style={styles.headerBar} fixed />
 
       <View style={styles.headerRow}>
@@ -197,16 +217,15 @@ function OnePager({ data, preparedBy, preparedDate }: { data: ProposalPersonData
             <Text style={styles.subtitle}>
               {person.jobTitle} · {person.department}
             </Text>
-            {location && (
-              <Text style={styles.meta}>
-                {location.city}, {location.country}
-              </Text>
-            )}
+            <Text style={styles.meta}>
+              {location ? `${location.city}, ${location.country}` : ""}
+              {email ? `  ·  ${email}` : ""}
+            </Text>
           </View>
         </View>
         <View style={styles.brand}>
           <Text style={styles.brandName}>Nexus</Text>
-          <Text style={styles.brandTag}>Candidate proposal</Text>
+          <Text style={styles.brandTag}>Curriculum Vitae</Text>
         </View>
       </View>
 
@@ -228,7 +247,7 @@ function OnePager({ data, preparedBy, preparedDate }: { data: ProposalPersonData
         </View>
       )}
 
-      <View style={[styles.section, styles.twoColRow]}>
+      <View style={[styles.section, styles.twoColRow]} wrap={false}>
         {industries.length > 0 && (
           <View style={styles.twoColCol}>
             <Text style={styles.sectionTitle}>Industry Experience</Text>
@@ -254,27 +273,35 @@ function OnePager({ data, preparedBy, preparedDate }: { data: ProposalPersonData
         )}
       </View>
 
-      {skills.length > 0 && (
+      {skillGroups.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Skills</Text>
-          <View style={styles.skillGrid}>
-            {skills.slice(0, 8).map((s) => (
-              <View key={s.name} style={styles.skillItem}>
-                <Text style={styles.skillName}>{s.name}</Text>
-                <Text style={styles.skillLevel}>{SKILL_LEVEL_LABEL[s.level as 1 | 2 | 3 | 4 | 5] ?? s.level}</Text>
+          {skillGroups.map((group) => (
+            <View key={group.category} wrap={false}>
+              <Text style={styles.skillCategory}>{group.category}</Text>
+              <View style={styles.skillGrid}>
+                {group.skills.map((s) => (
+                  <View key={s.name} style={styles.skillItem}>
+                    <Text style={styles.skillName}>{s.name}</Text>
+                    <Text style={styles.skillLevel}>{SKILL_LEVEL_LABEL[s.level as 1 | 2 | 3 | 4 | 5] ?? s.level}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
+            </View>
+          ))}
         </View>
       )}
 
       {certifications.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Certifications</Text>
-          {certifications.slice(0, 5).map((c) => (
-            <View key={c.name} style={styles.certRow}>
+          {certifications.map((c) => (
+            <View key={c.name} style={styles.certRow} wrap={false}>
               <Text style={styles.certName}>{c.name}</Text>
-              <Text style={styles.certIssuer}>{c.issuer}</Text>
+              <Text style={styles.certMeta}>
+                {c.issuer} · Issued {formatDate(c.issuedDate)}
+                {c.expiryDate ? ` · Expires ${formatDate(c.expiryDate)}` : ""}
+              </Text>
             </View>
           ))}
         </View>
@@ -282,52 +309,62 @@ function OnePager({ data, preparedBy, preparedDate }: { data: ProposalPersonData
 
       {projects.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Relevant Project Experience</Text>
-          {projects.slice(0, 3).map((p, i) => (
-            <View key={i} style={styles.projectBlock}>
+          <Text style={styles.sectionTitle}>Project Experience</Text>
+          {projects.map((p, i) => (
+            <View key={i} style={styles.projectBlock} wrap={false}>
               <View style={styles.projectTitleRow}>
-                <Text style={styles.projectName}>{p.name}</Text>
-                <Text style={styles.projectRole}>{p.roleOnProject}</Text>
+                <Text style={styles.projectName}>{p.projectName}</Text>
+                <Text style={styles.projectDates}>{tenureLabel(p)}</Text>
               </View>
-              <Text style={styles.projectClient}>{p.clientName}</Text>
+              <Text style={styles.projectSubRow}>
+                {p.roleOnProject} · {p.clientName}
+              </Text>
               <Text style={styles.projectDesc}>{p.description}</Text>
+              {p.outcomes.slice(0, 3).map((outcome, oi) => (
+                <View key={oi} style={styles.outcomeRow}>
+                  <View style={styles.outcomeDot} />
+                  <Text style={styles.outcomeText}>{outcome}</Text>
+                </View>
+              ))}
+              {p.technologies.length > 0 && (
+                <View style={styles.techRow}>
+                  {p.technologies.map((tech) => (
+                    <Text key={tech} style={styles.techChip}>
+                      {tech}
+                    </Text>
+                  ))}
+                </View>
+              )}
             </View>
           ))}
         </View>
       )}
 
-      <View style={styles.footer} fixed>
-        <Text>{preparedBy ? `Prepared by ${preparedBy}` : "Nexus staffing proposal"}</Text>
-        <Text>{preparedDate}</Text>
-      </View>
+      <Text
+        style={styles.footer}
+        fixed
+        render={({ pageNumber, totalPages }) => `${fullName(person)} — CV  ·  Page ${pageNumber} of ${totalPages}`}
+      />
     </Page>
   );
 }
 
-function ProposalDocument({
-  people,
-  preparedBy,
-}: {
-  people: ProposalPersonData[];
-  preparedBy?: string;
-}) {
+function CVDocument({ data }: { data: CVData }) {
   const preparedDate = formatDate(new Date().toISOString().slice(0, 10));
   return (
-    <Document title="Nexus Staffing Proposal">
-      <CoverPage people={people} preparedBy={preparedBy} preparedDate={preparedDate} />
-      {people.map((data) => (
-        <OnePager key={data.person.id} data={data} preparedBy={preparedBy} preparedDate={preparedDate} />
-      ))}
+    <Document title={`${fullName(data.person)} — CV`}>
+      <CoverPage data={data} preparedDate={preparedDate} />
+      <ContentPage data={data} />
     </Document>
   );
 }
 
-export async function downloadStaffingProposal(people: ProposalPersonData[], preparedBy?: string) {
-  const blob = await pdf(<ProposalDocument people={people} preparedBy={preparedBy} />).toBlob();
+export async function downloadCV(data: CVData) {
+  const blob = await pdf(<CVDocument data={data} />).toBlob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `staffing-proposal-${new Date().toISOString().slice(0, 10)}.pdf`;
+  a.download = `${data.person.firstName}-${data.person.lastName}-CV.pdf`.toLowerCase();
   document.body.appendChild(a);
   a.click();
   a.remove();

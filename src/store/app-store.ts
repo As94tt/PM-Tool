@@ -88,6 +88,7 @@ export interface AppState {
   setProjectSkills: (projectId: string, skillIds: string[]) => void;
   addProjectMembership: (personId: string, projectId: string, roleOnProject: string) => void;
   removeProjectMembership: (personId: string, projectId: string) => void;
+  updateProjectMemberContribution: (personId: string, projectId: string, contributionDescription: string) => void;
 
   addClient: (client: Client) => void;
   updateClient: (clientId: string, patch: Partial<Client>) => void;
@@ -325,6 +326,12 @@ export function createAppStore() {
             } else {
               state.projectMembers.push({ personId, projectId, roleOnProject });
             }
+          }),
+
+        updateProjectMemberContribution: (personId, projectId, contributionDescription) =>
+          set((state) => {
+            const member = state.projectMembers.find((m) => m.personId === personId && m.projectId === projectId);
+            if (member) member.contributionDescription = contributionDescription;
           }),
 
         removeProjectMembership: (personId, projectId) =>
