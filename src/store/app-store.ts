@@ -134,6 +134,7 @@ export interface AppState {
 
   addFeedbackNote: (note: { type: FeedbackType; text: string; authorPersonId: string }) => void;
   removeFeedbackNote: (noteId: string) => void;
+  toggleFeedbackVote: (noteId: string, personId: string) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -170,6 +171,11 @@ function repairState(state: AppState): AppState {
     projectStrengths: Array.isArray(p.projectStrengths) ? p.projectStrengths : [],
   }));
 
+  const feedbackNotes = state.feedbackNotes.map((n) => ({
+    ...n,
+    votedByPersonIds: Array.isArray(n.votedByPersonIds) ? n.votedByPersonIds : [],
+  }));
+
   const resourceAllocations = state.resourceAllocations.filter(
     (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId)
   );
@@ -204,6 +210,7 @@ function repairState(state: AppState): AppState {
   return {
     ...state,
     people,
+    feedbackNotes,
     resourceAllocations,
     projectRoleRequirements,
     projectRoleAssignments,
@@ -583,12 +590,28 @@ export function createAppStore() {
               "feedback",
               state.feedbackNotes.map((n) => n.id)
             );
-            state.feedbackNotes.unshift({ id, type, text, authorPersonId, createdAt: new Date().toISOString() });
+            state.feedbackNotes.unshift({
+              id,
+              type,
+              text,
+              authorPersonId,
+              createdAt: new Date().toISOString(),
+              votedByPersonIds: [],
+            });
           }),
 
         removeFeedbackNote: (noteId) =>
           set((state) => {
             state.feedbackNotes = state.feedbackNotes.filter((n) => n.id !== noteId);
+          }),
+
+        toggleFeedbackVote: (noteId, personId) =>
+          set((state) => {
+            const note = state.feedbackNotes.find((n) => n.id === noteId);
+            if (!note) return;
+            const idx = note.votedByPersonIds.indexOf(personId);
+            if (idx === -1) note.votedByPersonIds.push(personId);
+            else note.votedByPersonIds.splice(idx, 1);
           }),
       })),
       {

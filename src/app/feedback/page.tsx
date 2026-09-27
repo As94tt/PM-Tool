@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Bug, Lightbulb, Plus, X, StickyNote } from "lucide-react";
+import { Bug, Lightbulb, Plus, X, StickyNote, ThumbsUp } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson } from "@/store/hooks";
 import { fullName, initials } from "@/lib/data/queries";
@@ -44,6 +44,7 @@ export default function FeedbackPage() {
   const people = useAppStore((s) => s.people);
   const addFeedbackNote = useAppStore((s) => s.addFeedbackNote);
   const removeFeedbackNote = useAppStore((s) => s.removeFeedbackNote);
+  const toggleFeedbackVote = useAppStore((s) => s.toggleFeedbackVote);
   const currentPerson = useCurrentPerson();
 
   const [open, setOpen] = useState(false);
@@ -62,6 +63,10 @@ export default function FeedbackPage() {
   function handleRemove(id: string) {
     removeFeedbackNote(id);
     toast.success("Removed");
+  }
+
+  function handleToggleVote(id: string) {
+    toggleFeedbackVote(id, currentPerson.id);
   }
 
   return (
@@ -133,6 +138,8 @@ export default function FeedbackPage() {
             const author = people.find((p) => p.id === note.authorPersonId);
             const style = TYPE_STYLES[note.type];
             const Icon = style.icon;
+            const hasVoted = note.votedByPersonIds.includes(currentPerson.id);
+            const voteCount = note.votedByPersonIds.length;
             return (
               <div
                 key={note.id}
@@ -153,14 +160,28 @@ export default function FeedbackPage() {
                   <Icon className="size-3" /> {style.label}
                 </span>
                 <p className="min-h-[3rem] flex-1 text-sm whitespace-pre-wrap text-foreground/90">{note.text}</p>
-                <div className="flex items-center gap-2 border-t border-black/5 pt-2 dark:border-white/10">
-                  <Avatar className="size-5">
-                    <AvatarImage src={author?.avatarUrl} alt={author ? fullName(author) : ""} />
-                    <AvatarFallback className="text-[9px]">{author ? initials(author) : "?"}</AvatarFallback>
-                  </Avatar>
-                  <span className="truncate text-[11px] text-foreground/60">
-                    {author ? fullName(author) : "Unknown"} · {formatWhen(note.createdAt)}
-                  </span>
+                <div className="flex items-center justify-between gap-2 border-t border-black/5 pt-2 dark:border-white/10">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <Avatar className="size-5">
+                      <AvatarImage src={author?.avatarUrl} alt={author ? fullName(author) : ""} />
+                      <AvatarFallback className="text-[9px]">{author ? initials(author) : "?"}</AvatarFallback>
+                    </Avatar>
+                    <span className="truncate text-[11px] text-foreground/60">
+                      {author ? fullName(author) : "Unknown"} · {formatWhen(note.createdAt)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleToggleVote(note.id)}
+                    aria-pressed={hasVoted}
+                    className={cn(
+                      "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors",
+                      hasVoted
+                        ? "bg-primary/15 text-primary"
+                        : "text-foreground/60 hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10"
+                    )}
+                  >
+                    <ThumbsUp className={cn("size-3", hasVoted && "fill-current")} /> {voteCount}
+                  </button>
                 </div>
               </div>
             );

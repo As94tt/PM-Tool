@@ -239,6 +239,8 @@ export interface FeedbackNote {
   text: string;
   authorPersonId: string;
   createdAt: string; // ISO datetime
+  /** Person IDs who've upvoted this note — one vote per person, toggled on/off. */
+  votedByPersonIds: string[];
 }
 
 export interface Dataset {
