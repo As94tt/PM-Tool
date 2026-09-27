@@ -21,7 +21,7 @@ import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MiniBarChart } from "@/components/charts/mini-bar-chart";
+import { AllocationHeatmapRow, AllocationHeatmapLegend } from "@/components/charts/allocation-heatmap";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
 import { ProjectPlanningDialog } from "@/components/projects/project-planning-dialog";
@@ -151,15 +151,22 @@ export default function ProjectDetailPage() {
               <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
                 <Users className="size-4" /> Team & resource allocation
               </h2>
-              {canSeeBudget && <ProjectPlanningDialog project={project} />}
+              <div className="flex flex-wrap items-center gap-3">
+                <AllocationHeatmapLegend />
+                {canSeeBudget && <ProjectPlanningDialog project={project} />}
+              </div>
             </div>
             {chartMonths.length > 0 && (
-              <div className="mt-3 flex items-center gap-1 pl-12 text-[10px] text-muted-foreground">
-                {chartMonths.map((m, i) => (
-                  <span key={m} className="flex-1 text-center">
-                    {i % 2 === 0 ? formatMonthLabel(m, { month: "short" }) : ""}
-                  </span>
-                ))}
+              <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground">
+                <div className="size-9 shrink-0" />
+                <div className="w-32 shrink-0" />
+                <div className="flex min-w-0 flex-1 gap-[2px]">
+                  {chartMonths.map((m, i) => (
+                    <span key={m} className="flex-1 text-center">
+                      {i % 2 === 0 ? formatMonthLabel(m, { month: "short" }) : ""}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
             <div className="mt-1 flex flex-col divide-y divide-border/70">
@@ -183,13 +190,7 @@ export default function ProjectDetailPage() {
                       <p className="truncate text-sm font-medium">{fullName(person)}</p>
                       <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
                     </div>
-                    <MiniBarChart
-                      data={chartData}
-                      height={26}
-                      showLabels={false}
-                      valueFormatter={(v) => `${v}% allocated`}
-                      className="min-w-0 flex-1"
-                    />
+                    <AllocationHeatmapRow data={chartData} />
                   </Link>
                 );
               })}
