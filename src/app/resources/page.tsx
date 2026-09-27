@@ -8,7 +8,7 @@ import { CalendarRange, Wallet } from "lucide-react";
 
 export default function ResourcesPage() {
   return (
-    <RoleGate allow={["management", "admin"]}>
+    <RoleGate functionKey="resources">
       <div className="flex flex-col gap-6 pb-8">
         <div>
           <h1 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">Budget & Resources</h1>

@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
+import { useCanEditFunction, useCanViewFunction } from "@/store/hooks";
 import {
   getProjectMemberDetails,
   getProjectSkillDetails,
@@ -34,7 +35,8 @@ const STATUS_BADGE: Record<ProjectStatus, string> = {
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
 
-  const role = useAppStore((s) => s.viewAsRole);
+  const canSeeBudget = useCanViewFunction("resources");
+  const canEdit = useCanEditFunction("projects");
   const projects = useAppStore((s) => s.projects);
   const industries = useAppStore((s) => s.industries);
   const skills = useAppStore((s) => s.skills);
@@ -67,8 +69,6 @@ export default function ProjectDetailPage() {
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
   const similar = getSimilarProjects(projects, projectSkills, project.id, 3);
   const budgetPlan = budgetPlans.find((b) => b.projectId === project.id);
-  const canSeeBudget = role === "management" || role === "admin";
-  const canEdit = role === "admin";
 
   return (
     <div className="flex flex-col gap-6 pb-8">

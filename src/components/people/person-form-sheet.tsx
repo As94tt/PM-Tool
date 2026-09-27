@@ -32,9 +32,11 @@ export function PersonFormSheet() {
   const interests = useAppStore((s) => s.interests);
   const roles = useAppStore((s) => s.roles);
   const importPeople = useAppStore((s) => s.importPeople);
+  const addUser = useAppStore((s) => s.addUser);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [jobTitle, setJobTitle] = useState(roles[0]?.name ?? "");
   const [department, setDepartment] = useState<Department>(DEPARTMENTS[0]);
   const [locationId, setLocationId] = useState(locations[0]?.id ?? "");
@@ -55,6 +57,7 @@ export function PersonFormSheet() {
   function reset() {
     setFirstName("");
     setLastName("");
+    setEmail("");
     setJobTitle(roles[0]?.name ?? "");
     setBio("");
     setInterestIds([]);
@@ -62,8 +65,8 @@ export function PersonFormSheet() {
   }
 
   function handleSubmit() {
-    if (!firstName.trim() || !lastName.trim() || !jobTitle.trim()) {
-      toast.error("First name, last name and job title are required");
+    if (!firstName.trim() || !lastName.trim() || !jobTitle.trim() || !email.trim()) {
+      toast.error("First name, last name, email and job title are required");
       return;
     }
 
@@ -85,6 +88,9 @@ export function PersonFormSheet() {
     };
 
     importPeople([newPerson]);
+    // Every new registration starts as a User — a real SSO claim will
+    // eventually replace this, but the role still needs to start somewhere.
+    addUser({ personId: id, email: email.trim(), role: "user" });
     toast.success("Person added");
     setOpen(false);
     reset();
@@ -119,6 +125,18 @@ export function PersonFormSheet() {
                   Last name
                 </Label>
                 <Input id="np-last" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" />
+              </div>
+              <div className="col-span-2">
+                <Label htmlFor="np-email" className="mb-1.5">
+                  Email
+                </Label>
+                <Input
+                  id="np-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="jane.doe@nexuscorp.example"
+                />
               </div>
               <div className="col-span-2">
                 <Label className="mb-1.5">Job title / role</Label>

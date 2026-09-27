@@ -18,11 +18,13 @@ import type {
   Certification,
   Interest,
   Role,
+  User,
   ProjectRoleRequirement,
   ProjectRoleAssignment,
   FeedbackNote,
   FeedbackType,
 } from "@/lib/types";
+import { APP_FUNCTIONS, DEFAULT_PERMISSIONS, type PermissionLevel, type PermissionMatrix } from "@/lib/permissions";
 import {
   INITIAL_LOCATIONS,
   INITIAL_INDUSTRIES,
@@ -57,6 +59,8 @@ export interface AppState {
   interests: typeof INITIAL_INTERESTS;
   roles: typeof INITIAL_ROLES;
   users: typeof INITIAL_USERS;
+  /** Admin-editable see/edit/hide matrix per app function and role — see lib/permissions.ts. */
+  permissions: PermissionMatrix;
 
   // core entities
   people: Person[];
@@ -135,6 +139,15 @@ export interface AppState {
   addFeedbackNote: (note: { type: FeedbackType; text: string; authorPersonId: string }) => void;
   removeFeedbackNote: (noteId: string) => void;
   toggleFeedbackVote: (noteId: string, personId: string) => void;
+
+  /** Creates a login/role record for a person — called right when a new
+   * person is added, so "every new registration gets role User" holds. */
+  addUser: (user: { personId: string; email: string; role: AppRole }) => void;
+  /** Admin's "change this person's role" action. Updates their existing
+   * User record, or creates one (with a synthesized email) if they
+   * somehow don't have one yet — e.g. a CSV-imported or legacy person. */
+  setPersonRole: (personId: string, role: AppRole) => void;
+  setPermission: (functionKey: string, role: AppRole, level: PermissionLevel) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -145,6 +158,12 @@ function nextId(prefix: string, existingIds: string[]) {
     id = `${prefix}-${n}`;
   }
   return id;
+}
+
+/** Fallback email for a person who needs a User record but wasn't given one
+ * explicitly (CSV import, or self-healing a legacy person with none at all). */
+function synthesizeEmail(person: Person): string {
+  return `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase().replace(/[^a-z]/g, "")}@nexuscorp.example`;
 }
 
 /**
@@ -175,6 +194,21 @@ function repairState(state: AppState): AppState {
     ...n,
     votedByPersonIds: Array.isArray(n.votedByPersonIds) ? n.votedByPersonIds : [],
   }));
+
+  // Every function/role pair always has a level — merge over the defaults
+  // rather than trusting whatever's persisted, so a browser session from
+  // before this feature (or before a newly-added function) self-heals
+  // instead of treating an unset cell as "hidden".
+  const permissions: PermissionMatrix = {};
+  for (const fn of APP_FUNCTIONS) {
+    permissions[fn.key] = { ...DEFAULT_PERMISSIONS[fn.key], ...(state.permissions?.[fn.key] ?? {}) };
+  }
+
+  const existingUserPersonIds = new Set(state.users.map((u) => u.personId));
+  const missingUsers: User[] = people
+    .filter((p) => !existingUserPersonIds.has(p.id))
+    .map((p) => ({ id: `user-repair-${p.id}`, personId: p.id, email: synthesizeEmail(p), role: "user" }));
+  const users = [...state.users, ...missingUsers];
 
   const resourceAllocations = state.resourceAllocations.filter(
     (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId)
@@ -211,6 +245,8 @@ function repairState(state: AppState): AppState {
     ...state,
     people,
     feedbackNotes,
+    permissions,
+    users,
     resourceAllocations,
     projectRoleRequirements,
     projectRoleAssignments,
@@ -232,6 +268,7 @@ export function createAppStore() {
         interests: INITIAL_INTERESTS,
         roles: INITIAL_ROLES,
         users: INITIAL_USERS,
+        permissions: DEFAULT_PERMISSIONS,
 
         people: INITIAL_PEOPLE,
         personSkills: INITIAL_PERSON_SKILLS,
@@ -613,6 +650,39 @@ export function createAppStore() {
             if (idx === -1) note.votedByPersonIds.push(personId);
             else note.votedByPersonIds.splice(idx, 1);
           }),
+
+        addUser: ({ personId, email, role }) =>
+          set((state) => {
+            const id = nextId(
+              "user",
+              state.users.map((u) => u.id)
+            );
+            state.users.push({ id, personId, email, role });
+          }),
+
+        setPersonRole: (personId, role) =>
+          set((state) => {
+            const existing = state.users.find((u) => u.personId === personId);
+            if (existing) {
+              existing.role = role;
+              return;
+            }
+            const person = state.people.find((p) => p.id === personId);
+            if (!person) return;
+            const id = nextId(
+              "user",
+              state.users.map((u) => u.id)
+            );
+            state.users.push({ id, personId, email: synthesizeEmail(person), role });
+          }),
+
+        setPermission: (functionKey, role, level) =>
+          set((state) => {
+            if (!state.permissions[functionKey]) {
+              state.permissions[functionKey] = { user: "hidden", management: "hidden", admin: "hidden" };
+            }
+            state.permissions[functionKey][role] = level;
+          }),
       })),
       {
         name: "nexus-pm-tool-store",
@@ -628,6 +698,8 @@ export function createAppStore() {
           certifications: state.certifications,
           interests: state.interests,
           roles: state.roles,
+          users: state.users,
+          permissions: state.permissions,
           people: state.people,
           personSkills: state.personSkills,
           personCertifications: state.personCertifications,

@@ -25,29 +25,31 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsUpDown, UserRound } from "lucide-react";
-import type { AppRole } from "@/lib/types";
-
-const ROLE_LABEL: Record<AppRole, string> = {
-  user: "User",
-  management: "Management",
-  admin: "Admin",
-};
+import { ChevronsUpDown, UserRound, LogOut } from "lucide-react";
+import { ROLE_LABEL } from "@/lib/permissions";
+import { AUTH_STORAGE_KEY } from "@/components/auth/auth-gate";
 
 export function AppSidebar() {
   const pathname = usePathname();
   const role = useAppStore((s) => s.viewAsRole);
-  const setViewAsRole = useAppStore((s) => s.setViewAsRole);
+  const permissions = useAppStore((s) => s.permissions);
   const person = useCurrentPerson();
 
-  const items = NAV_ITEMS.filter((item) => canAccess(role, item));
-  const showBugs = canAccess(role, BUGS_NAV_ITEM);
-  const showAdmin = canAccess(role, ADMIN_NAV_ITEM);
+  const items = NAV_ITEMS.filter((item) => canAccess(permissions, role, item));
+  const showBugs = canAccess(permissions, role, BUGS_NAV_ITEM);
+  const showAdmin = canAccess(permissions, role, ADMIN_NAV_ITEM);
+
+  function handleLogOut() {
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch {
+      // localStorage unavailable — nothing to clear
+    }
+    window.location.reload();
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -151,19 +153,14 @@ export function AppSidebar() {
               <DropdownMenuContent side="top" align="start" className="w-64">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <UserRound className="size-3.5" /> Signed in as
+                    <UserRound className="size-3.5" /> Signed in as {ROLE_LABEL[role]}
                   </DropdownMenuLabel>
                   <DropdownMenuItem render={<Link href={`/people/${person.id}`} />}>My profile</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={role} onValueChange={(v) => setViewAsRole(v as AppRole)}>
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">
-                    Demo: view platform as
-                  </DropdownMenuLabel>
-                  <DropdownMenuRadioItem value="user">User</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="management">Management</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="admin">Admin</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+                <DropdownMenuItem onClick={handleLogOut} variant="destructive">
+                  <LogOut className="size-3.5" /> Log out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

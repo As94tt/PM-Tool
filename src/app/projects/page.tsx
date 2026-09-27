@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, X, FolderKanban, LayoutGrid, Rows3 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
+import { useCanEditFunction } from "@/store/hooks";
 import { filterProjects, getProjectSkillDetails, getProjectMemberDetails, type ProjectFilters } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
 import { formatDate } from "@/lib/format";
@@ -35,7 +36,7 @@ export default function ProjectsPage() {
 
 function ProjectsPageInner() {
   const searchParams = useSearchParams();
-  const role = useAppStore((s) => s.viewAsRole);
+  const canEdit = useCanEditFunction("projects");
   const projects = useAppStore((s) => s.projects);
   const projectSkills = useAppStore((s) => s.projectSkills);
   const projectMembers = useAppStore((s) => s.projectMembers);
@@ -85,7 +86,7 @@ function ProjectsPageInner() {
             Browse project experience and reference engagements — not a task tracker.
           </p>
         </div>
-        {role === "admin" && <ProjectFormSheet />}
+        {canEdit && <ProjectFormSheet />}
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">

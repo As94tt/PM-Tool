@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase } from "lucide-react";
+import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, UserCog, KeyRound } from "lucide-react";
 import { RoleGate } from "@/components/shared/role-gate";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,11 +11,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CsvImportWizard } from "@/components/admin/csv-import-wizard";
 import { PEOPLE_IMPORT_FIELDS, PROJECT_IMPORT_FIELDS } from "@/lib/csv-import";
 import { selectLabel } from "@/lib/select-utils";
+import { fullName, initials } from "@/lib/data/queries";
 import { useAppStore } from "@/store/app-store-provider";
-import { DEPARTMENTS, type Department, type Person, type Project, type SkillCategory } from "@/lib/types";
+import {
+  APP_FUNCTIONS,
+  ROLE_LABEL,
+  PERMISSION_LEVEL_LABEL,
+  getPermission,
+  type PermissionLevel,
+} from "@/lib/permissions";
+import { DEPARTMENTS, type AppRole, type Department, type Person, type Project, type SkillCategory } from "@/lib/types";
+
+const ROLE_OPTIONS: AppRole[] = ["user", "management", "admin"];
+const PERMISSION_LEVEL_OPTIONS: PermissionLevel[] = ["hidden", "view", "edit"];
 
 const SKILL_CATEGORIES: SkillCategory[] = [
   "Cloud",
@@ -97,8 +110,12 @@ export default function AdminPage() {
   const interests = useAppStore((s) => s.interests);
   const certifications = useAppStore((s) => s.certifications);
   const roles = useAppStore((s) => s.roles);
+  const users = useAppStore((s) => s.users);
+  const permissions = useAppStore((s) => s.permissions);
 
   const importPeople = useAppStore((s) => s.importPeople);
+  const setPersonRole = useAppStore((s) => s.setPersonRole);
+  const setPermission = useAppStore((s) => s.setPermission);
   const importProjects = useAppStore((s) => s.importProjects);
   const addSkill = useAppStore((s) => s.addSkill);
   const removeSkill = useAppStore((s) => s.removeSkill);
@@ -162,6 +179,9 @@ export default function AdminPage() {
       };
     });
     importPeople(newPeople);
+    // Every new person gets a login/role record, defaulting to "User" —
+    // same as the "New person" form, just for the bulk-import path.
+    for (const person of newPeople) setPersonRole(person.id, "user");
     return newPeople.length;
   }
 
@@ -253,8 +273,20 @@ export default function AdminPage() {
     toast.success("Role removed");
   }
 
+  function handleChangePersonRole(personId: string, role: AppRole) {
+    setPersonRole(personId, role);
+    toast.success("Role updated");
+  }
+
+  function handleChangePermission(functionKey: string, role: AppRole, level: PermissionLevel) {
+    // Admins always keep at least view access to Administration itself —
+    // otherwise this table could lock every admin out with no way back in.
+    if (functionKey === "admin" && role === "admin" && level === "hidden") return;
+    setPermission(functionKey, role, level);
+  }
+
   return (
-    <RoleGate allow={["admin"]}>
+    <RoleGate functionKey="admin">
       <div className="flex flex-col gap-6 pb-8">
         <div>
           <h1 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">Administration</h1>
@@ -280,6 +312,12 @@ export default function AdminPage() {
             </TabsTrigger>
             <TabsTrigger value="roles">
               <Briefcase className="size-3.5" /> Roles
+            </TabsTrigger>
+            <TabsTrigger value="users">
+              <UserCog className="size-3.5" /> Users
+            </TabsTrigger>
+            <TabsTrigger value="permissions">
+              <KeyRound className="size-3.5" /> Permissions
             </TabsTrigger>
           </TabsList>
 
@@ -501,6 +539,127 @@ export default function AdminPage() {
               onAdd={handleAddRole}
               onRemove={handleRemoveRole}
             />
+          </TabsContent>
+
+          <TabsContent value="users" className="mt-4">
+            <Card className="p-6 shadow-elevation-1">
+              <h2 className="font-heading text-base font-semibold">User management</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Every registration starts as a User. Promote people to Management or Admin here — this stands in
+                for real role assignment once the company SSO is wired up.
+              </p>
+
+              <Table className="mt-5">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Person</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead className="w-44">Role</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...people]
+                    .sort((a, b) => fullName(a).localeCompare(fullName(b)))
+                    .map((person) => {
+                      const user = users.find((u) => u.personId === person.id);
+                      const currentRole = user?.role ?? "user";
+                      return (
+                        <TableRow key={person.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-2.5">
+                              <Avatar className="size-7">
+                                <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
+                                <AvatarFallback className="text-[10px]">{initials(person)}</AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-medium">{fullName(person)}</p>
+                                <p className="truncate text-xs text-muted-foreground">{person.jobTitle}</p>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{user?.email ?? "—"}</TableCell>
+                          <TableCell>
+                            <Select
+                              value={currentRole}
+                              onValueChange={(v) => v && handleChangePersonRole(person.id, v as AppRole)}
+                            >
+                              <SelectTrigger size="sm" className="w-full">
+                                <SelectValue>{ROLE_LABEL[currentRole]}</SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ROLE_OPTIONS.map((r) => (
+                                  <SelectItem key={r} value={r}>
+                                    {ROLE_LABEL[r]}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+              {people.length === 0 && <p className="py-3 text-sm text-muted-foreground">No people yet.</p>}
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="permissions" className="mt-4">
+            <Card className="p-6 shadow-elevation-1">
+              <h2 className="font-heading text-base font-semibold">Permissions</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                For each area of the app, choose what each role can do — hidden entirely, view-only, or able to
+                edit.
+              </p>
+
+              <Table className="mt-5">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Function</TableHead>
+                    {ROLE_OPTIONS.map((r) => (
+                      <TableHead key={r} className="w-44">
+                        {ROLE_LABEL[r]}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {APP_FUNCTIONS.map((fn) => (
+                    <TableRow key={fn.key}>
+                      <TableCell>
+                        <p className="text-sm font-medium">{fn.label}</p>
+                        <p className="text-xs text-muted-foreground">{fn.description}</p>
+                      </TableCell>
+                      {ROLE_OPTIONS.map((r) => {
+                        const level = getPermission(permissions, fn.key, r);
+                        const locked = fn.key === "admin" && r === "admin";
+                        return (
+                          <TableCell key={r}>
+                            <Select
+                              value={level}
+                              onValueChange={(v) => v && handleChangePermission(fn.key, r, v as PermissionLevel)}
+                              disabled={locked}
+                            >
+                              <SelectTrigger size="sm" className="w-full">
+                                <SelectValue>{PERMISSION_LEVEL_LABEL[level]}</SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {PERMISSION_LEVEL_OPTIONS.map((lvl) => (
+                                  <SelectItem key={lvl} value={lvl}>
+                                    {PERMISSION_LEVEL_LABEL[lvl]}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            {locked && <p className="mt-1 text-[11px] text-muted-foreground">Always available to Admins</p>}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

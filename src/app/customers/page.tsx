@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, Building2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
+import { useCanEditFunction } from "@/store/hooks";
 import { getProjectsForClient } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
 import { ClientLogo } from "@/components/shared/client-logo";
@@ -13,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 
 export default function CustomersPage() {
-  const role = useAppStore((s) => s.viewAsRole);
+  const canEdit = useCanEditFunction("customers");
   const clients = useAppStore((s) => s.clients);
   const industries = useAppStore((s) => s.industries);
   const projects = useAppStore((s) => s.projects);
@@ -38,7 +39,7 @@ export default function CustomersPage() {
             Client companies, contacts and branding used across project experience.
           </p>
         </div>
-        {role === "admin" && <CustomerFormSheet />}
+        {canEdit && <CustomerFormSheet />}
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">

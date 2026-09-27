@@ -6,7 +6,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { MapPin, Mail, CalendarDays, Award, ArrowLeft, Sparkles, Languages as LanguagesIcon, FileDown } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { useCurrentPerson } from "@/store/hooks";
+import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
 import {
   fullName,
   initials,
@@ -51,7 +51,7 @@ export default function PersonDetailPage() {
   const projects = useAppStore((s) => s.projects);
   const clients = useAppStore((s) => s.clients);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
-  const role = useAppStore((s) => s.viewAsRole);
+  const canEditPeople = useCanEditFunction("people");
   const currentPerson = useCurrentPerson();
 
   const person = people.find((p) => p.id === id);
@@ -91,7 +91,7 @@ export default function PersonDetailPage() {
     }
   }
 
-  const canEdit = role === "admin" || currentPerson.id === person.id;
+  const canEdit = canEditPeople || currentPerson.id === person.id;
 
   const skillsByCategory = new Map<string, typeof mySkills>();
   for (const detail of mySkills) {

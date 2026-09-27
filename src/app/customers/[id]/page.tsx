@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Mail, Phone, Building2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
+import { useCanEditFunction } from "@/store/hooks";
 import { getProjectsForClient } from "@/lib/data/queries";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
@@ -13,7 +14,7 @@ import { Card } from "@/components/ui/card";
 export default function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
 
-  const role = useAppStore((s) => s.viewAsRole);
+  const canEdit = useCanEditFunction("customers");
   const clients = useAppStore((s) => s.clients);
   const industries = useAppStore((s) => s.industries);
   const projects = useAppStore((s) => s.projects);
@@ -33,7 +34,6 @@ export default function CustomerDetailPage() {
 
   const industry = industries.find((i) => i.id === client.industryId);
   const clientProjects = getProjectsForClient(projects, client.name);
-  const canEdit = role === "admin";
 
   return (
     <div className="flex flex-col gap-6 pb-8">

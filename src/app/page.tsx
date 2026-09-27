@@ -13,7 +13,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { useCurrentPerson } from "@/store/hooks";
+import { useCurrentPerson, useCanViewFunction } from "@/store/hooks";
 import {
   getDashboardStats,
   getPeopleBecomingAvailableSoon,
@@ -47,7 +47,7 @@ const STATUS_BADGE: Record<ProjectStatus, string> = {
 
 export default function DashboardPage() {
   const person = useCurrentPerson();
-  const role = useAppStore((s) => s.viewAsRole);
+  const canSeeBudget = useCanViewFunction("resources");
   const people = useAppStore((s) => s.people);
   const projects = useAppStore((s) => s.projects);
   const skills = useAppStore((s) => s.skills);
@@ -77,7 +77,6 @@ export default function DashboardPage() {
 
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
-  const canSeeBudget = role === "management" || role === "admin";
   const horizon = getHorizonMonths(12);
   const budget = getBudgetOverview(projects, budgetPlans, projectRoleRequirements, projectRoleAssignments);
   const capacityData = horizon.map((month) => {

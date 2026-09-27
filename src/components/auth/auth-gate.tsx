@@ -4,19 +4,26 @@ import { useEffect, useState, type FormEvent } from "react";
 import { LogoMark } from "@/components/shared/logo-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAppStore } from "@/store/app-store-provider";
+import { ROLE_LABEL } from "@/lib/permissions";
+import { cn } from "@/lib/utils";
+import type { AppRole } from "@/lib/types";
 
-const STORAGE_KEY = "nexus-pm-tool-unlocked";
+export const AUTH_STORAGE_KEY = "nexus-pm-tool-unlocked";
 const PASSWORD = "POCpmtool";
+const ROLE_OPTIONS: AppRole[] = ["user", "management", "admin"];
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
+  const setViewAsRole = useAppStore((s) => s.setViewAsRole);
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<AppRole>("user");
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let value = false;
     try {
-      value = localStorage.getItem(STORAGE_KEY) === "true";
+      value = localStorage.getItem(AUTH_STORAGE_KEY) === "true";
     } catch {
       value = false;
     }
@@ -31,10 +38,13 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     e.preventDefault();
     if (password === PASSWORD) {
       try {
-        localStorage.setItem(STORAGE_KEY, "true");
+        localStorage.setItem(AUTH_STORAGE_KEY, "true");
       } catch {
         // localStorage unavailable (private browsing, etc.) — stay unlocked for this session only
       }
+      // Stands in for a real SSO claim until the company SSO is wired up —
+      // for now, the role is simply picked at login, not tied to identity.
+      setViewAsRole(selectedRole);
       setUnlocked(true);
       setError(false);
     } else {
@@ -57,6 +67,26 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           <span className="font-heading text-lg font-semibold tracking-tight">Nexus</span>
         </div>
         <form onSubmit={handleSubmit} className="flex w-full max-w-xs flex-col gap-3">
+          <div>
+            <p className="mb-1.5 text-center text-xs text-muted-foreground">Log in as</p>
+            <div className="flex rounded-lg border border-border p-1">
+              {ROLE_OPTIONS.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setSelectedRole(r)}
+                  className={cn(
+                    "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
+                    selectedRole === r
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {ROLE_LABEL[r]}
+                </button>
+              ))}
+            </div>
+          </div>
           <Input
             type="password"
             autoFocus

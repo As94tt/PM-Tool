@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Search, X, Users2, FileText, Loader2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { useCurrentPerson } from "@/store/hooks";
+import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
 import {
   filterPeople,
   getPersonSkillDetails,
@@ -52,7 +52,7 @@ function PeoplePageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const role = useAppStore((s) => s.viewAsRole);
+  const canEdit = useCanEditFunction("people");
   const people = useAppStore((s) => s.people);
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
@@ -210,7 +210,7 @@ function PeoplePageInner() {
           <Button variant={proposalMode ? "secondary" : "outline"} onClick={toggleProposalMode}>
             <FileText className="size-4" /> {proposalMode ? "Cancel selection" : "Create Staffing Proposal"}
           </Button>
-          {role === "admin" && <PersonFormSheet />}
+          {canEdit && <PersonFormSheet />}
         </div>
       </div>
 
