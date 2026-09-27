@@ -573,12 +573,16 @@ PROJECT_DEFS.forEach((def, idx) => {
   });
 
   // ---- project-level role requirements & staffing plan (weekly FTE) ----
-  // Active projects get a full plan-vs-actual demo (a required role per
-  // distinct roleOnProject already on the team, then the real members
-  // staffed against it). The first two planned projects get a staffing
-  // PLAN only (no assignments yet) to demo the "not yet staffed" state.
-  const wantsRolePlan = status === "active" || (status === "planned" && idx <= 15);
-  if (wantsRolePlan) {
+  // Every project's team gets a full plan-vs-actual demo: one required seat
+  // per team member (a role requirement) and, since they're already on the
+  // project, an assignment filling that seat with them — regardless of
+  // status. (Previously this only ran for "active" projects plus the first
+  // few "planned" ones via a leftover `idx <= 15` threshold from the old
+  // 18-project dataset — trivially true at 5 projects, so it silently
+  // always matched "planned" but never "completed", leaving every
+  // completed project's team invisible in the Resource & Budget Planning
+  // dialog despite showing up on the project's own Team & Resource card.)
+  {
     const thisProjectMembers = projectMembers.filter((m) => m.projectId === id);
     const roleGroups = new Map();
     for (const m of thisProjectMembers) {
@@ -620,16 +624,14 @@ PROJECT_DEFS.forEach((def, idx) => {
           ftePerWeek,
         });
 
-        if (status === "active") {
-          const ownRate = Math.round((planDayRate * (0.9 + rnd() * 0.2)) / 5) * 5;
-          projectRoleAssignments.push({
-            id: `asg-${projectRoleAssignments.length + 1}`,
-            projectId: id,
-            roleRequirementId: reqId,
-            personId: member.id,
-            dayRate: ownRate,
-          });
-        }
+        const ownRate = Math.round((planDayRate * (0.9 + rnd() * 0.2)) / 5) * 5;
+        projectRoleAssignments.push({
+          id: `asg-${projectRoleAssignments.length + 1}`,
+          projectId: id,
+          roleRequirementId: reqId,
+          personId: member.id,
+          dayRate: ownRate,
+        });
       });
     }
 

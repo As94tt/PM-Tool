@@ -25,15 +25,23 @@
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-site-reliability-engineering"
+    "skillId": "skill-ansible"
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-aws"
+    "skillId": "skill-kubernetes"
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-docker"
+    "skillId": "skill-network-engineering"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-cloud-security"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-azure"
   },
   {
     "projectId": "project-02",
@@ -41,7 +49,7 @@
   },
   {
     "projectId": "project-03",
-    "skillId": "skill-scrum"
+    "skillId": "skill-kanban"
   },
   {
     "projectId": "project-03",
@@ -49,10 +57,22 @@
   },
   {
     "projectId": "project-03",
-    "skillId": "skill-stakeholder-management"
+    "skillId": "skill-prince2"
   },
   {
     "projectId": "project-03",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-business-analysis"
+  },
+  {
+    "projectId": "project-04",
     "skillId": "skill-kanban"
   },
   {
@@ -61,19 +81,7 @@
   },
   {
     "projectId": "project-04",
-    "skillId": "skill-business-analysis"
-  },
-  {
-    "projectId": "project-04",
     "skillId": "skill-requirements-engineering"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-kanban"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-scrum"
   },
   {
     "projectId": "project-04",
@@ -81,18 +89,18 @@
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-ci-cd"
+    "skillId": "skill-ansible"
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-network-engineering"
+    "skillId": "skill-kubernetes"
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-azure"
+    "skillId": "skill-google-cloud-platform"
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-aws"
+    "skillId": "skill-terraform"
   }
 ]

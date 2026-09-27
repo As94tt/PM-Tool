@@ -16,7 +16,7 @@
       "Zero-downtime cutover for 2.1M connected vehicles"
     ],
     "currency": "EUR",
-    "totalBudget": 308165,
+    "totalBudget": 536774,
     "deliveryResponsiblePersonId": "person-006"
   },
   {
@@ -26,8 +26,8 @@
     "industryId": "ind-automotive",
     "shortDescription": "Implemented a predictive-maintenance data pipeline consuming vehicle sensor telemetry in near real time.",
     "projectType": "Implementation",
-    "startDate": "2026-04-01",
-    "endDate": "2026-11-01",
+    "startDate": "2025-12-01",
+    "endDate": "2027-01-01",
     "status": "active",
     "leadPersonId": "person-001",
     "outcomes": [
@@ -36,8 +36,8 @@
       "Delivered self-service diagnostics dashboard"
     ],
     "currency": "EUR",
-    "totalBudget": 671814,
-    "deliveryResponsiblePersonId": "person-008"
+    "totalBudget": 1104462,
+    "deliveryResponsiblePersonId": "person-003"
   },
   {
     "id": "project-03",
@@ -46,8 +46,8 @@
     "industryId": "ind-healthcare",
     "shortDescription": "Integrated regional patient-record systems onto a standards-based interoperability layer.",
     "projectType": "Systems Integration",
-    "startDate": "2026-07-01",
-    "endDate": "2027-07-01",
+    "startDate": "2026-03-01",
+    "endDate": "2026-11-01",
     "status": "active",
     "leadPersonId": "person-008",
     "outcomes": [
@@ -56,7 +56,8 @@
       "Delivered GDPR-compliant consent management"
     ],
     "currency": "EUR",
-    "totalBudget": 1176480
+    "totalBudget": 757680,
+    "deliveryResponsiblePersonId": "person-009"
   },
   {
     "id": "project-04",
@@ -65,8 +66,8 @@
     "industryId": "ind-logistics",
     "shortDescription": "Advised on route and warehouse network optimization backed by a new demand-forecasting model.",
     "projectType": "Consulting Engagement",
-    "startDate": "2026-08-01",
-    "endDate": "2027-09-01",
+    "startDate": "2025-12-01",
+    "endDate": "2026-09-01",
     "status": "active",
     "leadPersonId": "person-008",
     "outcomes": [
@@ -75,7 +76,7 @@
       "Delivered a reusable forecasting model for planning teams"
     ],
     "currency": "EUR",
-    "totalBudget": 905844
+    "totalBudget": 650016
   },
   {
     "id": "project-05",
@@ -84,8 +85,8 @@
     "industryId": "ind-logistics",
     "shortDescription": "Piloted an automated storage and retrieval system integration across two distribution centers.",
     "projectType": "Implementation",
-    "startDate": "2027-02-01",
-    "endDate": "2028-02-01",
+    "startDate": "2027-01-01",
+    "endDate": "2027-07-01",
     "status": "planned",
     "leadPersonId": "person-005",
     "outcomes": [
@@ -94,7 +95,7 @@
       "Integrated WMS with robotics control layer"
     ],
     "currency": "EUR",
-    "totalBudget": 631424,
+    "totalBudget": 529151,
     "deliveryResponsiblePersonId": "person-009"
   }
 ]

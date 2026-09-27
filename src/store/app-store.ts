@@ -25,6 +25,8 @@ import type {
   FeedbackType,
 } from "@/lib/types";
 import { APP_FUNCTIONS, DEFAULT_PERMISSIONS, type PermissionLevel, type PermissionMatrix } from "@/lib/permissions";
+import { monthToDate } from "@/lib/data/capacity";
+import { startOfWeek, weekKey, addWeeks, getHorizonWeeks } from "@/lib/data/week-planning";
 import {
   INITIAL_LOCATIONS,
   INITIAL_INDUSTRIES,
@@ -166,6 +168,37 @@ function synthesizeEmail(person: Person): string {
   return `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase().replace(/[^a-z]/g, "")}@nexuscorp.example`;
 }
 
+/** Converts a person's monthly ResourceAllocation rows on a project into a
+ * weekly FTE map, for backfilling a staffing-plan seat that never existed —
+ * grounded in the real (if approximate) monthly numbers instead of a guess.
+ * Falls back to a flat 8-week/100% placeholder when there's no allocation
+ * history at all to derive from (e.g. a membership added by hand). */
+function deriveFtePerWeekFromAllocations(
+  allocations: ResourceAllocation[],
+  personId: string,
+  projectId: string
+): Record<string, number> {
+  const rows = allocations.filter(
+    (a) => a.personId === personId && a.projectId === projectId && a.allocationPercent > 0
+  );
+  const ftePerWeek: Record<string, number> = {};
+  if (rows.length === 0) {
+    for (const week of getHorizonWeeks(8)) ftePerWeek[week] = 1;
+    return ftePerWeek;
+  }
+  for (const row of rows) {
+    const monthStart = monthToDate(row.month);
+    const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0);
+    const fte = Math.round((row.allocationPercent / 100) * 20) / 20;
+    let cursor = startOfWeek(monthStart);
+    while (cursor <= monthEnd) {
+      ftePerWeek[weekKey(cursor)] = fte;
+      cursor = addWeeks(cursor, 1);
+    }
+  }
+  return ftePerWeek;
+}
+
 /**
  * Runs on every rehydration (page load) to keep the persisted state
  * internally consistent, self-healing two classes of drift that can build
@@ -179,6 +212,12 @@ function synthesizeEmail(person: Person): string {
  *     ProjectMember is meant to be the single source of truth for "is this
  *     person on this project," so anything implying membership should
  *     always have a matching row there.
+ *  3. The reverse of #2: a ProjectMember with no staffing-plan seat at all
+ *     (no ProjectRoleAssignment), which used to happen for any project
+ *     whose demo data predated the staffing-plan feature (or, before this
+ *     fix, for completed projects specifically — see generate-data.mjs).
+ *     Backfills a requirement + assignment so "on the team" and "planned"
+ *     never drift apart in either direction.
  */
 function repairState(state: AppState): AppState {
   const peopleIds = new Set(state.people.map((p) => p.id));
@@ -241,6 +280,53 @@ function repairState(state: AppState): AppState {
     }
   }
 
+  const allProjectMembers = [...projectMembers, ...missingMembers];
+
+  // Reverse direction of the sync above: a ProjectMember with no matching
+  // ProjectRoleAssignment at all is invisible in that project's Resource &
+  // Budget Planning dialog even though they show up on the project's own
+  // Team & Resource card — "on the team" and "planned" drift apart, which
+  // is exactly the inconsistency this repair exists to close. Backfill a
+  // seat (a requirement + an assignment filling it) for any member missing
+  // one; day rate is averaged from the project's other seats (a flat
+  // fallback if it has none at all), FTE is derived from the member's own
+  // ResourceAllocation history when there is any.
+  const reqIds = projectRoleRequirements.map((r) => r.id);
+  const asgIds = projectRoleAssignments.map((a) => a.id);
+  const assignedMemberKeys = new Set(projectRoleAssignments.map((a) => memberKey(a.personId, a.projectId)));
+  const backfilledRequirements: ProjectRoleRequirement[] = [];
+  const backfilledAssignments: ProjectRoleAssignment[] = [];
+
+  for (const m of allProjectMembers) {
+    const key = memberKey(m.personId, m.projectId);
+    if (assignedMemberKeys.has(key)) continue;
+
+    const projectReqs = [...projectRoleRequirements, ...backfilledRequirements].filter(
+      (r) => r.projectId === m.projectId
+    );
+    const dayRate =
+      projectReqs.length > 0
+        ? Math.round(projectReqs.reduce((sum, r) => sum + r.dayRate, 0) / projectReqs.length / 5) * 5
+        : 700;
+
+    const reqId = nextId("req-repair", reqIds);
+    reqIds.push(reqId);
+    const requirement: ProjectRoleRequirement = {
+      id: reqId,
+      projectId: m.projectId,
+      roleName: m.roleOnProject,
+      dayRate,
+      ftePerWeek: deriveFtePerWeekFromAllocations(resourceAllocations, m.personId, m.projectId),
+    };
+    backfilledRequirements.push(requirement);
+
+    const asgId = nextId("asg-repair", asgIds);
+    asgIds.push(asgId);
+    backfilledAssignments.push({ id: asgId, projectId: m.projectId, roleRequirementId: reqId, personId: m.personId, dayRate });
+
+    assignedMemberKeys.add(key);
+  }
+
   return {
     ...state,
     people,
@@ -248,9 +334,9 @@ function repairState(state: AppState): AppState {
     permissions,
     users,
     resourceAllocations,
-    projectRoleRequirements,
-    projectRoleAssignments,
-    projectMembers: [...projectMembers, ...missingMembers],
+    projectRoleRequirements: [...projectRoleRequirements, ...backfilledRequirements],
+    projectRoleAssignments: [...projectRoleAssignments, ...backfilledAssignments],
+    projectMembers: allProjectMembers,
   };
 }
 

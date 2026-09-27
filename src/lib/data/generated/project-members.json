@@ -26,43 +26,38 @@
   },
   {
     "projectId": "project-02",
-    "personId": "person-008",
-    "roleOnProject": "Delivery Responsible"
-  },
-  {
-    "projectId": "project-02",
-    "personId": "person-002",
-    "roleOnProject": "Business Analyst"
-  },
-  {
-    "projectId": "project-02",
-    "personId": "person-009",
+    "personId": "person-006",
     "roleOnProject": "Lead Developer"
   },
   {
+    "projectId": "project-02",
+    "personId": "person-005",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-003",
+    "roleOnProject": "Delivery Responsible"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-009",
+    "roleOnProject": "UX Designer"
+  },
+  {
     "projectId": "project-03",
     "personId": "person-008",
     "roleOnProject": "Project Lead"
-  },
-  {
-    "projectId": "project-03",
-    "personId": "person-001",
-    "roleOnProject": "Data Engineer"
-  },
-  {
-    "projectId": "project-03",
-    "personId": "person-002",
-    "roleOnProject": "Consultant"
   },
   {
     "projectId": "project-03",
     "personId": "person-009",
-    "roleOnProject": "Data Engineer"
+    "roleOnProject": "Delivery Responsible"
   },
   {
     "projectId": "project-03",
-    "personId": "person-003",
-    "roleOnProject": "DevOps Engineer"
+    "personId": "person-007",
+    "roleOnProject": "Lead Developer"
   },
   {
     "projectId": "project-04",
@@ -71,18 +66,18 @@
   },
   {
     "projectId": "project-04",
-    "personId": "person-010",
+    "personId": "person-007",
     "roleOnProject": "Solution Architect"
   },
   {
     "projectId": "project-04",
-    "personId": "person-005",
-    "roleOnProject": "Business Analyst"
+    "personId": "person-009",
+    "roleOnProject": "UX Designer"
   },
   {
     "projectId": "project-04",
     "personId": "person-002",
-    "roleOnProject": "Data Engineer"
+    "roleOnProject": "Lead Developer"
   },
   {
     "projectId": "project-05",
@@ -91,22 +86,22 @@
   },
   {
     "projectId": "project-05",
-    "personId": "person-003",
-    "roleOnProject": "Solution Architect"
+    "personId": "person-001",
+    "roleOnProject": "QA Engineer"
   },
   {
     "projectId": "project-05",
     "personId": "person-002",
-    "roleOnProject": "Business Analyst"
-  },
-  {
-    "projectId": "project-05",
-    "personId": "person-007",
-    "roleOnProject": "Business Analyst"
+    "roleOnProject": "Data Engineer"
   },
   {
     "projectId": "project-05",
     "personId": "person-009",
     "roleOnProject": "Delivery Responsible"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-003",
+    "roleOnProject": "QA Engineer"
   }
 ]
