@@ -118,7 +118,10 @@ export interface AppState {
   addRoleRequirement: (requirement: { projectId: string; roleName: string; dayRate: number }) => void;
   removeRoleRequirement: (requirementId: string) => void;
   updateRoleRequirementDayRate: (requirementId: string, dayRate: number) => void;
-  setRoleRequirementWeekFte: (requirementId: string, week: string, fte: number) => void;
+  /** Sets one requirement's FTE for every week in `weeks` to the same value
+   * (a single week for a week-level edit, or a whole month's weeks at once
+   * for a month-level edit that's meant to cascade). */
+  setRoleRequirementWeeksFte: (requirementId: string, weeks: string[], fte: number) => void;
 
   addRoleAssignment: (assignment: {
     projectId: string;
@@ -728,12 +731,14 @@ export function createAppStore() {
             if (req) req.dayRate = dayRate;
           }),
 
-        setRoleRequirementWeekFte: (requirementId, week, fte) =>
+        setRoleRequirementWeeksFte: (requirementId, weeks, fte) =>
           set((state) => {
             const req = state.projectRoleRequirements.find((r) => r.id === requirementId);
             if (!req) return;
-            if (fte > 0) req.ftePerWeek[week] = fte;
-            else delete req.ftePerWeek[week];
+            for (const week of weeks) {
+              if (fte > 0) req.ftePerWeek[week] = fte;
+              else delete req.ftePerWeek[week];
+            }
             const affectedAssignments = state.projectRoleAssignments.filter((a) => a.roleRequirementId === requirementId);
             for (const a of affectedAssignments) syncMonthlyAllocations(state, a.personId, a.projectId);
           }),
