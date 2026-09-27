@@ -145,6 +145,71 @@ function nextId(prefix: string, existingIds: string[]) {
   return id;
 }
 
+/**
+ * Runs on every rehydration (page load) to keep the persisted state
+ * internally consistent, self-healing two classes of drift that can build
+ * up in a browser's localStorage over time as the app evolves:
+ *  1. A person saved before a field existed (e.g. `languages`,
+ *     `projectStrengths`) won't have it — code that assumes it's always an
+ *     array (like the PDF export) would otherwise crash.
+ *  2. Rows that reference a person/project that no longer exists (e.g.
+ *     after a demo-data regeneration), or an allocation/staffing-plan
+ *     entry for a person+project pair with no matching ProjectMember —
+ *     ProjectMember is meant to be the single source of truth for "is this
+ *     person on this project," so anything implying membership should
+ *     always have a matching row there.
+ */
+function repairState(state: AppState): AppState {
+  const peopleIds = new Set(state.people.map((p) => p.id));
+  const projectIds = new Set(state.projects.map((p) => p.id));
+
+  const people = state.people.map((p) => ({
+    ...p,
+    languages: Array.isArray(p.languages) ? p.languages : [],
+    projectStrengths: Array.isArray(p.projectStrengths) ? p.projectStrengths : [],
+  }));
+
+  const resourceAllocations = state.resourceAllocations.filter(
+    (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId)
+  );
+  const projectRoleRequirements = state.projectRoleRequirements.filter((r) => projectIds.has(r.projectId));
+  const requirementIds = new Set(projectRoleRequirements.map((r) => r.id));
+  const projectRoleAssignments = state.projectRoleAssignments.filter(
+    (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId) && requirementIds.has(a.roleRequirementId)
+  );
+  const projectMembers = state.projectMembers.filter(
+    (m) => peopleIds.has(m.personId) && projectIds.has(m.projectId)
+  );
+
+  const memberKey = (personId: string, projectId: string) => `${personId}|${projectId}`;
+  const memberSet = new Set(projectMembers.map((m) => memberKey(m.personId, m.projectId)));
+  const missingMembers: ProjectMember[] = [];
+  for (const a of resourceAllocations) {
+    const key = memberKey(a.personId, a.projectId);
+    if (!memberSet.has(key)) {
+      missingMembers.push({ personId: a.personId, projectId: a.projectId, roleOnProject: "Team Member" });
+      memberSet.add(key);
+    }
+  }
+  for (const a of projectRoleAssignments) {
+    const key = memberKey(a.personId, a.projectId);
+    if (!memberSet.has(key)) {
+      const requirement = projectRoleRequirements.find((r) => r.id === a.roleRequirementId);
+      missingMembers.push({ personId: a.personId, projectId: a.projectId, roleOnProject: requirement?.roleName ?? "Team Member" });
+      memberSet.add(key);
+    }
+  }
+
+  return {
+    ...state,
+    people,
+    resourceAllocations,
+    projectRoleRequirements,
+    projectRoleAssignments,
+    projectMembers: [...projectMembers, ...missingMembers],
+  };
+}
+
 export function createAppStore() {
   return createStore<AppState>()(
     persist(
@@ -264,8 +329,19 @@ export function createAppStore() {
 
         removeProjectMembership: (personId, projectId) =>
           set((state) => {
+            // ProjectMember is the single source of truth for "is this
+            // person on this project" — removing it must also drop any
+            // allocation/staffing-plan rows for the same pair, or they'd
+            // keep showing this person's utilization on a project they're
+            // no longer part of.
             state.projectMembers = state.projectMembers.filter(
               (m) => !(m.personId === personId && m.projectId === projectId)
+            );
+            state.resourceAllocations = state.resourceAllocations.filter(
+              (a) => !(a.personId === personId && a.projectId === projectId)
+            );
+            state.projectRoleAssignments = state.projectRoleAssignments.filter(
+              (a) => !(a.personId === personId && a.projectId === projectId)
             );
           }),
 
@@ -473,6 +549,14 @@ export function createAppStore() {
               state.projectRoleAssignments.map((a) => a.id)
             );
             state.projectRoleAssignments.push({ id, projectId, roleRequirementId, personId, dayRate });
+            // Keep ProjectMember (the single source of truth for "on this
+            // project") in sync — staffing someone via the planning dialog
+            // must make them show up in the project's own team list too.
+            const isMember = state.projectMembers.some((m) => m.personId === personId && m.projectId === projectId);
+            if (!isMember) {
+              const requirement = state.projectRoleRequirements.find((r) => r.id === roleRequirementId);
+              state.projectMembers.push({ projectId, personId, roleOnProject: requirement?.roleName ?? "Team Member" });
+            }
           }),
 
         removeRoleAssignment: (assignmentId) =>
@@ -504,6 +588,8 @@ export function createAppStore() {
         name: "nexus-pm-tool-store",
         version: 1,
         storage: createJSONStorage(() => localStorage),
+        merge: (persistedState, currentState) =>
+          repairState({ ...currentState, ...(persistedState as Partial<AppState>) }),
         partialize: (state) => ({
           currentUserId: state.currentUserId,
           viewAsRole: state.viewAsRole,
