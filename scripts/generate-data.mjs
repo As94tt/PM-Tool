@@ -161,53 +161,73 @@ const TRACKS = {
     categories: ["Cloud", "Infrastructure"],
     titles: ["Cloud Engineer", "Cloud Solutions Architect", "Senior Cloud Architect", "Platform Engineer", "DevOps Engineer"],
     certs: ["cert-aws-saa", "cert-aws-devops", "cert-az-arch", "cert-gcp-arch", "cert-cka"],
+    strengths: ["Cloud migration", "Cost optimization", "Infrastructure automation", "Landing zone design"],
   },
   dev: {
     categories: ["Software Development", "Cloud"],
     titles: ["Software Engineer", "Senior Software Engineer", "Backend Developer", "Frontend Developer", "Full-Stack Engineer", "Engineering Lead"],
     certs: ["cert-aws-saa", "cert-cka"],
+    strengths: ["Clean architecture", "Agile delivery", "Code quality & testing", "API design"],
   },
   data: {
     categories: ["Data & AI", "Software Development"],
     titles: ["Data Engineer", "Data Scientist", "Machine Learning Engineer", "Analytics Consultant", "BI Consultant"],
     certs: ["cert-databricks", "cert-aws-saa"],
+    strengths: ["Data storytelling", "ML productionization", "Pipeline reliability", "Stakeholder reporting"],
   },
   telco: {
     categories: ["Telco", "Infrastructure"],
     titles: ["Telco Network Engineer", "5G Solutions Consultant", "Network Architect", "OSS/BSS Consultant"],
     certs: ["cert-ccnp", "cert-itil"],
+    strengths: ["Network design", "Vendor management", "Rollout planning", "Field troubleshooting"],
   },
   infra: {
     categories: ["Infrastructure", "Cloud"],
     titles: ["Infrastructure Engineer", "Systems Administrator", "Site Reliability Engineer", "Network Engineer"],
     certs: ["cert-ccnp", "cert-itil", "cert-cka"],
+    strengths: ["Reliability engineering", "Incident response", "Capacity planning", "Automation scripting"],
   },
   security: {
     categories: ["Cybersecurity", "Infrastructure"],
     titles: ["Security Consultant", "Security Architect", "Penetration Tester", "GRC Consultant"],
     certs: ["cert-cissp", "cert-cism", "cert-comptia-sec", "cert-iso27001"],
+    strengths: ["Risk assessment", "Compliance alignment", "Security awareness training", "Threat modeling"],
   },
   pm: {
     categories: ["Project Management", "Business"],
     titles: ["Project Manager", "Senior Project Manager", "Program Manager", "Scrum Master", "Delivery Lead"],
     certs: ["cert-pmp", "cert-psm", "cert-prince2"],
+    strengths: ["Stakeholder management", "Risk & issue management", "Cross-team coordination", "Delivery governance"],
   },
   business: {
     categories: ["Business", "Project Management"],
     titles: ["Business Analyst", "Senior Business Analyst", "Management Consultant", "Change Manager"],
     certs: ["cert-togaf", "cert-prince2"],
+    strengths: ["Requirements elicitation", "Process redesign", "Change management", "Workshop facilitation"],
   },
   sales: {
     categories: ["Sales", "Business"],
     titles: ["Account Manager", "Sales Director", "Business Development Manager", "Bid Manager"],
     certs: ["cert-sfdc-admin"],
+    strengths: ["Client relationship building", "Solution selling", "Contract negotiation", "Bid management"],
   },
   design: {
     categories: ["Design / UX", "Software Development"],
     titles: ["UX Designer", "UI Designer", "Senior Product Designer", "Design Lead"],
     certs: [],
+    strengths: ["User research", "Design systems", "Rapid prototyping", "Accessibility"],
   },
 };
+
+const COUNTRY_LANGUAGE = {
+  Germany: "German",
+  Romania: "Romanian",
+  Portugal: "Portuguese",
+  Poland: "Polish",
+  "United Kingdom": "English",
+  Netherlands: "Dutch",
+};
+const EXTRA_LANGUAGES = ["French", "Spanish", "Italian", "Mandarin"];
 const TRACK_KEYS = Object.keys(TRACKS);
 
 // each track maps to one of the four company departments
@@ -336,6 +356,22 @@ for (let i = 0; i < PERSON_COUNT; i++) {
   const interestIds = sampleUnique(interests, rndInt(2, 4)).map((i) => i.id);
   const industryExperienceIds = sampleUnique(industries, rndInt(1, 3)).map((i) => i.id);
 
+  // languages: native tongue from the office's country (English if that IS
+  // the local language), business-fluent English everywhere else, and
+  // sometimes a third language for variety
+  const localLanguage = COUNTRY_LANGUAGE[location.country] ?? "English";
+  const languages = [{ name: localLanguage, proficiency: "Native" }];
+  if (localLanguage !== "English") {
+    languages.push({ name: "English", proficiency: chance(0.6) ? "Fluent" : "Professional" });
+  }
+  if (chance(0.35)) {
+    const extra = pick(EXTRA_LANGUAGES.filter((l) => l !== localLanguage));
+    languages.push({ name: extra, proficiency: chance(0.5) ? "Conversational" : "Basic" });
+  }
+
+  const strengthPool = [...track.strengths, ...secondaryTrack.strengths];
+  const projectStrengths = sampleUnique(strengthPool, rndInt(2, 3));
+
   const domainLabel = pick(industries).name.toLowerCase();
   const topSkillName = (chosenPrimary[0] ?? skills[0]).name;
   const bio = `${pick(BIO_OPENERS)(firstName, jobTitle, location.city)}, ${pick(BIO_MIDDLES)(years, domainLabel)}. ${pick(BIO_CLOSERS)(topSkillName)}`;
@@ -354,6 +390,8 @@ for (let i = 0; i < PERSON_COUNT; i++) {
     interestIds,
     industryExperienceIds,
     joinedDate,
+    languages,
+    projectStrengths,
     _track: trackKey,
     _seniority: seniority,
   });

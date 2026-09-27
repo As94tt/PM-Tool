@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Mail, CalendarDays, Award, ArrowLeft } from "lucide-react";
+import { MapPin, Mail, CalendarDays, Award, ArrowLeft, Sparkles, Languages as LanguagesIcon } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson } from "@/store/hooks";
 import {
@@ -152,6 +152,21 @@ export default function PersonDetailPage() {
             )}
           </Card>
 
+          {person.projectStrengths.length > 0 && (
+            <Card className="p-6 shadow-elevation-1">
+              <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
+                <Sparkles className="size-4 text-primary" /> Project strengths
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {person.projectStrengths.map((strength) => (
+                  <Badge key={strength} className="bg-primary/10 font-normal text-primary hover:bg-primary/10">
+                    {strength}
+                  </Badge>
+                ))}
+              </div>
+            </Card>
+          )}
+
           <Card className="p-6 shadow-elevation-1">
             <h2 className="font-heading text-base font-semibold">Skills</h2>
             <div className="mt-4 flex flex-col gap-5">
@@ -236,6 +251,21 @@ export default function PersonDetailPage() {
                 </div>
               ))}
               {myCerts.length === 0 && <p className="text-sm text-muted-foreground">No certifications yet.</p>}
+            </div>
+          </Card>
+
+          <Card className="p-5 shadow-elevation-1">
+            <h2 className="flex items-center gap-1.5 font-heading text-sm font-semibold">
+              <LanguagesIcon className="size-4" /> Languages
+            </h2>
+            <div className="mt-3 flex flex-col gap-2">
+              {person.languages.map((lang) => (
+                <div key={lang.name} className="flex items-center justify-between text-sm">
+                  <span>{lang.name}</span>
+                  <span className="text-xs text-muted-foreground">{lang.proficiency}</span>
+                </div>
+              ))}
+              {person.languages.length === 0 && <p className="text-sm text-muted-foreground">No languages added yet.</p>}
             </div>
           </Card>
 

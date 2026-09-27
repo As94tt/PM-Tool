@@ -1,219 +1,219 @@
 [
   {
     "projectId": "project-01",
-    "plannedPersonnelCost": 174938,
+    "plannedPersonnelCost": 285338,
     "monthlyPlannedCost": [
       {
         "month": "2026-03",
-        "plannedCost": 24772
+        "plannedCost": 43030
       },
       {
         "month": "2026-04",
-        "plannedCost": 32452
+        "plannedCost": 51694
       },
       {
         "month": "2026-05",
-        "plannedCost": 29860
+        "plannedCost": 44574
       },
       {
         "month": "2026-06",
-        "plannedCost": 29506
+        "plannedCost": 49214
       },
       {
         "month": "2026-07",
-        "plannedCost": 31196
+        "plannedCost": 51332
       },
       {
         "month": "2026-08",
-        "plannedCost": 27152
+        "plannedCost": 45494
       }
     ]
   },
   {
     "projectId": "project-02",
-    "plannedPersonnelCost": 98100,
+    "plannedPersonnelCost": 251524,
     "monthlyPlannedCost": [
       {
-        "month": "2026-03",
-        "plannedCost": 16860
-      },
-      {
         "month": "2026-04",
-        "plannedCost": 17496
+        "plannedCost": 28546
       },
       {
         "month": "2026-05",
-        "plannedCost": 15912
+        "plannedCost": 31684
       },
       {
         "month": "2026-06",
-        "plannedCost": 15492
+        "plannedCost": 34220
       },
       {
         "month": "2026-07",
-        "plannedCost": 16344
+        "plannedCost": 31230
       },
       {
         "month": "2026-08",
-        "plannedCost": 15996
+        "plannedCost": 29996
+      },
+      {
+        "month": "2026-09",
+        "plannedCost": 33144
+      },
+      {
+        "month": "2026-10",
+        "plannedCost": 34776
+      },
+      {
+        "month": "2026-11",
+        "plannedCost": 27928
       }
     ]
   },
   {
     "projectId": "project-03",
-    "plannedPersonnelCost": 381780,
+    "plannedPersonnelCost": 468574,
     "monthlyPlannedCost": [
       {
-        "month": "2026-04",
-        "plannedCost": 30094
-      },
-      {
-        "month": "2026-05",
-        "plannedCost": 34914
-      },
-      {
-        "month": "2026-06",
-        "plannedCost": 31358
-      },
-      {
         "month": "2026-07",
-        "plannedCost": 34890
+        "plannedCost": 29876
       },
       {
         "month": "2026-08",
-        "plannedCost": 29364
+        "plannedCost": 34292
       },
       {
         "month": "2026-09",
-        "plannedCost": 27704
+        "plannedCost": 35282
       },
       {
         "month": "2026-10",
-        "plannedCost": 31104
+        "plannedCost": 37326
       },
       {
         "month": "2026-11",
-        "plannedCost": 36524
+        "plannedCost": 39564
       },
       {
         "month": "2026-12",
-        "plannedCost": 33428
+        "plannedCost": 35868
       },
       {
         "month": "2027-01",
-        "plannedCost": 30644
+        "plannedCost": 36982
       },
       {
         "month": "2027-02",
-        "plannedCost": 34496
+        "plannedCost": 33314
       },
       {
         "month": "2027-03",
-        "plannedCost": 27260
+        "plannedCost": 37276
+      },
+      {
+        "month": "2027-04",
+        "plannedCost": 38512
+      },
+      {
+        "month": "2027-05",
+        "plannedCost": 41930
+      },
+      {
+        "month": "2027-06",
+        "plannedCost": 36454
+      },
+      {
+        "month": "2027-07",
+        "plannedCost": 31898
       }
     ]
   },
   {
     "projectId": "project-04",
-    "plannedPersonnelCost": 418732,
+    "plannedPersonnelCost": 291268,
     "monthlyPlannedCost": [
       {
-        "month": "2026-07",
-        "plannedCost": 28076
-      },
-      {
         "month": "2026-08",
-        "plannedCost": 29078
+        "plannedCost": 20854
       },
       {
         "month": "2026-09",
-        "plannedCost": 29414
+        "plannedCost": 23422
       },
       {
         "month": "2026-10",
-        "plannedCost": 28486
+        "plannedCost": 22752
       },
       {
         "month": "2026-11",
-        "plannedCost": 29422
+        "plannedCost": 22602
       },
       {
         "month": "2026-12",
-        "plannedCost": 29094
+        "plannedCost": 26510
       },
       {
         "month": "2027-01",
-        "plannedCost": 32264
+        "plannedCost": 22148
       },
       {
         "month": "2027-02",
-        "plannedCost": 31254
+        "plannedCost": 22176
       },
       {
         "month": "2027-03",
-        "plannedCost": 27714
+        "plannedCost": 20316
       },
       {
         "month": "2027-04",
-        "plannedCost": 32478
+        "plannedCost": 21284
       },
       {
         "month": "2027-05",
-        "plannedCost": 30802
+        "plannedCost": 25514
       },
       {
         "month": "2027-06",
-        "plannedCost": 30622
+        "plannedCost": 21978
       },
       {
         "month": "2027-07",
-        "plannedCost": 32970
+        "plannedCost": 23574
       },
       {
         "month": "2027-08",
-        "plannedCost": 27058
+        "plannedCost": 18138
       }
     ]
   },
   {
     "projectId": "project-05",
-    "plannedPersonnelCost": 250282,
+    "plannedPersonnelCost": 263232,
     "monthlyPlannedCost": [
       {
-        "month": "2026-12",
-        "plannedCost": 23928
-      },
-      {
-        "month": "2027-01",
-        "plannedCost": 29116
-      },
-      {
         "month": "2027-02",
-        "plannedCost": 25962
+        "plannedCost": 35354
       },
       {
         "month": "2027-03",
-        "plannedCost": 28292
+        "plannedCost": 43524
       },
       {
         "month": "2027-04",
-        "plannedCost": 29222
+        "plannedCost": 36346
       },
       {
         "month": "2027-05",
-        "plannedCost": 29204
+        "plannedCost": 38018
       },
       {
         "month": "2027-06",
-        "plannedCost": 31164
+        "plannedCost": 35914
       },
       {
         "month": "2027-07",
-        "plannedCost": 28592
+        "plannedCost": 37064
       },
       {
         "month": "2027-08",
-        "plannedCost": 24802
+        "plannedCost": 37012
       }
     ]
   }

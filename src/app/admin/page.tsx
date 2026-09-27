@@ -157,6 +157,8 @@ export default function AdminPage() {
         interestIds: [],
         industryExperienceIds: [],
         joinedDate: now,
+        languages: [],
+        projectStrengths: [],
       };
     });
     importPeople(newPeople);

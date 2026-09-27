@@ -33,7 +33,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { selectLabel } from "@/lib/select-utils";
-import { DEPARTMENTS, type Department, type Person, type Project, type SkillLevel } from "@/lib/types";
+import {
+  DEPARTMENTS,
+  LANGUAGE_PROFICIENCIES,
+  type Department,
+  type LanguageProficiency,
+  type Person,
+  type Project,
+  type SkillLevel,
+} from "@/lib/types";
 
 const ROLE_SUGGESTIONS = [
   "Project Lead",
@@ -77,6 +85,9 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const [addCertId, setAddCertId] = useState("");
   const [addProjectId, setAddProjectId] = useState("");
   const [addProjectRole, setAddProjectRole] = useState("");
+  const [newStrength, setNewStrength] = useState("");
+  const [newLanguageName, setNewLanguageName] = useState("");
+  const [newLanguageProficiency, setNewLanguageProficiency] = useState<LanguageProficiency>("Professional");
 
   const mySkills = getPersonSkillDetails(personSkills, skills, person.id);
   const myCerts = getPersonCertificationDetails(personCertifications, certifications, person.id);
@@ -177,6 +188,29 @@ export function EditProfileSheet({ person }: { person: Person }) {
         ? person.industryExperienceIds.filter((i) => i !== id)
         : [...person.industryExperienceIds, id],
     });
+  }
+
+  function handleAddStrength() {
+    const value = newStrength.trim();
+    if (!value || person.projectStrengths.some((s) => s.toLowerCase() === value.toLowerCase())) return;
+    updatePerson(person.id, { projectStrengths: [...person.projectStrengths, value] });
+    setNewStrength("");
+  }
+
+  function removeStrength(value: string) {
+    updatePerson(person.id, { projectStrengths: person.projectStrengths.filter((s) => s !== value) });
+  }
+
+  function handleAddLanguage() {
+    const name = newLanguageName.trim();
+    if (!name || person.languages.some((l) => l.name.toLowerCase() === name.toLowerCase())) return;
+    updatePerson(person.id, { languages: [...person.languages, { name, proficiency: newLanguageProficiency }] });
+    setNewLanguageName("");
+    setNewLanguageProficiency("Professional");
+  }
+
+  function removeLanguage(name: string) {
+    updatePerson(person.id, { languages: person.languages.filter((l) => l.name !== name) });
   }
 
   return (
@@ -408,6 +442,47 @@ export function EditProfileSheet({ person }: { person: Person }) {
             </section>
 
             <section>
+              <h3 className="mb-3 text-sm font-semibold">Project strengths</h3>
+              <p className="mb-2 text-xs text-muted-foreground">
+                Short selling points for staffing proposals — e.g. &ldquo;Stakeholder management&rdquo;.
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {person.projectStrengths.map((strength) => (
+                  <Badge key={strength} variant="secondary" className="gap-1 font-normal">
+                    {strength}
+                    <button
+                      onClick={() => removeStrength(strength)}
+                      aria-label={`Remove ${strength}`}
+                      className="ml-0.5 rounded-full hover:text-destructive"
+                    >
+                      <X className="size-3" />
+                    </button>
+                  </Badge>
+                ))}
+                {person.projectStrengths.length === 0 && (
+                  <p className="text-sm text-muted-foreground">No strengths added yet.</p>
+                )}
+              </div>
+              <div className="mt-3 flex gap-2">
+                <Input
+                  value={newStrength}
+                  onChange={(e) => setNewStrength(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddStrength();
+                    }
+                  }}
+                  placeholder="Add a strength…"
+                  className="flex-1"
+                />
+                <Button size="sm" onClick={handleAddStrength} disabled={!newStrength.trim()}>
+                  <Plus />
+                </Button>
+              </div>
+            </section>
+
+            <section>
               <h3 className="mb-3 text-sm font-semibold">Certifications</h3>
               <div className="flex flex-col gap-2">
                 {myCerts.map(({ certification }) => (
@@ -450,6 +525,58 @@ export function EditProfileSheet({ person }: { person: Person }) {
                   </SelectContent>
                 </Select>
                 <Button size="sm" onClick={handleAddCert} disabled={!addCertId}>
+                  <Plus />
+                </Button>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="mb-3 text-sm font-semibold">Languages</h3>
+              <div className="flex flex-col gap-2">
+                {person.languages.map((lang) => (
+                  <div key={lang.name} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
+                    <span className="flex-1 truncate text-sm">{lang.name}</span>
+                    <span className="text-xs text-muted-foreground">{lang.proficiency}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => removeLanguage(lang.name)}
+                      aria-label={`Remove ${lang.name}`}
+                    >
+                      <X className="size-3.5" />
+                    </Button>
+                  </div>
+                ))}
+                {person.languages.length === 0 && <p className="text-sm text-muted-foreground">No languages added yet.</p>}
+              </div>
+              <div className="mt-3 flex gap-2">
+                <Input
+                  value={newLanguageName}
+                  onChange={(e) => setNewLanguageName(e.target.value)}
+                  placeholder="Language…"
+                  className="flex-1"
+                />
+                <Select
+                  value={newLanguageProficiency}
+                  onValueChange={(v) => v && setNewLanguageProficiency(v as LanguageProficiency)}
+                >
+                  <SelectTrigger size="sm" className="w-[150px]">
+                    <SelectValue>
+                      {selectLabel(
+                        LANGUAGE_PROFICIENCIES.map((p) => ({ value: p, label: p })),
+                        "Proficiency"
+                      )}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANGUAGE_PROFICIENCIES.map((p) => (
+                      <SelectItem key={p} value={p}>
+                        {p}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button size="sm" onClick={handleAddLanguage} disabled={!newLanguageName.trim()}>
                   <Plus />
                 </Button>
               </div>

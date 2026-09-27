@@ -4,69 +4,90 @@
     "projectId": "project-02",
     "roleRequirementId": "req-1",
     "personId": "person-001",
-    "dayRate": 755
+    "dayRate": 750
   },
   {
     "id": "asg-2",
     "projectId": "project-02",
     "roleRequirementId": "req-2",
-    "personId": "person-006",
-    "dayRate": 465
+    "personId": "person-008",
+    "dayRate": 1170
   },
   {
     "id": "asg-3",
     "projectId": "project-02",
     "roleRequirementId": "req-3",
-    "personId": "person-005",
-    "dayRate": 440
+    "personId": "person-002",
+    "dayRate": 515
   },
   {
     "id": "asg-4",
-    "projectId": "project-03",
+    "projectId": "project-02",
     "roleRequirementId": "req-4",
-    "personId": "person-008",
-    "dayRate": 745
+    "personId": "person-009",
+    "dayRate": 805
   },
   {
     "id": "asg-5",
     "projectId": "project-03",
     "roleRequirementId": "req-5",
-    "personId": "person-007",
-    "dayRate": 800
+    "personId": "person-008",
+    "dayRate": 1180
   },
   {
     "id": "asg-6",
     "projectId": "project-03",
     "roleRequirementId": "req-6",
-    "personId": "person-004",
-    "dayRate": 760
+    "personId": "person-001",
+    "dayRate": 745
   },
   {
     "id": "asg-7",
     "projectId": "project-03",
     "roleRequirementId": "req-7",
     "personId": "person-009",
-    "dayRate": 1075
+    "dayRate": 775
   },
   {
     "id": "asg-8",
-    "projectId": "project-04",
+    "projectId": "project-03",
     "roleRequirementId": "req-8",
-    "personId": "person-008",
-    "dayRate": 845
+    "personId": "person-002",
+    "dayRate": 455
   },
   {
     "id": "asg-9",
-    "projectId": "project-04",
+    "projectId": "project-03",
     "roleRequirementId": "req-9",
-    "personId": "person-009",
-    "dayRate": 1265
+    "personId": "person-003",
+    "dayRate": 455
   },
   {
     "id": "asg-10",
     "projectId": "project-04",
     "roleRequirementId": "req-10",
-    "personId": "person-004",
-    "dayRate": 840
+    "personId": "person-008",
+    "dayRate": 1135
+  },
+  {
+    "id": "asg-11",
+    "projectId": "project-04",
+    "roleRequirementId": "req-11",
+    "personId": "person-010",
+    "dayRate": 1120
+  },
+  {
+    "id": "asg-12",
+    "projectId": "project-04",
+    "roleRequirementId": "req-12",
+    "personId": "person-005",
+    "dayRate": 760
+  },
+  {
+    "id": "asg-13",
+    "projectId": "project-04",
+    "roleRequirementId": "req-13",
+    "personId": "person-002",
+    "dayRate": 465
   }
 ]

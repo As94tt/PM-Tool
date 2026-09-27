@@ -145,7 +145,7 @@
   },
   {
     "id": "role-37",
-    "name": "Senior Data Scientist"
+    "name": "Senior GRC Consultant"
   },
   {
     "id": "role-38",
@@ -153,34 +153,42 @@
   },
   {
     "id": "role-39",
-    "name": "Senior Project Manager"
+    "name": "Senior Program Manager"
   },
   {
     "id": "role-40",
-    "name": "Senior Software Engineer"
+    "name": "Senior Project Manager"
   },
   {
     "id": "role-41",
-    "name": "Site Reliability Engineer"
+    "name": "Senior Software Engineer"
   },
   {
     "id": "role-42",
-    "name": "Software Engineer"
+    "name": "Senior UI Designer"
   },
   {
     "id": "role-43",
-    "name": "Systems Administrator"
+    "name": "Site Reliability Engineer"
   },
   {
     "id": "role-44",
-    "name": "Telco Network Engineer"
+    "name": "Software Engineer"
   },
   {
     "id": "role-45",
-    "name": "UI Designer"
+    "name": "Systems Administrator"
   },
   {
     "id": "role-46",
+    "name": "Telco Network Engineer"
+  },
+  {
+    "id": "role-47",
+    "name": "UI Designer"
+  },
+  {
+    "id": "role-48",
     "name": "UX Designer"
   }
 ]

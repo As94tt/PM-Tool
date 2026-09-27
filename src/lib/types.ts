@@ -81,6 +81,21 @@ export type Department = "IT Solutions" | "Development" | "Data" | "5G";
 
 export const DEPARTMENTS: Department[] = ["IT Solutions", "Development", "Data", "5G"];
 
+export type LanguageProficiency = "Native" | "Fluent" | "Professional" | "Conversational" | "Basic";
+
+export interface PersonLanguage {
+  name: string;
+  proficiency: LanguageProficiency;
+}
+
+export const LANGUAGE_PROFICIENCIES: LanguageProficiency[] = [
+  "Native",
+  "Fluent",
+  "Professional",
+  "Conversational",
+  "Basic",
+];
+
 export interface Person {
   id: string;
   firstName: string;
@@ -93,6 +108,12 @@ export interface Person {
   interestIds: string[];
   industryExperienceIds: string[];
   joinedDate: string; // ISO date
+  languages: PersonLanguage[];
+  /** Short, personal selling points for a staffing proposal — e.g.
+   * "Stakeholder management", "Cost optimization" — distinct from Skills,
+   * which are a shared catalog with proficiency levels. Free text per
+   * person, not a shared vocabulary. */
+  projectStrengths: string[];
 }
 
 export type ProjectStatus = "planned" | "active" | "completed";

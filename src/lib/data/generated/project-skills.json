@@ -1,7 +1,15 @@
 [
   {
     "projectId": "project-01",
-    "skillId": "skill-docker"
+    "skillId": "skill-vmware"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-site-reliability-engineering"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-linux-administration"
   },
   {
     "projectId": "project-01",
@@ -13,27 +21,11 @@
   },
   {
     "projectId": "project-01",
-    "skillId": "skill-google-cloud-platform"
-  },
-  {
-    "projectId": "project-01",
-    "skillId": "skill-vmware"
+    "skillId": "skill-azure"
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-network-engineering"
-  },
-  {
-    "projectId": "project-02",
-    "skillId": "skill-terraform"
-  },
-  {
-    "projectId": "project-02",
-    "skillId": "skill-kubernetes"
-  },
-  {
-    "projectId": "project-02",
-    "skillId": "skill-ansible"
+    "skillId": "skill-site-reliability-engineering"
   },
   {
     "projectId": "project-02",
@@ -44,12 +36,8 @@
     "skillId": "skill-docker"
   },
   {
-    "projectId": "project-03",
-    "skillId": "skill-prince2"
-  },
-  {
-    "projectId": "project-03",
-    "skillId": "skill-financial-modeling"
+    "projectId": "project-02",
+    "skillId": "skill-vmware"
   },
   {
     "projectId": "project-03",
@@ -57,19 +45,27 @@
   },
   {
     "projectId": "project-03",
+    "skillId": "skill-business-analysis"
+  },
+  {
+    "projectId": "project-03",
     "skillId": "skill-stakeholder-management"
   },
   {
     "projectId": "project-03",
+    "skillId": "skill-kanban"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-prince2"
+  },
+  {
+    "projectId": "project-04",
     "skillId": "skill-business-analysis"
   },
   {
     "projectId": "project-04",
-    "skillId": "skill-stakeholder-management"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-financial-modeling"
+    "skillId": "skill-requirements-engineering"
   },
   {
     "projectId": "project-04",
@@ -77,7 +73,15 @@
   },
   {
     "projectId": "project-04",
-    "skillId": "skill-change-management"
+    "skillId": "skill-scrum"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-financial-modeling"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-ci-cd"
   },
   {
     "projectId": "project-05",
@@ -85,18 +89,10 @@
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-aws"
-  },
-  {
-    "projectId": "project-05",
     "skillId": "skill-azure"
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-google-cloud-platform"
-  },
-  {
-    "projectId": "project-05",
-    "skillId": "skill-cloud-security"
+    "skillId": "skill-aws"
   }
 ]

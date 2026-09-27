@@ -3,27 +3,27 @@
     "id": "client-meridian-automotive-group",
     "name": "Meridian Automotive Group",
     "industryId": "ind-automotive",
-    "contactName": "Simon Wojcik",
-    "contactEmail": "simon.wojcik@meridianautomotivegroup.example",
-    "contactPhone": "+49 72 7407941",
-    "notes": "Head of Digital at Meridian Automotive Group; primary point of contact for the engagements with Nexus."
+    "contactName": "Katharina Laurent",
+    "contactEmail": "katharina.laurent@meridianautomotivegroup.example",
+    "contactPhone": "+49 34 9247418",
+    "notes": "Programme Director at Meridian Automotive Group; primary point of contact for the engagements with Nexus."
   },
   {
     "id": "client-union-health-network",
     "name": "Union Health Network",
     "industryId": "ind-healthcare",
-    "contactName": "Max Koch",
-    "contactEmail": "max.koch@unionhealthnetwork.example",
-    "contactPhone": "+49 60 8656184",
-    "notes": "Director of Operations at Union Health Network; primary point of contact for the engagement with Nexus."
+    "contactName": "Marie Zimmermann",
+    "contactEmail": "marie.zimmermann@unionhealthnetwork.example",
+    "contactPhone": "+49 82 8769471",
+    "notes": "Chief Information Officer at Union Health Network; primary point of contact for the engagement with Nexus."
   },
   {
     "id": "client-vantage-freight-logistics",
     "name": "Vantage Freight & Logistics",
     "industryId": "ind-logistics",
-    "contactName": "Nina Werner",
-    "contactEmail": "nina.werner@vantagefreightlogistics.example",
-    "contactPhone": "+49 87 9937394",
-    "notes": "Head of Procurement at Vantage Freight & Logistics; primary point of contact for the engagements with Nexus."
+    "contactName": "Max Dumitru",
+    "contactEmail": "max.dumitru@vantagefreightlogistics.example",
+    "contactPhone": "+49 67 5176548",
+    "notes": "VP Technology at Vantage Freight & Logistics; primary point of contact for the engagements with Nexus."
   }
 ]

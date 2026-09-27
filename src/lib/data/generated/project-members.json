@@ -6,18 +6,18 @@
   },
   {
     "projectId": "project-01",
-    "personId": "person-005",
-    "roleOnProject": "Lead Developer"
-  },
-  {
-    "projectId": "project-01",
-    "personId": "person-009",
+    "personId": "person-006",
     "roleOnProject": "Delivery Responsible"
   },
   {
     "projectId": "project-01",
-    "personId": "person-007",
-    "roleOnProject": "DevOps Engineer"
+    "personId": "person-009",
+    "roleOnProject": "QA Engineer"
+  },
+  {
+    "projectId": "project-01",
+    "personId": "person-004",
+    "roleOnProject": "Business Analyst"
   },
   {
     "projectId": "project-02",
@@ -26,13 +26,18 @@
   },
   {
     "projectId": "project-02",
-    "personId": "person-006",
-    "roleOnProject": "Solution Architect"
+    "personId": "person-008",
+    "roleOnProject": "Delivery Responsible"
   },
   {
     "projectId": "project-02",
-    "personId": "person-005",
-    "roleOnProject": "UX Designer"
+    "personId": "person-002",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-02",
+    "personId": "person-009",
+    "roleOnProject": "Lead Developer"
   },
   {
     "projectId": "project-03",
@@ -41,17 +46,22 @@
   },
   {
     "projectId": "project-03",
-    "personId": "person-007",
+    "personId": "person-001",
+    "roleOnProject": "Data Engineer"
+  },
+  {
+    "projectId": "project-03",
+    "personId": "person-002",
     "roleOnProject": "Consultant"
   },
   {
     "projectId": "project-03",
-    "personId": "person-004",
-    "roleOnProject": "Delivery Responsible"
+    "personId": "person-009",
+    "roleOnProject": "Data Engineer"
   },
   {
     "projectId": "project-03",
-    "personId": "person-009",
+    "personId": "person-003",
     "roleOnProject": "DevOps Engineer"
   },
   {
@@ -61,13 +71,18 @@
   },
   {
     "projectId": "project-04",
-    "personId": "person-009",
+    "personId": "person-010",
     "roleOnProject": "Solution Architect"
   },
   {
     "projectId": "project-04",
-    "personId": "person-004",
-    "roleOnProject": "UX Designer"
+    "personId": "person-005",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-04",
+    "personId": "person-002",
+    "roleOnProject": "Data Engineer"
   },
   {
     "projectId": "project-05",
@@ -76,12 +91,22 @@
   },
   {
     "projectId": "project-05",
-    "personId": "person-001",
-    "roleOnProject": "Lead Developer"
+    "personId": "person-003",
+    "roleOnProject": "Solution Architect"
   },
   {
     "projectId": "project-05",
     "personId": "person-002",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-007",
+    "roleOnProject": "Business Analyst"
+  },
+  {
+    "projectId": "project-05",
+    "personId": "person-009",
     "roleOnProject": "Delivery Responsible"
   }
 ]

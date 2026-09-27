@@ -80,6 +80,8 @@ export function PersonFormSheet() {
       interestIds,
       industryExperienceIds: industryIds,
       joinedDate: new Date().toISOString().slice(0, 10),
+      languages: [],
+      projectStrengths: [],
     };
 
     importPeople([newPerson]);
@@ -97,7 +99,10 @@ export function PersonFormSheet() {
       <SheetContent side="right" className="w-full gap-0 p-0 sm:max-w-lg">
         <SheetHeader className="border-b border-border">
           <SheetTitle>New person</SheetTitle>
-          <SheetDescription>Add a colleague to the directory. Skills and certifications can be added afterwards from their profile.</SheetDescription>
+          <SheetDescription>
+            Add a colleague to the directory. Skills, certifications, languages and project strengths can be
+            added afterwards from their profile.
+          </SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-[calc(100svh-10rem)]">

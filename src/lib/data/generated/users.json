@@ -8,55 +8,55 @@
   {
     "id": "user-person-002",
     "personId": "person-002",
-    "email": "felix.dubois@nexuscorp.example",
+    "email": "nina.horvat@nexuscorp.example",
     "role": "management"
   },
   {
     "id": "user-person-003",
     "personId": "person-003",
-    "email": "ioana.devries@nexuscorp.example",
+    "email": "bogdan.wolf@nexuscorp.example",
     "role": "management"
   },
   {
     "id": "user-person-004",
     "personId": "person-004",
-    "email": "beatriz.sharma@nexuscorp.example",
+    "email": "moritz.andersson@nexuscorp.example",
     "role": "management"
   },
   {
     "id": "user-person-005",
     "personId": "person-005",
-    "email": "rui.santos@nexuscorp.example",
+    "email": "lena.koch@nexuscorp.example",
     "role": "management"
   },
   {
     "id": "user-person-006",
     "personId": "person-006",
-    "email": "sebastian.mendes@nexuscorp.example",
+    "email": "lena.bianchi@nexuscorp.example",
     "role": "management"
   },
   {
     "id": "user-person-007",
     "personId": "person-007",
-    "email": "franziska.becker@nexuscorp.example",
+    "email": "felix.schmidt@nexuscorp.example",
     "role": "user"
   },
   {
     "id": "user-person-008",
     "personId": "person-008",
-    "email": "noah.costa@nexuscorp.example",
+    "email": "david.laurent@nexuscorp.example",
     "role": "user"
   },
   {
     "id": "user-person-009",
     "personId": "person-009",
-    "email": "david.laurent@nexuscorp.example",
+    "email": "sebastian.sharma@nexuscorp.example",
     "role": "user"
   },
   {
     "id": "user-person-010",
     "personId": "person-010",
-    "email": "moritz.radu@nexuscorp.example",
+    "email": "lea.becker@nexuscorp.example",
     "role": "user"
   }
 ]
