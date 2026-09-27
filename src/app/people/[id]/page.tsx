@@ -12,7 +12,6 @@ import {
   initials,
   getPersonSkillDetails,
   getPersonCertificationDetails,
-  getPersonProjectsSplit,
   getPersonProjectHistory,
   getProjectSkillDetails,
 } from "@/lib/data/queries";
@@ -29,8 +28,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SkillLevelDots, SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
-import { ProjectMiniCard } from "@/components/projects/project-mini-card";
+import { PersonProjectEntry } from "@/components/people/person-project-entry";
 import { EditProfileSheet } from "@/components/people/edit-profile-sheet";
+import { RoleGate } from "@/components/shared/role-gate";
 import { cn } from "@/lib/utils";
 
 export default function PersonDetailPage() {
@@ -51,7 +51,11 @@ export default function PersonDetailPage() {
   const projects = useAppStore((s) => s.projects);
   const clients = useAppStore((s) => s.clients);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
-  const canEditPeople = useCanEditFunction("people");
+  // Whether this is the viewer's own profile or someone else's isn't known
+  // until `person` resolves below, but hooks must run unconditionally —
+  // so both own/other edit levels are read here, and the right one picked after.
+  const canEditOwn = useCanEditFunction("people-own");
+  const canEditOther = useCanEditFunction("people-other");
   const currentPerson = useCurrentPerson();
 
   const person = people.find((p) => p.id === id);
@@ -67,13 +71,20 @@ export default function PersonDetailPage() {
     );
   }
 
+  const isOwnProfile = currentPerson.id === person.id;
+  const canEdit = isOwnProfile ? canEditOwn : canEditOther;
+  const viewFunctionKey = isOwnProfile ? "people-own" : "people-other";
+
   const location = locations.find((l) => l.id === person.locationId);
   const user = users.find((u) => u.personId === person.id);
   const mySkills = getPersonSkillDetails(personSkills, skills, person.id);
   const myCerts = getPersonCertificationDetails(personCertifications, certifications, person.id);
   const myInterests = interests.filter((i) => person.interestIds.includes(i.id));
   const myIndustries = industries.filter((i) => person.industryExperienceIds.includes(i.id));
-  const { current, upcoming, previous } = getPersonProjectsSplit(projectMembers, projects, person.id);
+  const projectHistory = getPersonProjectHistory(projectMembers, projects, resourceAllocations, person.id);
+  const current = projectHistory.filter((e) => e.project.status === "active");
+  const upcoming = projectHistory.filter((e) => e.project.status === "planned");
+  const previous = projectHistory.filter((e) => e.project.status === "completed");
 
   const horizon = getHorizonMonths(6);
   const currentAllocation = getAllocationForPersonMonth(resourceAllocations, person.id, horizon[0]);
@@ -90,8 +101,6 @@ export default function PersonDetailPage() {
       break;
     }
   }
-
-  const canEdit = canEditPeople || currentPerson.id === person.id;
 
   const skillsByCategory = new Map<string, typeof mySkills>();
   for (const detail of mySkills) {
@@ -142,6 +151,7 @@ export default function PersonDetailPage() {
   }
 
   return (
+    <RoleGate functionKey={viewFunctionKey}>
     <div className="flex flex-col gap-6 pb-8">
       <Link href="/people" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" /> Back to People
@@ -247,8 +257,16 @@ export default function PersonDetailPage() {
             <section>
               <h2 className="mb-3 font-heading text-base font-semibold">Current projects</h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {current.map((p) => (
-                  <ProjectMiniCard key={p.id} project={p} clients={clients} />
+                {current.map((entry) => (
+                  <PersonProjectEntry
+                    key={entry.project.id}
+                    project={entry.project}
+                    clients={clients}
+                    personId={person.id}
+                    roleOnProject={entry.roleOnProject}
+                    contributionDescription={entry.contributionDescription}
+                    canEdit={canEdit}
+                  />
                 ))}
               </div>
             </section>
@@ -258,8 +276,16 @@ export default function PersonDetailPage() {
             <section>
               <h2 className="mb-3 font-heading text-base font-semibold">Upcoming projects</h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {upcoming.map((p) => (
-                  <ProjectMiniCard key={p.id} project={p} clients={clients} />
+                {upcoming.map((entry) => (
+                  <PersonProjectEntry
+                    key={entry.project.id}
+                    project={entry.project}
+                    clients={clients}
+                    personId={person.id}
+                    roleOnProject={entry.roleOnProject}
+                    contributionDescription={entry.contributionDescription}
+                    canEdit={canEdit}
+                  />
                 ))}
               </div>
             </section>
@@ -269,8 +295,16 @@ export default function PersonDetailPage() {
             <section>
               <h2 className="mb-3 font-heading text-base font-semibold">Previous projects</h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {previous.map((p) => (
-                  <ProjectMiniCard key={p.id} project={p} clients={clients} />
+                {previous.map((entry) => (
+                  <PersonProjectEntry
+                    key={entry.project.id}
+                    project={entry.project}
+                    clients={clients}
+                    personId={person.id}
+                    roleOnProject={entry.roleOnProject}
+                    contributionDescription={entry.contributionDescription}
+                    canEdit={canEdit}
+                  />
                 ))}
               </div>
             </section>
@@ -336,5 +370,6 @@ export default function PersonDetailPage() {
         </div>
       </div>
     </div>
+    </RoleGate>
   );
 }

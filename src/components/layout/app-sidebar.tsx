@@ -29,7 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown, UserRound, LogOut } from "lucide-react";
-import { ROLE_LABEL } from "@/lib/permissions";
+import { ROLE_LABEL, canView } from "@/lib/permissions";
 import { AUTH_STORAGE_KEY } from "@/components/auth/auth-gate";
 
 export function AppSidebar() {
@@ -41,6 +41,7 @@ export function AppSidebar() {
   const items = NAV_ITEMS.filter((item) => canAccess(permissions, role, item));
   const showBugs = canAccess(permissions, role, BUGS_NAV_ITEM);
   const showAdmin = canAccess(permissions, role, ADMIN_NAV_ITEM);
+  const showMyProfile = canView(permissions, "people-own", role);
 
   function handleLogOut() {
     try {
@@ -155,7 +156,9 @@ export function AppSidebar() {
                   <DropdownMenuLabel className="flex items-center gap-2 text-xs text-muted-foreground">
                     <UserRound className="size-3.5" /> Signed in as {ROLE_LABEL[role]}
                   </DropdownMenuLabel>
-                  <DropdownMenuItem render={<Link href={`/people/${person.id}`} />}>My profile</DropdownMenuItem>
+                  {showMyProfile && (
+                    <DropdownMenuItem render={<Link href={`/people/${person.id}`} />}>My profile</DropdownMenuItem>
+                  )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogOut} variant="destructive">

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Search, X, Users2, FileText, Loader2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
+import { RoleGate } from "@/components/shared/role-gate";
 import {
   filterPeople,
   getPersonSkillDetails,
@@ -52,7 +53,7 @@ function PeoplePageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const canEdit = useCanEditFunction("people");
+  const canEdit = useCanEditFunction("people-other");
   const people = useAppStore((s) => s.people);
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
@@ -198,6 +199,7 @@ function PeoplePageInner() {
   ];
 
   return (
+    <RoleGate functionKey="people-other">
     <div className="flex flex-col gap-6 pb-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -390,5 +392,6 @@ function PeoplePageInner() {
         </div>
       )}
     </div>
+    </RoleGate>
   );
 }
