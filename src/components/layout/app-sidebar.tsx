@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { LogoMark } from "@/components/shared/logo-mark";
-import { NAV_ITEMS, ADMIN_NAV_ITEM, canAccess } from "@/lib/nav";
+import { NAV_ITEMS, BUGS_NAV_ITEM, ADMIN_NAV_ITEM, canAccess } from "@/lib/nav";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson } from "@/store/hooks";
 import { fullName, initials } from "@/lib/data/queries";
@@ -46,6 +46,7 @@ export function AppSidebar() {
   const person = useCurrentPerson();
 
   const items = NAV_ITEMS.filter((item) => canAccess(role, item));
+  const showBugs = canAccess(role, BUGS_NAV_ITEM);
   const showAdmin = canAccess(role, ADMIN_NAV_ITEM);
 
   return (
@@ -89,8 +90,27 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {showAdmin && (
+        {showBugs && (
           <SidebarGroup className="mt-auto">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    isActive={pathname.startsWith(BUGS_NAV_ITEM.href)}
+                    tooltip={BUGS_NAV_ITEM.label}
+                    render={<Link href={BUGS_NAV_ITEM.href} />}
+                  >
+                    <BUGS_NAV_ITEM.icon />
+                    <span>{BUGS_NAV_ITEM.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {showAdmin && (
+          <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>

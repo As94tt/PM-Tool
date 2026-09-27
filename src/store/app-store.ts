@@ -20,6 +20,8 @@ import type {
   Role,
   ProjectRoleRequirement,
   ProjectRoleAssignment,
+  FeedbackNote,
+  FeedbackType,
 } from "@/lib/types";
 import {
   INITIAL_LOCATIONS,
@@ -68,6 +70,7 @@ export interface AppState {
   budgetPlans: BudgetPlan[];
   projectRoleRequirements: ProjectRoleRequirement[];
   projectRoleAssignments: ProjectRoleAssignment[];
+  feedbackNotes: FeedbackNote[];
 
   // actions
   setViewAsRole: (role: AppRole) => void;
@@ -127,6 +130,9 @@ export interface AppState {
   }) => void;
   removeRoleAssignment: (assignmentId: string) => void;
   updateRoleAssignmentDayRate: (assignmentId: string, dayRate: number) => void;
+
+  addFeedbackNote: (note: { type: FeedbackType; text: string; authorPersonId: string }) => void;
+  removeFeedbackNote: (noteId: string) => void;
 }
 
 function nextId(prefix: string, existingIds: string[]) {
@@ -165,6 +171,7 @@ export function createAppStore() {
         budgetPlans: INITIAL_BUDGET_PLANS,
         projectRoleRequirements: INITIAL_PROJECT_ROLE_REQUIREMENTS,
         projectRoleAssignments: INITIAL_PROJECT_ROLE_ASSIGNMENTS,
+        feedbackNotes: [],
 
         setViewAsRole: (role) =>
           set((state) => {
@@ -478,6 +485,20 @@ export function createAppStore() {
             const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
             if (assignment) assignment.dayRate = dayRate;
           }),
+
+        addFeedbackNote: ({ type, text, authorPersonId }) =>
+          set((state) => {
+            const id = nextId(
+              "feedback",
+              state.feedbackNotes.map((n) => n.id)
+            );
+            state.feedbackNotes.unshift({ id, type, text, authorPersonId, createdAt: new Date().toISOString() });
+          }),
+
+        removeFeedbackNote: (noteId) =>
+          set((state) => {
+            state.feedbackNotes = state.feedbackNotes.filter((n) => n.id !== noteId);
+          }),
       })),
       {
         name: "nexus-pm-tool-store",
@@ -502,6 +523,7 @@ export function createAppStore() {
           budgetPlans: state.budgetPlans,
           projectRoleRequirements: state.projectRoleRequirements,
           projectRoleAssignments: state.projectRoleAssignments,
+          feedbackNotes: state.feedbackNotes,
         }),
       }
     )

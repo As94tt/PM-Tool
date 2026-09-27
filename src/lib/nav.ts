@@ -7,6 +7,7 @@ import {
   Wallet,
   ShieldCheck,
   Building2,
+  Bug,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,6 +26,13 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Skill Matrix", href: "/skill-matrix", icon: Grid3x3, roles: ["user", "management", "admin"] },
   { label: "Budget & Resources", href: "/resources", icon: Wallet, roles: ["management", "admin"] },
 ];
+
+export const BUGS_NAV_ITEM: NavItem = {
+  label: "Bugs & Requests",
+  href: "/feedback",
+  icon: Bug,
+  roles: ["user", "management", "admin"],
+};
 
 export const ADMIN_NAV_ITEM: NavItem = {
   label: "Administration",

@@ -2,12 +2,16 @@
 
 import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, Users2 } from "lucide-react";
+import { toast } from "sonner";
+import { Search, X, Users2, FileText, Loader2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
+import { useCurrentPerson } from "@/store/hooks";
 import {
   filterPeople,
   getPersonSkillDetails,
   getPersonCertificationDetails,
+  getPersonProjectsSplit,
+  fullName,
   type PeopleFilters,
 } from "@/lib/data/queries";
 import { getAllocationForPersonMonth, getHorizonMonths } from "@/lib/data/capacity";
@@ -53,11 +57,17 @@ function PeoplePageInner() {
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
   const projectMembers = useAppStore((s) => s.projectMembers);
+  const projects = useAppStore((s) => s.projects);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
   const locations = useAppStore((s) => s.locations);
   const industries = useAppStore((s) => s.industries);
   const skills = useAppStore((s) => s.skills);
   const certifications = useAppStore((s) => s.certifications);
+  const currentPerson = useCurrentPerson();
+
+  const [proposalMode, setProposalMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [generating, setGenerating] = useState(false);
 
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [locationId, setLocationId] = useState(searchParams.get("location") ?? "");
@@ -95,6 +105,59 @@ function PeoplePageInner() {
 
   const month = getHorizonMonths(1)[0];
   const hasActiveFilters = Boolean(query || locationId || department || industryId || skillId || certificationId || minAvailability !== "0");
+
+  function toggleProposalMode() {
+    setProposalMode((v) => !v);
+    setSelectedIds(new Set());
+  }
+
+  function toggleSelected(personId: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(personId)) next.delete(personId);
+      else next.add(personId);
+      return next;
+    });
+  }
+
+  async function handleGenerateProposal() {
+    const chosen = people.filter((p) => selectedIds.has(p.id));
+    if (chosen.length === 0) return;
+    setGenerating(true);
+    try {
+      const { downloadStaffingProposal } = await import("@/lib/pdf/staffing-proposal");
+      const data = chosen.map((person) => {
+        const { current, upcoming, previous } = getPersonProjectsSplit(projectMembers, projects, person.id);
+        const relevantProjects = [...current, ...upcoming, ...previous].slice(0, 3).map((project) => {
+          const membership = projectMembers.find((m) => m.personId === person.id && m.projectId === project.id);
+          return {
+            name: project.name,
+            clientName: project.clientName,
+            roleOnProject: membership?.roleOnProject ?? "Team Member",
+            description: project.shortDescription,
+          };
+        });
+        return {
+          person,
+          location: locations.find((l) => l.id === person.locationId),
+          skills: getPersonSkillDetails(personSkills, skills, person.id).map((s) => ({ name: s.skill.name, level: s.level })),
+          certifications: getPersonCertificationDetails(personCertifications, certifications, person.id).map((c) => ({
+            name: c.certification.name,
+            issuer: c.certification.issuer,
+          })),
+          industries: industries.filter((i) => person.industryExperienceIds.includes(i.id)).map((i) => i.name),
+          projects: relevantProjects,
+        };
+      });
+      await downloadStaffingProposal(data, fullName(currentPerson));
+      toast.success(`Staffing proposal generated for ${chosen.length} ${chosen.length === 1 ? "person" : "people"}`);
+      toggleProposalMode();
+    } catch {
+      toast.error("Couldn't generate the PDF — please try again");
+    } finally {
+      setGenerating(false);
+    }
+  }
 
   function clearFilters() {
     setQuery("");
@@ -143,8 +206,26 @@ function PeoplePageInner() {
             Find colleagues by skill, role, location or availability.
           </p>
         </div>
-        {role === "admin" && <PersonFormSheet />}
+        <div className="flex items-center gap-2">
+          <Button variant={proposalMode ? "secondary" : "outline"} onClick={toggleProposalMode}>
+            <FileText className="size-4" /> {proposalMode ? "Cancel selection" : "Create Staffing Proposal"}
+          </Button>
+          {role === "admin" && <PersonFormSheet />}
+        </div>
       </div>
+
+      {proposalMode && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3">
+          <p className="text-sm">
+            <span className="font-semibold">{selectedIds.size}</span> {selectedIds.size === 1 ? "person" : "people"} selected
+            — click cards below to add or remove them.
+          </p>
+          <Button size="sm" onClick={handleGenerateProposal} disabled={selectedIds.size === 0 || generating}>
+            {generating ? <Loader2 className="size-3.5 animate-spin" /> : <FileText className="size-3.5" />}
+            {generating ? "Generating…" : "Generate PDF"}
+          </Button>
+        </div>
+      )}
 
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">
         <div className="relative">
@@ -300,6 +381,9 @@ function PeoplePageInner() {
                 topSkills={topSkills}
                 certificationCount={certs.length}
                 availabilityPercent={Math.max(0, 100 - allocated)}
+                selectable={proposalMode}
+                selected={selectedIds.has(person.id)}
+                onToggleSelect={() => toggleSelected(person.id)}
               />
             );
           })}

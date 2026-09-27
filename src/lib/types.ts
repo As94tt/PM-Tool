@@ -201,6 +201,18 @@ export type AllocationStatus =
   | "full"
   | "overallocated";
 
+export type FeedbackType = "bug" | "feature";
+
+/** A sticky note on the Bugs & Requests board — informal feedback from
+ * anyone using the platform, not a full ticketing system. */
+export interface FeedbackNote {
+  id: string;
+  type: FeedbackType;
+  text: string;
+  authorPersonId: string;
+  createdAt: string; // ISO datetime
+}
+
 export interface Dataset {
   locations: Location[];
   industries: Industry[];
@@ -220,4 +232,5 @@ export interface Dataset {
   budgetPlans: BudgetPlan[];
   projectRoleRequirements: ProjectRoleRequirement[];
   projectRoleAssignments: ProjectRoleAssignment[];
+  feedbackNotes: FeedbackNote[];
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Award } from "lucide-react";
+import { MapPin, Award, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DepartmentBadge } from "@/components/shared/department-badge";
@@ -14,21 +14,40 @@ export function PersonCard({
   topSkills,
   certificationCount,
   availabilityPercent,
+  selectable = false,
+  selected = false,
+  onToggleSelect,
 }: {
   person: Person;
   location?: Location;
   topSkills: PersonSkillDetail[];
   certificationCount: number;
   availabilityPercent: number;
+  selectable?: boolean;
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }) {
   const status = getAllocationStatus(100 - availabilityPercent);
   const styles = ALLOCATION_STATUS_STYLES[status];
 
-  return (
-    <Link
-      href={`/people/${person.id}`}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-elevation-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
+  const cardClassName = cn(
+    "group relative flex flex-col rounded-2xl border p-5 shadow-elevation-1 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-elevation-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    selected ? "border-primary bg-primary/5" : "border-border bg-card"
+  );
+
+  const inner = (
+    <>
+      {selectable && (
+        <span
+          className={cn(
+            "absolute top-4 right-4 flex size-5 items-center justify-center rounded-full border-2 transition-colors",
+            selected ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"
+          )}
+          aria-hidden="true"
+        >
+          {selected && <Check className="size-3" />}
+        </span>
+      )}
       <div className="flex items-start gap-3">
         <Avatar className="size-12 shrink-0 ring-2 ring-background">
           <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
@@ -75,6 +94,20 @@ export function PersonCard({
           {availabilityPercent}% free
         </span>
       </div>
+    </>
+  );
+
+  if (selectable) {
+    return (
+      <button type="button" onClick={onToggleSelect} className={cn(cardClassName, "text-left")}>
+        {inner}
+      </button>
+    );
+  }
+
+  return (
+    <Link href={`/people/${person.id}`} className={cardClassName}>
+      {inner}
     </Link>
   );
 }
