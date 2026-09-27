@@ -176,6 +176,26 @@ export function getPersonProjectHistory(
     });
 }
 
+/** A person's total FTE on a project for one week, as a percent (0-100+) —
+ * the weekly-staffing-plan equivalent of capacity.ts's
+ * getAllocationForPersonMonth. Sums across every seat they fill on this
+ * project that week (normally one, but nothing stops two). */
+export function getPersonWeeklyAllocationForProject(
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[],
+  personId: string,
+  projectId: string,
+  week: string
+): number {
+  const totalFte = assignments
+    .filter((a) => a.personId === personId && a.projectId === projectId)
+    .reduce((sum, a) => {
+      const req = requirements.find((r) => r.id === a.roleRequirementId);
+      return sum + (req?.ftePerWeek[week] ?? 0);
+    }, 0);
+  return Math.round(totalFte * 100);
+}
+
 export function getProjectSkillDetails(
   projectSkills: ProjectSkill[],
   skills: Skill[],

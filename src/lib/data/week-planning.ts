@@ -70,3 +70,43 @@ export function blendedDayRate(totalCostValue: number, totalFte: number): number
   const totalFteDays = totalFte * WORKING_DAYS_PER_WEEK;
   return totalFteDays > 0 ? totalCostValue / totalFteDays : 0;
 }
+
+/**
+ * Weeks to chart for a project — the weekly-staffing-plan equivalent of
+ * capacity.ts's getProjectChartMonths: starts at the Monday of the
+ * project's own start date, runs through the later of its declared end
+ * date or the last week with a real (>0) FTE entry across any of its role
+ * requirements (so the chart never cuts off while a seat still shows FTE),
+ * capped at `maxWeeks` purely as a sanity ceiling.
+ */
+export function getProjectChartWeeks(
+  startDate: string,
+  endDate: string | null,
+  requirements: { projectId: string; ftePerWeek: Record<string, number> }[],
+  projectId: string,
+  opts: { maxWeeks?: number } = {}
+): string[] {
+  const { maxWeeks = 120 } = opts;
+  const projStart = startOfWeek(weekToDate(startDate));
+
+  const lastActiveWeek = requirements
+    .filter((r) => r.projectId === projectId)
+    .flatMap((r) => Object.entries(r.ftePerWeek).filter(([, fte]) => fte > 0).map(([week]) => week))
+    .toSorted()
+    .at(-1);
+
+  let endBound = endDate ? startOfWeek(weekToDate(endDate)) : projStart;
+  if (lastActiveWeek) {
+    const lastDate = weekToDate(lastActiveWeek);
+    if (lastDate > endBound) endBound = lastDate;
+  }
+  const endKey = weekKey(endBound);
+
+  const weeks: string[] = [];
+  let cursor = projStart;
+  while (weekKey(cursor) <= endKey && weeks.length < maxWeeks) {
+    weeks.push(weekKey(cursor));
+    cursor = addWeeks(cursor, 1);
+  }
+  return weeks.length > 0 ? weeks : [weekKey(projStart)];
+}

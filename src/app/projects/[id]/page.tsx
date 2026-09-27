@@ -2,12 +2,11 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet } from "lucide-react";
+import { ArrowLeft, Building2, CalendarRange, Sparkles, Wallet } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCanEditFunction, useCanViewFunction } from "@/store/hooks";
 import { RoleGate } from "@/components/shared/role-gate";
 import {
-  getProjectMemberDetails,
   getProjectSkillDetails,
   getSimilarProjects,
   getClientByName,
@@ -15,16 +14,14 @@ import {
   initials,
 } from "@/lib/data/queries";
 import { formatDate, formatCompactCurrency } from "@/lib/format";
-import { getAllocationForPersonMonth, getProjectChartMonths, formatMonthLabel } from "@/lib/data/capacity";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AllocationHeatmapRow, AllocationHeatmapLegend } from "@/components/charts/allocation-heatmap";
+import { TeamAllocationCard } from "@/components/projects/team-allocation-card";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
-import { ProjectPlanningDialog } from "@/components/projects/project-planning-dialog";
 import type { ProjectStatus } from "@/lib/types";
 
 const STATUS_BADGE: Record<ProjectStatus, string> = {
@@ -42,9 +39,7 @@ export default function ProjectDetailPage() {
   const industries = useAppStore((s) => s.industries);
   const skills = useAppStore((s) => s.skills);
   const people = useAppStore((s) => s.people);
-  const projectMembers = useAppStore((s) => s.projectMembers);
   const projectSkills = useAppStore((s) => s.projectSkills);
-  const resourceAllocations = useAppStore((s) => s.resourceAllocations);
   const budgetPlans = useAppStore((s) => s.budgetPlans);
   const clients = useAppStore((s) => s.clients);
 
@@ -63,8 +58,6 @@ export default function ProjectDetailPage() {
 
   const industry = industries.find((i) => i.id === project.industryId);
   const client = getClientByName(clients, project.clientName);
-  const members = getProjectMemberDetails(projectMembers, people, project.id);
-  const chartMonths = getProjectChartMonths(project.startDate, project.endDate, resourceAllocations, project.id);
   const lead = people.find((p) => p.id === project.leadPersonId);
   const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
@@ -146,57 +139,7 @@ export default function ProjectDetailPage() {
             )}
           </Card>
 
-          <Card className="p-6 shadow-elevation-1">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold">
-                <Users className="size-4" /> Team & resource allocation
-              </h2>
-              <div className="flex flex-wrap items-center gap-3">
-                <AllocationHeatmapLegend />
-                {canSeeBudget && <ProjectPlanningDialog project={project} />}
-              </div>
-            </div>
-            {chartMonths.length > 0 && (
-              <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground">
-                <div className="size-9 shrink-0" />
-                <div className="w-32 shrink-0" />
-                <div className="flex min-w-0 flex-1 gap-[2px]">
-                  {chartMonths.map((m, i) => (
-                    <span key={m} className="flex-1 text-center">
-                      {i % 2 === 0 ? formatMonthLabel(m, { month: "short" }) : ""}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="mt-1 flex flex-col divide-y divide-border/70">
-              {members.map(({ person, roleOnProject }) => {
-                const chartData = chartMonths.map((m) => ({
-                  key: m,
-                  label: formatMonthLabel(m, { month: "short" }),
-                  value: getAllocationForPersonMonth(resourceAllocations, person.id, m),
-                }));
-                return (
-                  <Link
-                    key={person.id}
-                    href={`/people/${person.id}`}
-                    className="flex items-center gap-3 py-3 transition-colors hover:bg-secondary/50"
-                  >
-                    <Avatar className="size-9">
-                      <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
-                      <AvatarFallback>{initials(person)}</AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 w-32 shrink-0">
-                      <p className="truncate text-sm font-medium">{fullName(person)}</p>
-                      <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
-                    </div>
-                    <AllocationHeatmapRow data={chartData} />
-                  </Link>
-                );
-              })}
-              {members.length === 0 && <p className="py-3 text-sm text-muted-foreground">No team members yet.</p>}
-            </div>
-          </Card>
+          <TeamAllocationCard project={project} canSeeBudget={canSeeBudget} />
 
           {similar.length > 0 && (
             <section>
