@@ -104,7 +104,11 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   function handleAddPerson(requirementId: string, requirementDayRate: number) {
     const form = addPersonState[requirementId];
     if (!form?.personId) return;
-    const dayRate = Math.max(0, Number(form.dayRate) || 0) || requirementDayRate;
+    // An explicit "0" must stay 0 (e.g. a pro-bono seat) — only fall back to
+    // the requirement's own rate when the field was left blank, not just
+    // whenever the typed value happens to be falsy.
+    const typed = form.dayRate.trim();
+    const dayRate = typed === "" ? requirementDayRate : Math.max(0, Number(typed) || 0);
     addRoleAssignment({ projectId: project.id, roleRequirementId: requirementId, personId: form.personId, dayRate });
     toast.success("Person staffed to role");
     setAddPersonState((prev) => ({ ...prev, [requirementId]: { personId: "", dayRate: "" } }));

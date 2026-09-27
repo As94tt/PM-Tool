@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DiscoveryView } from "@/components/skill-matrix/discovery-view";
 import { MatrixView } from "@/components/skill-matrix/matrix-view";
+import { RoleGate } from "@/components/shared/role-gate";
 import { Search, Grid3x3 } from "lucide-react";
 
 export default function SkillMatrixPage() {
@@ -22,6 +23,7 @@ function SkillMatrixPageInner() {
   const [minAvailability, setMinAvailability] = useState(0);
 
   return (
+    <RoleGate functionKey="skill-matrix">
     <div className="flex flex-col gap-6 pb-8">
       <div>
         <h1 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">Skill Matrix</h1>
@@ -54,5 +56,6 @@ function SkillMatrixPageInner() {
         </TabsContent>
       </Tabs>
     </div>
+    </RoleGate>
   );
 }

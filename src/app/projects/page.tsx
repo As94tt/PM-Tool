@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Search, X, FolderKanban, LayoutGrid, Rows3 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCanEditFunction } from "@/store/hooks";
+import { RoleGate } from "@/components/shared/role-gate";
 import { filterProjects, getProjectSkillDetails, getProjectMemberDetails, type ProjectFilters } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
 import { formatDate } from "@/lib/format";
@@ -78,6 +79,7 @@ function ProjectsPageInner() {
   const skillOptions = [{ value: "any", label: "Any skill" }, ...skills.map((s) => ({ value: s.id, label: s.name }))];
 
   return (
+    <RoleGate functionKey="projects">
     <div className="flex flex-col gap-6 pb-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -244,5 +246,6 @@ function ProjectsPageInner() {
         </div>
       )}
     </div>
+    </RoleGate>
   );
 }

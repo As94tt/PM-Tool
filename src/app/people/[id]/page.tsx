@@ -31,7 +31,7 @@ import { SkillLevelDots, SKILL_LEVEL_LABEL } from "@/components/shared/skill-lev
 import { PersonProjectEntry } from "@/components/people/person-project-entry";
 import { EditProfileSheet } from "@/components/people/edit-profile-sheet";
 import { RoleGate } from "@/components/shared/role-gate";
-import { cn } from "@/lib/utils";
+import { cn, groupBy } from "@/lib/utils";
 
 export default function PersonDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -102,12 +102,7 @@ export default function PersonDetailPage() {
     }
   }
 
-  const skillsByCategory = new Map<string, typeof mySkills>();
-  for (const detail of mySkills) {
-    const list = skillsByCategory.get(detail.skill.category) ?? [];
-    list.push(detail);
-    skillsByCategory.set(detail.skill.category, list);
-  }
+  const skillsByCategory = groupBy(mySkills, (detail) => detail.skill.category);
 
   async function handleGenerateCV() {
     if (!person) return;

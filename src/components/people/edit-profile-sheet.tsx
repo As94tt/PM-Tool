@@ -33,6 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { selectLabel } from "@/lib/select-utils";
+import { groupBy } from "@/lib/utils";
 import {
   DEPARTMENTS,
   LANGUAGE_PROFICIENCIES,
@@ -96,12 +97,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const availableSkills = skills.filter((s) => !mySkills.some((ms) => ms.skill.id === s.id));
   const availableCerts = certifications.filter((c) => !myCerts.some((mc) => mc.certification.id === c.id));
 
-  const skillsByCategory = new Map<string, typeof availableSkills>();
-  for (const s of availableSkills) {
-    const list = skillsByCategory.get(s.category) ?? [];
-    list.push(s);
-    skillsByCategory.set(s.category, list);
-  }
+  const skillsByCategory = groupBy(availableSkills, (s) => s.category);
 
   const levelDetailOptions = [1, 2, 3, 4, 5].map((lvl) => ({
     value: String(lvl),

@@ -383,16 +383,6 @@ export function filterProjects(params: {
   });
 }
 
-export function getProjectMemberAllocationAverage(
-  resourceAllocations: ResourceAllocation[],
-  projectId: string,
-  personId: string
-): number {
-  const rows = resourceAllocations.filter((a) => a.projectId === projectId && a.personId === personId);
-  if (rows.length === 0) return 0;
-  return Math.round(rows.reduce((sum, r) => sum + r.allocationPercent, 0) / rows.length);
-}
-
 export function getDashboardStats(
   people: Person[],
   projects: Project[],

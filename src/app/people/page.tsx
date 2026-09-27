@@ -7,6 +7,7 @@ import { Search, X, Users2, FileText, Loader2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
 import { RoleGate } from "@/components/shared/role-gate";
+import { groupBy } from "@/lib/utils";
 import {
   filterPeople,
   getPersonSkillDetails,
@@ -172,15 +173,7 @@ function PeoplePageInner() {
     router.replace("/people");
   }
 
-  const skillsByCategory = useMemo(() => {
-    const map = new Map<string, typeof skills>();
-    for (const s of skills) {
-      const list = map.get(s.category) ?? [];
-      list.push(s);
-      map.set(s.category, list);
-    }
-    return map;
-  }, [skills]);
+  const skillsByCategory = useMemo(() => groupBy(skills, (s) => s.category), [skills]);
 
   const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
   const departmentOptions = [

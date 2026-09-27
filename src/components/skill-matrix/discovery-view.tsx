@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SkillLevelDots } from "@/components/shared/skill-level";
 import { getAllocationStatus, ALLOCATION_STATUS_STYLES } from "@/lib/data/capacity";
-import { cn } from "@/lib/utils";
+import { cn, groupBy } from "@/lib/utils";
 import { DEPARTMENTS, type SkillLevel } from "@/lib/types";
 
 export function DiscoveryView({
@@ -37,12 +37,7 @@ export function DiscoveryView({
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
   const locations = useAppStore((s) => s.locations);
 
-  const skillsByCategory = new Map<string, typeof skills>();
-  for (const s of skills) {
-    const list = skillsByCategory.get(s.category) ?? [];
-    list.push(s);
-    skillsByCategory.set(s.category, list);
-  }
+  const skillsByCategory = groupBy(skills, (s) => s.category);
 
   const skillOptions = [{ value: "any", label: "Choose a skill…" }, ...skills.map((s) => ({ value: s.id, label: s.name }))];
   const levelOptions = [1, 2, 3, 4, 5].map((l) => ({ value: String(l), label: `Level ${l}+` }));

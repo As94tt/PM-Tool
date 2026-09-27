@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Building2 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCanEditFunction } from "@/store/hooks";
+import { RoleGate } from "@/components/shared/role-gate";
 import { getProjectsForClient } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
 import { ClientLogo } from "@/components/shared/client-logo";
@@ -31,6 +32,7 @@ export default function CustomersPage() {
   });
 
   return (
+    <RoleGate functionKey="customers">
     <div className="flex flex-col gap-6 pb-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -112,5 +114,6 @@ export default function CustomersPage() {
         </div>
       )}
     </div>
+    </RoleGate>
   );
 }

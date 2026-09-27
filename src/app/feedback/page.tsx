@@ -4,8 +4,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Bug, Lightbulb, Plus, X, StickyNote, ThumbsUp } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { useCurrentPerson } from "@/store/hooks";
+import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
 import { fullName, initials } from "@/lib/data/queries";
+import { RoleGate } from "@/components/shared/role-gate";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -46,6 +47,7 @@ export default function FeedbackPage() {
   const removeFeedbackNote = useAppStore((s) => s.removeFeedbackNote);
   const toggleFeedbackVote = useAppStore((s) => s.toggleFeedbackVote);
   const currentPerson = useCurrentPerson();
+  const canEdit = useCanEditFunction("feedback");
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<FeedbackType>("bug");
@@ -70,6 +72,7 @@ export default function FeedbackPage() {
   }
 
   return (
+    <RoleGate functionKey="feedback">
     <div className="flex flex-col gap-6 pb-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -78,6 +81,7 @@ export default function FeedbackPage() {
             Found something broken, or have an idea? Pin a sticky note for the team.
           </p>
         </div>
+        {canEdit && (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger render={<Button />}>
             <Plus className="size-4" /> Add sticky
@@ -122,6 +126,7 @@ export default function FeedbackPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        )}
       </div>
 
       {feedbackNotes.length === 0 ? (
@@ -149,13 +154,15 @@ export default function FeedbackPage() {
                   ROTATIONS[i % ROTATIONS.length]
                 )}
               >
-                <button
-                  onClick={() => handleRemove(note.id)}
-                  aria-label="Remove note"
-                  className="absolute top-2 right-2 rounded-full p-1 text-foreground/40 opacity-0 transition-opacity hover:bg-black/5 hover:text-foreground group-hover:opacity-100"
-                >
-                  <X className="size-3.5" />
-                </button>
+                {canEdit && (
+                  <button
+                    onClick={() => handleRemove(note.id)}
+                    aria-label="Remove note"
+                    className="absolute top-2 right-2 rounded-full p-1 text-foreground/40 opacity-0 transition-opacity hover:bg-black/5 hover:text-foreground group-hover:opacity-100"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
                 <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-[11px] font-medium text-foreground/70 dark:bg-white/10">
                   <Icon className="size-3" /> {style.label}
                 </span>
@@ -173,11 +180,13 @@ export default function FeedbackPage() {
                   <button
                     onClick={() => handleToggleVote(note.id)}
                     aria-pressed={hasVoted}
+                    disabled={!canEdit}
                     className={cn(
                       "inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors",
                       hasVoted
                         ? "bg-primary/15 text-primary"
-                        : "text-foreground/60 hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10"
+                        : "text-foreground/60 hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10",
+                      !canEdit && "cursor-not-allowed opacity-60"
                     )}
                   >
                     <ThumbsUp className={cn("size-3", hasVoted && "fill-current")} /> {voteCount}
@@ -189,5 +198,6 @@ export default function FeedbackPage() {
         </div>
       )}
     </div>
+    </RoleGate>
   );
 }

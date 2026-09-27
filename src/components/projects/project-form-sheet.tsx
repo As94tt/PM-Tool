@@ -95,13 +95,6 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
   const [addPersonId, setAddPersonId] = useState("");
   const [addRole, setAddRole] = useState(ROLE_OPTIONS[0]);
 
-  const skillsByCategory = new Map<string, typeof skills>();
-  for (const s of skills) {
-    const list = skillsByCategory.get(s.category) ?? [];
-    list.push(s);
-    skillsByCategory.set(s.category, list);
-  }
-
   const peopleOptions = people.map((p) => ({ value: p.id, label: fullName(p) }));
   const deliveryResponsibleOptions = [{ value: "none", label: "None" }, ...peopleOptions];
   const industryOptions = industries.map((i) => ({ value: i.id, label: i.name }));
@@ -165,7 +158,23 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         totalBudget: Number(totalBudget) || 0,
         imageUrl,
       });
-      setProjectTeam(project.id, team);
+      // Guarantee the lead and delivery-responsible are on the team the
+      // same way createProject already does below — picking a new lead who
+      // isn't already in the local `team` list must still add them as a
+      // member, not just update Project.leadPersonId with no matching row.
+      const fullTeam: TeamRow[] = [
+        { personId: leadPersonId, roleOnProject: team.find((t) => t.personId === leadPersonId)?.roleOnProject ?? "Project Lead" },
+        ...(deliveryResponsibleId && deliveryResponsibleId !== leadPersonId
+          ? [
+              {
+                personId: deliveryResponsibleId,
+                roleOnProject: team.find((t) => t.personId === deliveryResponsibleId)?.roleOnProject ?? "Delivery Responsible",
+              },
+            ]
+          : []),
+        ...team.filter((t) => t.personId !== leadPersonId && t.personId !== deliveryResponsibleId),
+      ];
+      setProjectTeam(project.id, fullTeam);
       setProjectSkills(project.id, selectedSkillIds);
       toast.success("Project updated");
       setOpen(false);

@@ -9,6 +9,7 @@ import { getProjectsForClient } from "@/lib/data/queries";
 import { ClientLogo } from "@/components/shared/client-logo";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { CustomerFormSheet } from "@/components/customers/customer-form-sheet";
+import { RoleGate } from "@/components/shared/role-gate";
 import { Card } from "@/components/ui/card";
 
 export default function CustomerDetailPage() {
@@ -36,6 +37,7 @@ export default function CustomerDetailPage() {
   const clientProjects = getProjectsForClient(projects, client.name);
 
   return (
+    <RoleGate functionKey="customers">
     <div className="flex flex-col gap-6 pb-8">
       <Link href="/customers" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" /> Back to Customers
@@ -101,5 +103,6 @@ export default function CustomerDetailPage() {
         </div>
       </div>
     </div>
+    </RoleGate>
   );
 }

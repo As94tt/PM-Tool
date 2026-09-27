@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Building2, CalendarRange, Sparkles, Users, Wallet } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCanEditFunction, useCanViewFunction } from "@/store/hooks";
+import { RoleGate } from "@/components/shared/role-gate";
 import {
   getProjectMemberDetails,
   getProjectSkillDetails,
@@ -71,6 +72,7 @@ export default function ProjectDetailPage() {
   const budgetPlan = budgetPlans.find((b) => b.projectId === project.id);
 
   return (
+    <RoleGate functionKey="projects">
     <div className="flex flex-col gap-6 pb-8">
       <Link href="/projects" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" /> Back to Projects
@@ -272,5 +274,6 @@ export default function ProjectDetailPage() {
         </div>
       </div>
     </div>
+    </RoleGate>
   );
 }

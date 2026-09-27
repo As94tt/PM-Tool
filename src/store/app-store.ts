@@ -26,7 +26,7 @@ import type {
 } from "@/lib/types";
 import { APP_FUNCTIONS, DEFAULT_PERMISSIONS, type PermissionLevel, type PermissionMatrix } from "@/lib/permissions";
 import { monthToDate } from "@/lib/data/capacity";
-import { startOfWeek, weekKey, addWeeks, getHorizonWeeks } from "@/lib/data/week-planning";
+import { startOfWeek, weekKey, addWeeks, getHorizonWeeks, weekToMonthKey } from "@/lib/data/week-planning";
 import {
   INITIAL_LOCATIONS,
   INITIAL_INDUSTRIES,
@@ -100,15 +100,6 @@ export interface AppState {
   updateClient: (clientId: string, patch: Partial<Client>) => void;
   removeClient: (clientId: string) => void;
 
-  upsertAllocation: (allocation: Omit<ResourceAllocation, "id"> & { id?: string }) => void;
-  removeAllocation: (allocationId: string) => void;
-  assignToProject: (params: {
-    personId: string;
-    projectId: string;
-    month: string;
-    allocationPercent: number;
-    roleOnProject?: string;
-  }) => void;
 
   importPeople: (people: Person[]) => void;
   importProjects: (projects: Project[]) => void;
@@ -200,9 +191,127 @@ function deriveFtePerWeekFromAllocations(
 }
 
 /**
+ * Recomputes a person's monthly ResourceAllocation rows on a project from
+ * their current ProjectRoleAssignments there (weekly FTE -> monthly %,
+ * averaged across that month's assigned weeks). The weekly staffing plan
+ * (Resource & Budget Planning dialog) is the newer, richer system, but
+ * every *other* availability view in the app — Dashboard capacity, the
+ * People search availability filter, a person's own availability badge,
+ * the Resource Planning matrix/bench, even a project's own mini
+ * allocation chart — still reads the older monthly ResourceAllocation
+ * rows. Without this, staffing someone purely through the Planning dialog
+ * left them looking 0%-allocated / "on the bench" everywhere else, right
+ * next to the plan and cost figures on that same project that *did*
+ * reflect it. Called from every action that changes an assignment's
+ * existence or its requirement's ftePerWeek. Must run inside a `set()`
+ * callback (mutates the Immer draft directly, like its callers).
+ */
+function syncMonthlyAllocations(state: AppState, personId: string, projectId: string) {
+  const personAssignments = state.projectRoleAssignments.filter(
+    (a) => a.personId === personId && a.projectId === projectId
+  );
+  const monthlyFte = new Map<string, number[]>();
+  for (const asg of personAssignments) {
+    const req = state.projectRoleRequirements.find((r) => r.id === asg.roleRequirementId);
+    if (!req) continue;
+    for (const [week, fte] of Object.entries(req.ftePerWeek)) {
+      if (!fte) continue;
+      const month = weekToMonthKey(week);
+      const list = monthlyFte.get(month) ?? [];
+      list.push(fte);
+      monthlyFte.set(month, list);
+    }
+  }
+
+  state.resourceAllocations = state.resourceAllocations.filter(
+    (a) => !(a.personId === personId && a.projectId === projectId)
+  );
+  for (const [month, ftes] of monthlyFte) {
+    const avgFte = ftes.reduce((sum, v) => sum + v, 0) / ftes.length;
+    const id = nextId(
+      "alloc-sync",
+      state.resourceAllocations.map((a) => a.id)
+    );
+    state.resourceAllocations.push({
+      id,
+      personId,
+      projectId,
+      month,
+      allocationPercent: Math.round(Math.min(100, avgFte * 100)),
+    });
+  }
+}
+
+/**
+ * One-time cleanup (see the `migrate` option below, version 1 -> 2): backfills
+ * a staffing-plan seat (a ProjectRoleRequirement + ProjectRoleAssignment) for
+ * any ProjectMember that has neither, which used to happen for any project
+ * whose demo data predated the staffing-plan feature (or, before the
+ * generator fix, for completed projects specifically — see
+ * generate-data.mjs) — those members showed up on a project's own Team &
+ * Resource card but were invisible in its Resource & Budget Planning dialog.
+ *
+ * Deliberately NOT part of `repairState` below, which runs on every load:
+ * the Planning dialog's "Unassign" button removes only the assignment,
+ * intentionally leaving someone on the team with no current seat — a
+ * repeatedly-reapplied version of this backfill would silently re-staff
+ * them right back on the next reload. Running it once, gated by the
+ * persisted store's version, fixes the historical drift without fighting
+ * that deliberate action afterwards.
+ */
+function backfillMissingStaffingSeats(state: AppState): AppState {
+  const resourceAllocations = state.resourceAllocations ?? [];
+  const projectRoleRequirements = state.projectRoleRequirements ?? [];
+  const projectRoleAssignments = state.projectRoleAssignments ?? [];
+  const projectMembers = state.projectMembers ?? [];
+
+  const memberKey = (personId: string, projectId: string) => `${personId}|${projectId}`;
+  const reqIds = projectRoleRequirements.map((r) => r.id);
+  const asgIds = projectRoleAssignments.map((a) => a.id);
+  const assignedMemberKeys = new Set(projectRoleAssignments.map((a) => memberKey(a.personId, a.projectId)));
+  const backfilledRequirements: ProjectRoleRequirement[] = [];
+  const backfilledAssignments: ProjectRoleAssignment[] = [];
+
+  for (const m of projectMembers) {
+    const key = memberKey(m.personId, m.projectId);
+    if (assignedMemberKeys.has(key)) continue;
+
+    const projectReqs = [...projectRoleRequirements, ...backfilledRequirements].filter(
+      (r) => r.projectId === m.projectId
+    );
+    const dayRate =
+      projectReqs.length > 0
+        ? Math.round(projectReqs.reduce((sum, r) => sum + r.dayRate, 0) / projectReqs.length / 5) * 5
+        : 700;
+
+    const reqId = nextId("req-repair", reqIds);
+    reqIds.push(reqId);
+    backfilledRequirements.push({
+      id: reqId,
+      projectId: m.projectId,
+      roleName: m.roleOnProject,
+      dayRate,
+      ftePerWeek: deriveFtePerWeekFromAllocations(resourceAllocations, m.personId, m.projectId),
+    });
+
+    const asgId = nextId("asg-repair", asgIds);
+    asgIds.push(asgId);
+    backfilledAssignments.push({ id: asgId, projectId: m.projectId, roleRequirementId: reqId, personId: m.personId, dayRate });
+
+    assignedMemberKeys.add(key);
+  }
+
+  return {
+    ...state,
+    projectRoleRequirements: [...projectRoleRequirements, ...backfilledRequirements],
+    projectRoleAssignments: [...projectRoleAssignments, ...backfilledAssignments],
+  };
+}
+
+/**
  * Runs on every rehydration (page load) to keep the persisted state
- * internally consistent, self-healing two classes of drift that can build
- * up in a browser's localStorage over time as the app evolves:
+ * internally consistent, self-healing classes of drift that can build up
+ * in a browser's localStorage over time as the app evolves:
  *  1. A person saved before a field existed (e.g. `languages`,
  *     `projectStrengths`) won't have it — code that assumes it's always an
  *     array (like the PDF export) would otherwise crash.
@@ -212,12 +321,11 @@ function deriveFtePerWeekFromAllocations(
  *     ProjectMember is meant to be the single source of truth for "is this
  *     person on this project," so anything implying membership should
  *     always have a matching row there.
- *  3. The reverse of #2: a ProjectMember with no staffing-plan seat at all
- *     (no ProjectRoleAssignment), which used to happen for any project
- *     whose demo data predated the staffing-plan feature (or, before this
- *     fix, for completed projects specifically — see generate-data.mjs).
- *     Backfills a requirement + assignment so "on the team" and "planned"
- *     never drift apart in either direction.
+ * Deliberately does NOT backfill a missing staffing-plan seat for an
+ * existing ProjectMember — that's a one-time migration (see
+ * `backfillMissingStaffingSeats` above), not an ongoing invariant, since
+ * "on the team with no current seat" is a legitimate, reachable state
+ * (the Planning dialog's "Unassign" button produces exactly that).
  */
 function repairState(state: AppState): AppState {
   const peopleIds = new Set(state.people.map((p) => p.id));
@@ -280,53 +388,6 @@ function repairState(state: AppState): AppState {
     }
   }
 
-  const allProjectMembers = [...projectMembers, ...missingMembers];
-
-  // Reverse direction of the sync above: a ProjectMember with no matching
-  // ProjectRoleAssignment at all is invisible in that project's Resource &
-  // Budget Planning dialog even though they show up on the project's own
-  // Team & Resource card — "on the team" and "planned" drift apart, which
-  // is exactly the inconsistency this repair exists to close. Backfill a
-  // seat (a requirement + an assignment filling it) for any member missing
-  // one; day rate is averaged from the project's other seats (a flat
-  // fallback if it has none at all), FTE is derived from the member's own
-  // ResourceAllocation history when there is any.
-  const reqIds = projectRoleRequirements.map((r) => r.id);
-  const asgIds = projectRoleAssignments.map((a) => a.id);
-  const assignedMemberKeys = new Set(projectRoleAssignments.map((a) => memberKey(a.personId, a.projectId)));
-  const backfilledRequirements: ProjectRoleRequirement[] = [];
-  const backfilledAssignments: ProjectRoleAssignment[] = [];
-
-  for (const m of allProjectMembers) {
-    const key = memberKey(m.personId, m.projectId);
-    if (assignedMemberKeys.has(key)) continue;
-
-    const projectReqs = [...projectRoleRequirements, ...backfilledRequirements].filter(
-      (r) => r.projectId === m.projectId
-    );
-    const dayRate =
-      projectReqs.length > 0
-        ? Math.round(projectReqs.reduce((sum, r) => sum + r.dayRate, 0) / projectReqs.length / 5) * 5
-        : 700;
-
-    const reqId = nextId("req-repair", reqIds);
-    reqIds.push(reqId);
-    const requirement: ProjectRoleRequirement = {
-      id: reqId,
-      projectId: m.projectId,
-      roleName: m.roleOnProject,
-      dayRate,
-      ftePerWeek: deriveFtePerWeekFromAllocations(resourceAllocations, m.personId, m.projectId),
-    };
-    backfilledRequirements.push(requirement);
-
-    const asgId = nextId("asg-repair", asgIds);
-    asgIds.push(asgId);
-    backfilledAssignments.push({ id: asgId, projectId: m.projectId, roleRequirementId: reqId, personId: m.personId, dayRate });
-
-    assignedMemberKeys.add(key);
-  }
-
   return {
     ...state,
     people,
@@ -334,9 +395,9 @@ function repairState(state: AppState): AppState {
     permissions,
     users,
     resourceAllocations,
-    projectRoleRequirements: [...projectRoleRequirements, ...backfilledRequirements],
-    projectRoleAssignments: [...projectRoleAssignments, ...backfilledAssignments],
-    projectMembers: allProjectMembers,
+    projectRoleRequirements,
+    projectRoleAssignments,
+    projectMembers: [...projectMembers, ...missingMembers],
   };
 }
 
@@ -436,8 +497,29 @@ export function createAppStore() {
 
         setProjectTeam: (projectId, members) =>
           set((state) => {
+            const keptPersonIds = new Set(members.map((m) => m.personId));
+            const droppedPersonIds = state.projectMembers
+              .filter((m) => m.projectId === projectId && !keptPersonIds.has(m.personId))
+              .map((m) => m.personId);
+
             state.projectMembers = state.projectMembers.filter((m) => m.projectId !== projectId);
             state.projectMembers.push(...members.map((m) => ({ ...m, projectId })));
+
+            // Same cascade as removeProjectMembership — editing a project's
+            // team here is how a member actually gets dropped, so leaving
+            // their allocation/staffing-plan rows behind would keep
+            // counting them toward this project's utilization and cost
+            // after they're no longer on it (and resurrect them as a
+            // member on the next reload, since those rows imply membership).
+            if (droppedPersonIds.length > 0) {
+              const droppedSet = new Set(droppedPersonIds);
+              state.resourceAllocations = state.resourceAllocations.filter(
+                (a) => !(a.projectId === projectId && droppedSet.has(a.personId))
+              );
+              state.projectRoleAssignments = state.projectRoleAssignments.filter(
+                (a) => !(a.projectId === projectId && droppedSet.has(a.personId))
+              );
+            }
           }),
 
         setProjectSkills: (projectId, skillIds) =>
@@ -496,59 +578,6 @@ export function createAppStore() {
         removeClient: (clientId) =>
           set((state) => {
             state.clients = state.clients.filter((c) => c.id !== clientId);
-          }),
-
-        upsertAllocation: (allocation) =>
-          set((state) => {
-            if (allocation.id) {
-              const existing = state.resourceAllocations.find((a) => a.id === allocation.id);
-              if (existing) {
-                Object.assign(existing, allocation);
-                return;
-              }
-            }
-            const existingForMonth = state.resourceAllocations.find(
-              (a) =>
-                a.personId === allocation.personId &&
-                a.projectId === allocation.projectId &&
-                a.month === allocation.month
-            );
-            if (existingForMonth) {
-              existingForMonth.allocationPercent = allocation.allocationPercent;
-              return;
-            }
-            const id = nextId(
-              "alloc",
-              state.resourceAllocations.map((a) => a.id)
-            );
-            state.resourceAllocations.push({ ...allocation, id });
-          }),
-
-        removeAllocation: (allocationId) =>
-          set((state) => {
-            state.resourceAllocations = state.resourceAllocations.filter((a) => a.id !== allocationId);
-          }),
-
-        assignToProject: ({ personId, projectId, month, allocationPercent, roleOnProject }) =>
-          set((state) => {
-            const isMember = state.projectMembers.some(
-              (m) => m.personId === personId && m.projectId === projectId
-            );
-            if (!isMember) {
-              state.projectMembers.push({ projectId, personId, roleOnProject: roleOnProject ?? "Team Member" });
-            }
-            const existing = state.resourceAllocations.find(
-              (a) => a.personId === personId && a.projectId === projectId && a.month === month
-            );
-            if (existing) {
-              existing.allocationPercent = allocationPercent;
-            } else {
-              const id = nextId(
-                "alloc",
-                state.resourceAllocations.map((a) => a.id)
-              );
-              state.resourceAllocations.push({ id, personId, projectId, month, allocationPercent });
-            }
           }),
 
         importPeople: (newPeople) =>
@@ -654,15 +683,16 @@ export function createAppStore() {
 
         removeRoleRequirement: (requirementId) =>
           set((state) => {
-            state.projectRoleRequirements = state.projectRoleRequirements.filter((r) => r.id !== requirementId);
-            const droppedAssignmentIds = new Set(
-              state.projectRoleAssignments
-                .filter((a) => a.roleRequirementId === requirementId)
-                .map((a) => a.id)
+            const droppedAssignments = state.projectRoleAssignments.filter(
+              (a) => a.roleRequirementId === requirementId
             );
+            state.projectRoleRequirements = state.projectRoleRequirements.filter((r) => r.id !== requirementId);
+            const droppedAssignmentIds = new Set(droppedAssignments.map((a) => a.id));
             state.projectRoleAssignments = state.projectRoleAssignments.filter(
               (a) => !droppedAssignmentIds.has(a.id)
             );
+            const affected = new Map(droppedAssignments.map((a) => [a.personId, a.projectId]));
+            for (const [personId, projectId] of affected) syncMonthlyAllocations(state, personId, projectId);
           }),
 
         updateRoleRequirementDayRate: (requirementId, dayRate) =>
@@ -677,6 +707,8 @@ export function createAppStore() {
             if (!req) return;
             if (fte > 0) req.ftePerWeek[week] = fte;
             else delete req.ftePerWeek[week];
+            const affectedAssignments = state.projectRoleAssignments.filter((a) => a.roleRequirementId === requirementId);
+            for (const a of affectedAssignments) syncMonthlyAllocations(state, a.personId, a.projectId);
           }),
 
         addRoleAssignment: ({ projectId, roleRequirementId, personId, dayRate }) =>
@@ -694,11 +726,14 @@ export function createAppStore() {
               const requirement = state.projectRoleRequirements.find((r) => r.id === roleRequirementId);
               state.projectMembers.push({ projectId, personId, roleOnProject: requirement?.roleName ?? "Team Member" });
             }
+            syncMonthlyAllocations(state, personId, projectId);
           }),
 
         removeRoleAssignment: (assignmentId) =>
           set((state) => {
+            const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
             state.projectRoleAssignments = state.projectRoleAssignments.filter((a) => a.id !== assignmentId);
+            if (assignment) syncMonthlyAllocations(state, assignment.personId, assignment.projectId);
           }),
 
         updateRoleAssignmentDayRate: (assignmentId, dayRate) =>
@@ -772,8 +807,15 @@ export function createAppStore() {
       })),
       {
         name: "nexus-pm-tool-store",
-        version: 1,
+        version: 2,
         storage: createJSONStorage(() => localStorage),
+        // Runs once for any store persisted at an older version, before
+        // `merge` below — the right place for a one-time data cleanup that
+        // must NOT reapply itself on every load (see backfillMissingStaffingSeats).
+        migrate: (persistedState, version) => {
+          const state = persistedState as AppState;
+          return version < 2 ? backfillMissingStaffingSeats(state) : state;
+        },
         merge: (persistedState, currentState) =>
           repairState({ ...currentState, ...(persistedState as Partial<AppState>) }),
         partialize: (state) => ({

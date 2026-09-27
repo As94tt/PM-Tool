@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson, useCanViewFunction } from "@/store/hooks";
+import { RoleGate } from "@/components/shared/role-gate";
 import {
   getDashboardStats,
   getPeopleBecomingAvailableSoon,
@@ -94,6 +95,7 @@ export default function DashboardPage() {
   });
 
   return (
+    <RoleGate functionKey="dashboard">
     <div className="flex flex-col gap-8 pb-8">
       <div>
         <p className="text-sm text-muted-foreground">{today}</p>
@@ -271,5 +273,6 @@ export default function DashboardPage() {
         </div>
       )}
     </div>
+    </RoleGate>
   );
 }

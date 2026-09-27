@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CsvImportWizard } from "@/components/admin/csv-import-wizard";
 import { PEOPLE_IMPORT_FIELDS, PROJECT_IMPORT_FIELDS } from "@/lib/csv-import";
 import { selectLabel } from "@/lib/select-utils";
+import { groupBy } from "@/lib/utils";
 import { fullName, initials } from "@/lib/data/queries";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCanViewFunction, useCanEditFunction } from "@/store/hooks";
@@ -152,12 +153,7 @@ export default function AdminPage() {
   const [newCountry, setNewCountry] = useState("");
   const [newRegion, setNewRegion] = useState("EMEA");
 
-  const skillsByCategory = new Map<string, typeof skills>();
-  for (const s of skills) {
-    const list = skillsByCategory.get(s.category) ?? [];
-    list.push(s);
-    skillsByCategory.set(s.category, list);
-  }
+  const skillsByCategory = groupBy(skills, (s) => s.category);
 
   function resolveRoleName(rawJobTitle: string | undefined): string {
     const trimmed = rawJobTitle?.trim();
