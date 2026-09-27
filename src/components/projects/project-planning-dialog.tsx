@@ -233,7 +233,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     </td>
                     {totalFteByWeek.map((v, i) => (
                       <td key={visibleWeeks[i]} className="border-l border-border/40 px-0.5 py-1 text-center tabular-nums">
-                        {v > 0 ? v : "–"}
+                        {v > 0 ? v.toFixed(2) : "–"}
                       </td>
                     ))}
                     <td className="border-l border-border/40 px-2 py-1 text-right tabular-nums">

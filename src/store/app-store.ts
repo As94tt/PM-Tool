@@ -140,6 +140,10 @@ export interface AppState {
    * User record, or creates one (with a synthesized email) if they
    * somehow don't have one yet — e.g. a CSV-imported or legacy person. */
   setPersonRole: (personId: string, role: AppRole) => void;
+  /** Admin's "delete this user" action — removes their login/role record
+   * only. The Person itself (profile, project history, skills) is untouched;
+   * this is closer to disabling an account than deleting a colleague. */
+  removeUser: (personId: string) => void;
   setPermission: (functionKey: string, role: AppRole, level: PermissionLevel) => void;
 }
 
@@ -157,6 +161,29 @@ function nextId(prefix: string, existingIds: string[]) {
  * explicitly (CSV import, or self-healing a legacy person with none at all). */
 function synthesizeEmail(person: Person): string {
   return `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase().replace(/[^a-z]/g, "")}@nexuscorp.example`;
+}
+
+/**
+ * One-time cleanup (see the `migrate` option below, version 2 -> 3): backfills
+ * a User record (role "user") for any Person that doesn't have one at all —
+ * legacy demo data from before every person-creation path explicitly created
+ * one (CSV import, the "New person" form — round 15).
+ *
+ * Deliberately NOT part of `repairState` below, which runs on every load:
+ * now that Admins can delete a person's User record from the Users tab (see
+ * `removeUser`), a repeatedly-reapplied version of this backfill would
+ * silently recreate the very account an admin just deleted, on the next
+ * reload — the same class of bug the staffing-seat backfill above had to be
+ * split out of `repairState` to avoid.
+ */
+function backfillMissingUsers(state: AppState): AppState {
+  const people = state.people ?? [];
+  const users = state.users ?? [];
+  const existingUserPersonIds = new Set(users.map((u) => u.personId));
+  const missingUsers: User[] = people
+    .filter((p) => !existingUserPersonIds.has(p.id))
+    .map((p) => ({ id: `user-repair-${p.id}`, personId: p.id, email: synthesizeEmail(p), role: "user" }));
+  return { ...state, users: [...users, ...missingUsers] };
 }
 
 /** Converts a person's monthly ResourceAllocation rows on a project into a
@@ -351,11 +378,11 @@ function repairState(state: AppState): AppState {
     permissions[fn.key] = { ...DEFAULT_PERMISSIONS[fn.key], ...(state.permissions?.[fn.key] ?? {}) };
   }
 
-  const existingUserPersonIds = new Set(state.users.map((u) => u.personId));
-  const missingUsers: User[] = people
-    .filter((p) => !existingUserPersonIds.has(p.id))
-    .map((p) => ({ id: `user-repair-${p.id}`, personId: p.id, email: synthesizeEmail(p), role: "user" }));
-  const users = [...state.users, ...missingUsers];
+  // Prunes a User record whose person no longer exists (a dangling
+  // reference, same as the other cleanups below) — but does NOT backfill a
+  // missing one, which is a one-time migration instead (see
+  // backfillMissingUsers) so a deliberately deleted account stays deleted.
+  const users = state.users.filter((u) => peopleIds.has(u.personId));
 
   const resourceAllocations = state.resourceAllocations.filter(
     (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId)
@@ -797,6 +824,11 @@ export function createAppStore() {
             state.users.push({ id, personId, email: synthesizeEmail(person), role });
           }),
 
+        removeUser: (personId) =>
+          set((state) => {
+            state.users = state.users.filter((u) => u.personId !== personId);
+          }),
+
         setPermission: (functionKey, role, level) =>
           set((state) => {
             if (!state.permissions[functionKey]) {
@@ -807,14 +839,19 @@ export function createAppStore() {
       })),
       {
         name: "nexus-pm-tool-store",
-        version: 2,
+        version: 3,
         storage: createJSONStorage(() => localStorage),
         // Runs once for any store persisted at an older version, before
         // `merge` below — the right place for a one-time data cleanup that
-        // must NOT reapply itself on every load (see backfillMissingStaffingSeats).
+        // must NOT reapply itself on every load (see backfillMissingStaffingSeats
+        // and backfillMissingUsers). Each migration only applies if the
+        // persisted version is old enough to need it, so a version-3 store
+        // (or later) skips both and a version-0/1 store gets both in order.
         migrate: (persistedState, version) => {
-          const state = persistedState as AppState;
-          return version < 2 ? backfillMissingStaffingSeats(state) : state;
+          let state = persistedState as AppState;
+          if (version < 2) state = backfillMissingStaffingSeats(state);
+          if (version < 3) state = backfillMissingUsers(state);
+          return state;
         },
         merge: (persistedState, currentState) =>
           repairState({ ...currentState, ...(persistedState as Partial<AppState>) }),

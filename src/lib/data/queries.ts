@@ -13,6 +13,7 @@ import type {
   ProjectStatus,
   Client,
   Department,
+  Location,
   ProjectRoleRequirement,
   ProjectRoleAssignment,
 } from "@/lib/types";
@@ -298,7 +299,7 @@ export function getPeopleBecomingAvailableSoon(
 
 export interface PeopleFilters {
   query?: string;
-  locationId?: string;
+  country?: string;
   department?: Department;
   skillId?: string;
   minSkillLevel?: SkillLevel;
@@ -314,15 +315,16 @@ export function filterPeople(params: {
   personCertifications: PersonCertification[];
   projectMembers: ProjectMember[];
   resourceAllocations: ResourceAllocation[];
+  locations: Location[];
   filters: PeopleFilters;
 }): Person[] {
-  const { people, personSkills, personCertifications, projectMembers, resourceAllocations, filters } = params;
+  const { people, personSkills, personCertifications, projectMembers, resourceAllocations, locations, filters } = params;
   const month = getHorizonMonths(1)[0];
   const q = filters.query?.trim().toLowerCase();
 
   return people.filter((p) => {
     if (q && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(q)) return false;
-    if (filters.locationId && p.locationId !== filters.locationId) return false;
+    if (filters.country && locations.find((l) => l.id === p.locationId)?.country !== filters.country) return false;
     if (filters.department && p.department !== filters.department) return false;
     if (filters.industryId && !p.industryExperienceIds.includes(filters.industryId)) return false;
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, UserCog, KeyRound } from "lucide-react";
+import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, UserCog, KeyRound, Trash2 } from "lucide-react";
 import { RoleGate } from "@/components/shared/role-gate";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -130,6 +130,7 @@ export default function AdminPage() {
 
   const importPeople = useAppStore((s) => s.importPeople);
   const setPersonRole = useAppStore((s) => s.setPersonRole);
+  const removeUser = useAppStore((s) => s.removeUser);
   const setPermission = useAppStore((s) => s.setPermission);
   const importProjects = useAppStore((s) => s.importProjects);
   const addSkill = useAppStore((s) => s.addSkill);
@@ -286,6 +287,11 @@ export default function AdminPage() {
   function handleChangePersonRole(personId: string, role: AppRole) {
     setPersonRole(personId, role);
     toast.success("Role updated");
+  }
+
+  function handleRemoveUser(personId: string, name: string) {
+    removeUser(personId);
+    toast.success(`${name}'s account was deleted`);
   }
 
   function handleChangePermission(functionKey: string, role: AppRole, level: PermissionLevel) {
@@ -598,7 +604,8 @@ export default function AdminPage() {
               <h2 className="font-heading text-base font-semibold">User management</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Every registration starts as a User. Promote people to Management or Admin here — this stands in
-                for real role assignment once the company SSO is wired up.
+                for real role assignment once the company SSO is wired up. Deleting a user removes their account
+                only; their profile, skills and project history stay intact.
               </p>
 
               <Table className="mt-5">
@@ -607,6 +614,7 @@ export default function AdminPage() {
                     <TableHead>Person</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead className="w-44">Role</TableHead>
+                    <TableHead className="w-10" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -631,7 +639,9 @@ export default function AdminPage() {
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground">{user?.email ?? "—"}</TableCell>
                           <TableCell>
-                            {canEditUsers ? (
+                            {!user ? (
+                              <span className="text-sm text-muted-foreground italic">No account</span>
+                            ) : canEditUsers ? (
                               <Select
                                 value={currentRole}
                                 onValueChange={(v) => v && handleChangePersonRole(person.id, v as AppRole)}
@@ -649,6 +659,18 @@ export default function AdminPage() {
                               </Select>
                             ) : (
                               <span className="text-sm text-muted-foreground">{ROLE_LABEL[currentRole]}</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {canEditUsers && user && (
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => handleRemoveUser(person.id, fullName(person))}
+                                aria-label={`Delete ${fullName(person)}'s account`}
+                              >
+                                <Trash2 className="size-3.5" />
+                              </Button>
                             )}
                           </TableCell>
                         </TableRow>

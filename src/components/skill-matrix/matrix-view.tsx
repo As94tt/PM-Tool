@@ -23,7 +23,7 @@ export function MatrixView() {
 
   const [category, setCategory] = useState<string>(categories[0] ?? "");
   const [roleQuery, setRoleQuery] = useState("");
-  const [locationId, setLocationId] = useState("");
+  const [country, setCountry] = useState("");
   const [department, setDepartment] = useState("");
   const [minLevel, setMinLevel] = useState(0);
   const [minAvailability, setMinAvailability] = useState(0);
@@ -39,7 +39,7 @@ export function MatrixView() {
 
   const visiblePeople = people.filter((p) => {
     if (roleQuery && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(roleQuery.toLowerCase())) return false;
-    if (locationId && p.locationId !== locationId) return false;
+    if (country && locations.find((l) => l.id === p.locationId)?.country !== country) return false;
     if (department && p.department !== department) return false;
     if (minAvailability > 0) {
       const allocated = getAllocationForPersonMonth(resourceAllocations, p.id, month);
@@ -53,7 +53,8 @@ export function MatrixView() {
   });
 
   const categoryOptions = [{ value: "all", label: "All categories" }, ...categories.map((c) => ({ value: c, label: c }))];
-  const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const countries = Array.from(new Set(locations.map((l) => l.country))).toSorted();
+  const countryOptions = [{ value: "any", label: "All locations" }, ...countries.map((c) => ({ value: c, label: c }))];
   const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
   const levelOptions = [
     { value: "0", label: "Any level" },
@@ -86,12 +87,12 @@ export function MatrixView() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={locationId || "any"} onValueChange={(v) => setLocationId(v && v !== "any" ? v : "")}>
+          <Select value={country || "any"} onValueChange={(v) => setCountry(v && v !== "any" ? v : "")}>
             <SelectTrigger size="sm" className="w-[150px]">
-              <SelectValue>{selectLabel(locationOptions, "Location")}</SelectValue>
+              <SelectValue>{selectLabel(countryOptions, "Location")}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {locationOptions.map((o) => (
+              {countryOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
                 </SelectItem>

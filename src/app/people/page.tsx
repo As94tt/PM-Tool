@@ -72,7 +72,7 @@ function PeoplePageInner() {
   const [generating, setGenerating] = useState(false);
 
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
-  const [locationId, setLocationId] = useState(searchParams.get("location") ?? "");
+  const [country, setCountry] = useState(searchParams.get("country") ?? "");
   const [department, setDepartment] = useState(searchParams.get("department") ?? "");
   const [industryId, setIndustryId] = useState(searchParams.get("industry") ?? "");
   const [skillId, setSkillId] = useState(searchParams.get("skill") ?? "");
@@ -82,7 +82,7 @@ function PeoplePageInner() {
 
   const filters: PeopleFilters = {
     query: query || undefined,
-    locationId: locationId || undefined,
+    country: country || undefined,
     department: (department as Department) || undefined,
     industryId: industryId || undefined,
     skillId: skillId || undefined,
@@ -99,14 +99,15 @@ function PeoplePageInner() {
         personCertifications,
         projectMembers,
         resourceAllocations,
+        locations,
         filters,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [people, personSkills, personCertifications, projectMembers, resourceAllocations, query, locationId, department, industryId, skillId, minLevel, certificationId, minAvailability]
+    [people, personSkills, personCertifications, projectMembers, resourceAllocations, locations, query, country, department, industryId, skillId, minLevel, certificationId, minAvailability]
   );
 
   const month = getHorizonMonths(1)[0];
-  const hasActiveFilters = Boolean(query || locationId || department || industryId || skillId || certificationId || minAvailability !== "0");
+  const hasActiveFilters = Boolean(query || country || department || industryId || skillId || certificationId || minAvailability !== "0");
 
   function toggleProposalMode() {
     setProposalMode((v) => !v);
@@ -163,7 +164,7 @@ function PeoplePageInner() {
 
   function clearFilters() {
     setQuery("");
-    setLocationId("");
+    setCountry("");
     setDepartment("");
     setIndustryId("");
     setSkillId("");
@@ -175,7 +176,8 @@ function PeoplePageInner() {
 
   const skillsByCategory = useMemo(() => groupBy(skills, (s) => s.category), [skills]);
 
-  const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const countries = Array.from(new Set(locations.map((l) => l.country))).toSorted();
+  const countryOptions = [{ value: "any", label: "All locations" }, ...countries.map((c) => ({ value: c, label: c }))];
   const departmentOptions = [
     { value: "any", label: "All departments" },
     ...DEPARTMENTS.map((d) => ({ value: d, label: d })),
@@ -234,15 +236,15 @@ function PeoplePageInner() {
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
-          <Select value={locationId || "any"} onValueChange={(v) => setLocationId(v && v !== "any" ? v : "")}>
+          <Select value={country || "any"} onValueChange={(v) => setCountry(v && v !== "any" ? v : "")}>
             <SelectTrigger size="sm" className="w-[150px]">
-              <SelectValue placeholder="Location">{selectLabel(locationOptions, "Location")}</SelectValue>
+              <SelectValue placeholder="Location">{selectLabel(countryOptions, "Location")}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">All locations</SelectItem>
-              {locations.map((l) => (
-                <SelectItem key={l.id} value={l.id}>
-                  {l.city}
+              {countries.map((c) => (
+                <SelectItem key={c} value={c}>
+                  {c}
                 </SelectItem>
               ))}
             </SelectContent>

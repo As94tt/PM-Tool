@@ -93,18 +93,19 @@ export function ResourcePlanningView() {
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
 
   const [query, setQuery] = useState("");
-  const [locationId, setLocationId] = useState("");
+  const [country, setCountry] = useState("");
   const [department, setDepartment] = useState("");
   const [underallocatedOnly, setUnderallocatedOnly] = useState(false);
 
   const horizon = getHorizonMonths(12);
-  const locationOptions = [{ value: "any", label: "All locations" }, ...locations.map((l) => ({ value: l.id, label: l.city }))];
+  const countries = Array.from(new Set(locations.map((l) => l.country))).toSorted();
+  const countryOptions = [{ value: "any", label: "All locations" }, ...countries.map((c) => ({ value: c, label: c }))];
   const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
   const bench = getBenchPeople(people, resourceAllocations);
 
   const visiblePeople = people.filter((p) => {
     if (query && !`${fullName(p)} ${p.jobTitle}`.toLowerCase().includes(query.toLowerCase())) return false;
-    if (locationId && p.locationId !== locationId) return false;
+    if (country && locations.find((l) => l.id === p.locationId)?.country !== country) return false;
     if (department && p.department !== department) return false;
     if (underallocatedOnly) {
       const isOrWillBeUnderallocated = horizon.some(
@@ -126,12 +127,12 @@ export function ResourcePlanningView() {
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">
         <div className="flex flex-wrap items-center gap-2">
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name or role…" className="w-[220px]" />
-          <Select value={locationId || "any"} onValueChange={(v) => setLocationId(v && v !== "any" ? v : "")}>
+          <Select value={country || "any"} onValueChange={(v) => setCountry(v && v !== "any" ? v : "")}>
             <SelectTrigger size="sm" className="w-[160px]">
-              <SelectValue>{selectLabel(locationOptions, "Location")}</SelectValue>
+              <SelectValue>{selectLabel(countryOptions, "Location")}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {locationOptions.map((o) => (
+              {countryOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
                 </SelectItem>
