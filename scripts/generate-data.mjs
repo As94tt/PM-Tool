@@ -78,18 +78,14 @@ const HORIZON_MONTHS = Array.from({ length: 12 }, (_, i) =>
 // ================= static reference data =================
 
 const locations = [
-  { id: "loc-muc", city: "Munich", country: "Germany", region: "EMEA" },
+  { id: "loc-dus", city: "Düsseldorf", country: "Germany", region: "EMEA" },
   { id: "loc-ber", city: "Berlin", country: "Germany", region: "EMEA" },
-  { id: "loc-ham", city: "Hamburg", country: "Germany", region: "EMEA" },
-  { id: "loc-fra", city: "Frankfurt", country: "Germany", region: "EMEA" },
   { id: "loc-stu", city: "Stuttgart", country: "Germany", region: "EMEA" },
+  { id: "loc-muc", city: "Munich", country: "Germany", region: "EMEA" },
+  { id: "loc-ham", city: "Hamburg", country: "Germany", region: "EMEA" },
   { id: "loc-col", city: "Cologne", country: "Germany", region: "EMEA" },
-  { id: "loc-buc", city: "Bucharest", country: "Romania", region: "EMEA" },
-  { id: "loc-cluj", city: "Cluj-Napoca", country: "Romania", region: "EMEA" },
+  { id: "loc-por", city: "Porto", country: "Portugal", region: "EMEA" },
   { id: "loc-lis", city: "Lisbon", country: "Portugal", region: "EMEA" },
-  { id: "loc-waw", city: "Warsaw", country: "Poland", region: "EMEA" },
-  { id: "loc-lon", city: "London", country: "United Kingdom", region: "EMEA" },
-  { id: "loc-ams", city: "Amsterdam", country: "Netherlands", region: "EMEA" },
 ];
 
 const industries = [
@@ -221,11 +217,7 @@ const TRACKS = {
 
 const COUNTRY_LANGUAGE = {
   Germany: "German",
-  Romania: "Romanian",
   Portugal: "Portuguese",
-  Poland: "Polish",
-  "United Kingdom": "English",
-  Netherlands: "Dutch",
 };
 const EXTRA_LANGUAGES = ["French", "Spanish", "Italian", "Mandarin"];
 const TRACK_KEYS = Object.keys(TRACKS);

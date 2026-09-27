@@ -6,8 +6,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=41",
     "jobTitle": "Senior Cloud Architect",
     "department": "IT Solutions",
-    "locationId": "loc-lis",
-    "bio": "Thomas works as a Senior Cloud Architect out of the Lisbon office, bringing 7 years of hands-on work in banking & financial services projects. Currently deepening expertise in Terraform.",
+    "locationId": "loc-col",
+    "bio": "Thomas works as a Senior Cloud Architect out of the Cologne office, bringing 7 years of hands-on work in banking & financial services projects. Currently deepening expertise in Terraform.",
     "interestIds": [
       "int-sailing",
       "int-mountain-biking",
@@ -22,7 +22,7 @@
     "joinedDate": "2021-03-01",
     "languages": [
       {
-        "name": "Portuguese",
+        "name": "German",
         "proficiency": "Native"
       },
       {
@@ -42,8 +42,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=26",
     "jobTitle": "Full-Stack Engineer",
     "department": "Development",
-    "locationId": "loc-waw",
-    "bio": "Based in Warsaw, Nina is a Full-Stack Engineer on the delivery team, with a 1-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Node.js.",
+    "locationId": "loc-por",
+    "bio": "Based in Porto, Nina is a Full-Stack Engineer on the delivery team, with a 1-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Node.js.",
     "interestIds": [
       "int-volunteering",
       "int-yoga",
@@ -57,7 +57,7 @@
     "joinedDate": "2026-04-01",
     "languages": [
       {
-        "name": "Polish",
+        "name": "Portuguese",
         "proficiency": "Native"
       },
       {
@@ -82,8 +82,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=42",
     "jobTitle": "Data Engineer",
     "department": "Data",
-    "locationId": "loc-buc",
-    "bio": "Based in Bucharest, Bogdan is a Data Engineer on the delivery team, bringing 1 years of hands-on work in retail & e-commerce projects. Currently deepening expertise in TypeScript.",
+    "locationId": "loc-ham",
+    "bio": "Based in Hamburg, Bogdan is a Data Engineer on the delivery team, bringing 1 years of hands-on work in retail & e-commerce projects. Currently deepening expertise in TypeScript.",
     "interestIds": [
       "int-sci-fi-novels",
       "int-home-brewing",
@@ -96,7 +96,7 @@
     "joinedDate": "2026-07-01",
     "languages": [
       {
-        "name": "Romanian",
+        "name": "German",
         "proficiency": "Native"
       },
       {
@@ -149,8 +149,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=68",
     "jobTitle": "Network Engineer",
     "department": "IT Solutions",
-    "locationId": "loc-muc",
-    "bio": "Lena works as a Network Engineer out of the Munich office, with 4 years of experience across public sector engagements. Currently deepening expertise in Ansible.",
+    "locationId": "loc-dus",
+    "bio": "Lena works as a Network Engineer out of the Düsseldorf office, with 4 years of experience across public sector engagements. Currently deepening expertise in Ansible.",
     "interestIds": [
       "int-sci-fi-novels",
       "int-mountain-biking"
@@ -186,8 +186,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=55",
     "jobTitle": "Senior GRC Consultant",
     "department": "IT Solutions",
-    "locationId": "loc-muc",
-    "bio": "Lena works as a Senior GRC Consultant out of the Munich office, with 9 years of experience across banking & financial services engagements. Recently focused on Security Architecture work for enterprise clients.",
+    "locationId": "loc-dus",
+    "bio": "Lena works as a Senior GRC Consultant out of the Düsseldorf office, with 9 years of experience across banking & financial services engagements. Recently focused on Security Architecture work for enterprise clients.",
     "interestIds": [
       "int-sci-fi-novels",
       "int-running-marathons",
@@ -221,8 +221,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=63",
     "jobTitle": "Senior Program Manager",
     "department": "Development",
-    "locationId": "loc-cluj",
-    "bio": "Felix works as a Senior Program Manager out of the Cluj-Napoca office, with 11 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Requirements Engineering topics whenever possible.",
+    "locationId": "loc-col",
+    "bio": "Felix works as a Senior Program Manager out of the Cologne office, with 11 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Requirements Engineering topics whenever possible.",
     "interestIds": [
       "int-travel",
       "int-rock-climbing",
@@ -237,7 +237,7 @@
     "joinedDate": "2021-07-01",
     "languages": [
       {
-        "name": "Romanian",
+        "name": "German",
         "proficiency": "Native"
       },
       {
@@ -257,8 +257,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=45",
     "jobTitle": "Senior Business Analyst",
     "department": "IT Solutions",
-    "locationId": "loc-lis",
-    "bio": "David works as a Senior Business Analyst out of the Lisbon office, bringing 16 years of hands-on work in insurance projects. Recently focused on Stakeholder Management work for enterprise clients.",
+    "locationId": "loc-col",
+    "bio": "David works as a Senior Business Analyst out of the Cologne office, bringing 16 years of hands-on work in insurance projects. Recently focused on Stakeholder Management work for enterprise clients.",
     "interestIds": [
       "int-chess",
       "int-running-marathons",
@@ -271,7 +271,7 @@
     "joinedDate": "2012-06-01",
     "languages": [
       {
-        "name": "Portuguese",
+        "name": "German",
         "proficiency": "Native"
       },
       {
@@ -291,8 +291,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=7",
     "jobTitle": "Sales Director",
     "department": "IT Solutions",
-    "locationId": "loc-ams",
-    "bio": "Based in Amsterdam, Sebastian is a Sales Director on the delivery team, with 8 years of experience across retail & e-commerce engagements. Currently deepening expertise in Bid Management.",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Sebastian is a Sales Director on the delivery team, with 8 years of experience across retail & e-commerce engagements. Currently deepening expertise in Bid Management.",
     "interestIds": [
       "int-mountain-biking",
       "int-chess"
@@ -304,7 +304,7 @@
     "joinedDate": "2026-02-01",
     "languages": [
       {
-        "name": "Dutch",
+        "name": "Portuguese",
         "proficiency": "Native"
       },
       {
@@ -324,8 +324,8 @@
     "avatarUrl": "https://i.pravatar.cc/300?img=57",
     "jobTitle": "Senior UI Designer",
     "department": "Development",
-    "locationId": "loc-waw",
-    "bio": "Lea works as a Senior UI Designer out of the Warsaw office, bringing 12 years of hands-on work in automotive projects. Currently deepening expertise in TypeScript.",
+    "locationId": "loc-por",
+    "bio": "Lea works as a Senior UI Designer out of the Porto office, bringing 12 years of hands-on work in automotive projects. Currently deepening expertise in TypeScript.",
     "interestIds": [
       "int-cooking",
       "int-snowboarding"
@@ -336,7 +336,7 @@
     "joinedDate": "2017-05-01",
     "languages": [
       {
-        "name": "Polish",
+        "name": "Portuguese",
         "proficiency": "Native"
       },
       {

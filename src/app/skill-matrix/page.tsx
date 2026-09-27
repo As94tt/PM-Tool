@@ -21,6 +21,10 @@ function SkillMatrixPageInner() {
   const [skillId, setSkillId] = useState(searchParams.get("skill") ?? "");
   const [minLevel, setMinLevel] = useState(1);
   const [minAvailability, setMinAvailability] = useState(0);
+  // Matrix is the default landing view, but a skill deep-link from global
+  // search (?skill=) is a request for Discovery pre-filtered by that skill —
+  // still honor that instead of overriding it to Matrix.
+  const defaultTab = searchParams.get("skill") ? "discovery" : "matrix";
 
   return (
     <RoleGate functionKey="skill-matrix">
@@ -32,7 +36,7 @@ function SkillMatrixPageInner() {
         </p>
       </div>
 
-      <Tabs defaultValue="discovery">
+      <Tabs defaultValue={defaultTab}>
         <TabsList>
           <TabsTrigger value="discovery">
             <Search className="size-3.5" /> Discovery
