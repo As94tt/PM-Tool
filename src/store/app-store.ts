@@ -735,8 +735,9 @@ export function createAppStore() {
           set((state) => {
             const req = state.projectRoleRequirements.find((r) => r.id === requirementId);
             if (!req) return;
+            const rounded = Math.round(fte * 100) / 100;
             for (const week of weeks) {
-              if (fte > 0) req.ftePerWeek[week] = fte;
+              if (rounded > 0) req.ftePerWeek[week] = rounded;
               else delete req.ftePerWeek[week];
             }
             const affectedAssignments = state.projectRoleAssignments.filter((a) => a.roleRequirementId === requirementId);

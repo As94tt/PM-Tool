@@ -27,12 +27,28 @@ import type { Project } from "@/lib/types";
 const MONTH_WINDOW = 6;
 const MAX_SEAT_FTE = 1;
 
+/** Every data column (a collapsed month or one of its weeks) renders at this
+ * same fixed width, so expanding/collapsing a month never resizes any other
+ * column — only the table's total width grows or shrinks. */
+const DATA_COL_W = 72;
+const ROLE_COL_W = 176;
+const RATE_COL_W = 88;
+const PLAN_SUM_COL_W = 156;
+const ACTION_COL_W = 44;
+const PERSON_COL_W = 180;
+const STAFF_SUM_COL_W = 112;
+
 /** One visible column — either a whole month (collapsed) or one of its
  * individual weeks (only appear for the single currently-expanded month). */
 type Column = { key: string; type: "month"; weeks: string[] } | { key: string; type: "week"; month: string };
 
+/** FTE is always shown/stored to at most 2 decimal places — never more. */
+function roundFte(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
 function formatFte(n: number): string {
-  return String(Math.round(n * 100) / 100);
+  return String(roundFte(n));
 }
 
 function DayRateInput({ value, onCommit }: { value: number; onCommit: (v: number) => void }) {
@@ -48,7 +64,7 @@ function DayRateInput({ value, onCommit }: { value: number; onCommit: (v: number
         setText(String(n));
         if (n !== value) onCommit(n);
       }}
-      className="h-6 w-16 rounded-md border border-input bg-transparent px-1.5 text-[11px] text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+      className="h-8 w-full rounded-md border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
     />
   );
 }
@@ -62,13 +78,13 @@ function FteCell({ value, onCommit, title }: { value: number; onCommit: (v: numb
       value={text}
       onChange={(e) => setText(e.target.value.replace(/[^0-9.]/g, ""))}
       onBlur={() => {
-        const n = Math.max(0, Math.min(MAX_SEAT_FTE, Number(text) || 0));
+        const n = roundFte(Math.max(0, Math.min(MAX_SEAT_FTE, Number(text) || 0)));
         setText(n ? String(n) : "");
         if (n !== value) onCommit(n);
       }}
       placeholder="0"
       title={title}
-      className="h-6 w-10 rounded-md border border-input bg-transparent px-1 text-center text-[11px] text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+      className="h-8 w-full rounded-md border border-input bg-transparent px-1 text-center text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
     />
   );
 }
@@ -147,12 +163,13 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   /** A column's FTE for one role: the week's own value, or (collapsed) the
    * average across that month's weeks — since FTE is a headcount *level*,
    * not something that should sum when several weeks are folded into one
-   * column (unlike cost, which legitimately accumulates). */
+   * column (unlike cost, which legitimately accumulates). Always rounded to
+   * at most 2 decimal places, whichever branch produced the number. */
   function columnFte(ftePerWeek: Record<string, number>, col: Column): number {
-    if (col.type === "week") return ftePerWeek[col.key] ?? 0;
+    if (col.type === "week") return roundFte(ftePerWeek[col.key] ?? 0);
     if (col.weeks.length === 0) return 0;
     const avg = col.weeks.reduce((sum, w) => sum + (ftePerWeek[w] ?? 0), 0) / col.weeks.length;
-    return Math.round(avg * 100) / 100;
+    return roundFte(avg);
   }
 
   /** A column's cost for one seat: the week's own cost, or (collapsed) the
@@ -166,9 +183,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
    * the per-week sum across every role instead of one role's own map. */
   function totalColumnFte(col: Column): number {
     const weekTotal = (w: string) => projReqs.reduce((sum, r) => sum + (r.ftePerWeek[w] ?? 0), 0);
-    if (col.type === "week") return weekTotal(col.key);
+    if (col.type === "week") return roundFte(weekTotal(col.key));
     if (col.weeks.length === 0) return 0;
-    return col.weeks.reduce((sum, w) => sum + weekTotal(w), 0) / col.weeks.length;
+    return roundFte(col.weeks.reduce((sum, w) => sum + weekTotal(w), 0) / col.weeks.length);
   }
   const totalFteByColumn = columns.map(totalColumnFte);
   const totalFteAll = projReqs.reduce((sum, r) => sum + sumFteMap(r.ftePerWeek), 0);
@@ -207,13 +224,13 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
       <DialogTrigger render={<Button variant="outline" size="sm" />}>
         <CalendarClock className="size-3.5" /> Resource & Budget Planning
       </DialogTrigger>
-      <DialogContent className="flex max-h-[88vh] w-full max-w-6xl flex-col gap-3 overflow-hidden p-4 sm:max-w-6xl">
+      <DialogContent className="flex max-h-[92vh] w-fit min-w-[960px] max-w-[1360px] flex-col gap-4 overflow-hidden p-6 sm:max-w-[1360px]">
         <div>
-          <h2 className="font-heading text-base font-semibold">Resource & Budget Planning</h2>
-          <p className="text-xs text-muted-foreground">{project.name}</p>
+          <h2 className="font-heading text-lg font-semibold">Resource & Budget Planning</h2>
+          <p className="text-sm text-muted-foreground">{project.name}</p>
         </div>
 
-        <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
+        <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-3 py-2">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -221,9 +238,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
             disabled={monthOffset === 0}
             aria-label="Previous months"
           >
-            <ChevronLeft className="size-3.5" />
+            <ChevronLeft className="size-4" />
           </Button>
-          <span className="text-[11px] font-medium text-muted-foreground">{periodRangeLabel()}</span>
+          <span className="text-sm font-medium text-muted-foreground">{periodRangeLabel()}</span>
           <Button
             variant="ghost"
             size="icon-sm"
@@ -231,23 +248,32 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
             disabled={monthOffset + MONTH_WINDOW >= allMonths.length}
             aria-label="Next months"
           >
-            <ChevronRight className="size-3.5" />
+            <ChevronRight className="size-4" />
           </Button>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
           <div className="rounded-lg border border-border">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-              <h3 className="text-xs font-semibold">Required roles (plan) — one row per seat, FTE per month or week</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-4 py-2">
+              <h3 className="text-sm font-semibold">Required roles (plan) — one row per seat, FTE per month or week</h3>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-xs">
+              <table className="table-fixed border-collapse text-sm">
+                <colgroup>
+                  <col style={{ width: ROLE_COL_W }} />
+                  <col style={{ width: RATE_COL_W }} />
+                  {columns.map((col) => (
+                    <col key={col.key} style={{ width: DATA_COL_W }} />
+                  ))}
+                  <col style={{ width: PLAN_SUM_COL_W }} />
+                  <col style={{ width: ACTION_COL_W }} />
+                </colgroup>
                 <thead>
-                  <tr className="border-b border-border/70 text-left text-[10px] font-medium text-muted-foreground">
-                    <th rowSpan={2} className="min-w-[120px] px-2 py-1.5 align-bottom">
+                  <tr className="border-b border-border/70 text-left text-xs font-semibold text-muted-foreground">
+                    <th rowSpan={2} className="px-3 py-2 align-bottom">
                       Role
                     </th>
-                    <th rowSpan={2} className="min-w-[68px] px-1 py-1.5 align-bottom">
+                    <th rowSpan={2} className="px-2 py-2 align-bottom">
                       Rate
                     </th>
                     {visibleMonths.map((month) => {
@@ -258,31 +284,31 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                           key={month}
                           colSpan={isExpanded ? weeks.length : 1}
                           rowSpan={isExpanded ? 1 : 2}
-                          className="border-l border-border/50 px-0.5 py-1.5 text-center align-bottom"
+                          className="border-l border-border/50 px-1 py-2 text-center align-bottom"
                         >
                           <button
                             type="button"
                             onClick={() => setExpandedMonth(isExpanded ? null : month)}
-                            className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 hover:bg-secondary/70"
+                            className="inline-flex items-center gap-0.5 rounded px-1.5 py-1 hover:bg-secondary/70"
                             aria-label={`${isExpanded ? "Collapse" : "Expand"} ${formatMonthLabel(month)}`}
                           >
                             {formatMonthLabel(month, { month: "short" })}
-                            {isExpanded ? <ChevronUp className="size-2.5" /> : <ChevronDown className="size-2.5" />}
+                            {isExpanded ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
                           </button>
                         </th>
                       );
                     })}
-                    <th rowSpan={2} className="min-w-[80px] border-l border-border/50 px-2 py-1.5 text-right align-bottom">
+                    <th rowSpan={2} className="border-l border-border/50 px-3 py-2 text-right align-bottom">
                       Avg FTE
                     </th>
-                    <th rowSpan={2} className="w-6" />
+                    <th rowSpan={2} />
                   </tr>
-                  <tr className="border-b border-border/70 text-center text-[10px] font-medium text-muted-foreground">
+                  <tr className="border-b border-border/70 text-center text-xs font-semibold text-muted-foreground">
                     {visibleMonths.flatMap((month) => {
                       if (month !== expandedMonth) return [];
                       const weeks = weeksByMonth.get(month) ?? [];
                       return weeks.map((w) => (
-                        <th key={w} className="w-10 border-l border-border/50 px-0.5 py-1">
+                        <th key={w} className="border-l border-border/50 px-1 py-1.5">
                           {formatWeekLabel(w)}
                         </th>
                       ));
@@ -295,12 +321,12 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     const roleAvgFte = roleActiveWeeks > 0 ? sumFteMap(req.ftePerWeek) / roleActiveWeeks : 0;
                     return (
                       <tr key={req.id} className="border-b border-border/40">
-                        <td className="px-2 py-1 font-medium">{req.roleName}</td>
-                        <td className="px-1 py-1">
+                        <td className="truncate px-3 py-2 font-medium">{req.roleName}</td>
+                        <td className="px-2 py-2">
                           <DayRateInput value={req.dayRate} onCommit={(v) => updateRoleRequirementDayRate(req.id, v)} />
                         </td>
                         {columns.map((col) => (
-                          <td key={col.key} className="border-l border-border/40 px-0.5 py-1 text-center">
+                          <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center">
                             <FteCell
                               value={columnFte(req.ftePerWeek, col)}
                               onCommit={(v) =>
@@ -314,20 +340,20 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                             />
                           </td>
                         ))}
-                        <td className="border-l border-border/40 px-2 py-1 text-right font-medium tabular-nums">
+                        <td className="border-l border-border/40 px-3 py-2 text-right font-medium tabular-nums">
                           {roleActiveWeeks > 0
                             ? `${formatFte(roleAvgFte)} FTE (${roleActiveWeeks} wk${roleActiveWeeks === 1 ? "" : "s"})`
                             : "–"}
                         </td>
-                        <td className="px-0.5 py-1 text-center">
+                        <td className="px-1 py-2 text-center">
                           <Button
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => removeRoleRequirement(req.id)}
                             aria-label={`Remove ${req.roleName}`}
-                            className="size-5"
+                            className="size-7"
                           >
-                            <X className="size-3" />
+                            <X className="size-3.5" />
                           </Button>
                         </td>
                       </tr>
@@ -335,24 +361,24 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                   })}
                   {projReqs.length > 0 && (
                     <tr className="border-b border-border/40 bg-secondary/30 font-medium">
-                      <td className="px-2 py-1" colSpan={2}>
+                      <td className="px-3 py-2" colSpan={2}>
                         Total FTE
                       </td>
                       {totalFteByColumn.map((v, i) => (
-                        <td key={columns[i].key} className="border-l border-border/40 px-0.5 py-1 text-center tabular-nums">
+                        <td key={columns[i].key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums">
                           {v > 0 ? formatFte(v) : "–"}
                         </td>
                       ))}
-                      <td className="border-l border-border/40 px-2 py-1 text-right tabular-nums">
+                      <td className="border-l border-border/40 px-3 py-2 text-right tabular-nums">
                         {totalActiveWeeks > 0 ? `~${formatFte(totalAvgFte)} FTE (${totalActiveWeeks} wks)` : "–"}
                       </td>
                       <td />
                     </tr>
                   )}
                   <tr>
-                    <td className="px-2 py-1.5">
+                    <td className="px-3 py-2">
                       <Select value={newRoleName} onValueChange={(v) => v && setNewRoleName(v)}>
-                        <SelectTrigger size="sm" className="h-7 w-full min-w-[120px] text-xs">
+                        <SelectTrigger size="sm" className="h-9 w-full text-xs">
                           <SelectValue>{selectLabel(roleOptions, "Select a role")}</SelectValue>
                         </SelectTrigger>
                         <SelectContent>
@@ -364,25 +390,25 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="px-1 py-1.5">
+                    <td className="px-2 py-2">
                       <input
                         type="text"
                         inputMode="numeric"
                         value={newRoleDayRate}
                         onChange={(e) => setNewRoleDayRate(e.target.value.replace(/[^0-9]/g, ""))}
-                        className="h-6 w-16 rounded-md border border-input bg-transparent px-1.5 text-[11px] text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                        className="h-9 w-full rounded-md border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                       />
                     </td>
                     <td colSpan={columns.length} />
-                    <td colSpan={2} className="px-2 py-1.5">
-                      <Button size="sm" className="h-7 text-xs" onClick={handleAddRole} disabled={!newRoleName.trim()}>
-                        <Plus className="size-3" /> Add role
+                    <td colSpan={2} className="px-3 py-2">
+                      <Button size="sm" className="h-9 text-xs" onClick={handleAddRole} disabled={!newRoleName.trim()}>
+                        <Plus className="size-3.5" /> Add role
                       </Button>
                     </td>
                   </tr>
                   {projReqs.length === 0 && (
                     <tr>
-                      <td colSpan={4 + columns.length} className="px-2 py-1.5 text-[11px] text-muted-foreground">
+                      <td colSpan={4 + columns.length} className="px-3 py-2 text-xs text-muted-foreground">
                         No required roles yet — add one above to start the staffing plan.
                       </td>
                     </tr>
@@ -393,32 +419,42 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
           </div>
 
           <div className="rounded-lg border border-border">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-              <h3 className="text-xs font-semibold">Staffing (actual) — one row per seat, € per month or week</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-4 py-2">
+              <h3 className="text-sm font-semibold">Staffing (actual) — one row per seat, € per month or week</h3>
               {projAsgs.length > 0 && (
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-xs text-muted-foreground">
                   Total {formatCompactCurrency(totalActualCost)}
                   {actualBlendedRate > 0 && <> · Blended {formatCurrency(Math.round(actualBlendedRate))}/day</>}
                 </span>
               )}
             </div>
             {projReqs.length === 0 ? (
-              <p className="px-3 py-2 text-[11px] text-muted-foreground">Define at least one required role first.</p>
+              <p className="px-4 py-3 text-xs text-muted-foreground">Define at least one required role first.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-xs">
+                <table className="table-fixed border-collapse text-sm">
+                  <colgroup>
+                    <col style={{ width: ROLE_COL_W }} />
+                    <col style={{ width: PERSON_COL_W }} />
+                    <col style={{ width: RATE_COL_W }} />
+                    {columns.map((col) => (
+                      <col key={col.key} style={{ width: DATA_COL_W }} />
+                    ))}
+                    <col style={{ width: STAFF_SUM_COL_W }} />
+                    <col style={{ width: ACTION_COL_W }} />
+                  </colgroup>
                   <thead>
-                    <tr className="border-b border-border/70 text-left text-[10px] font-medium text-muted-foreground">
-                      <th className="min-w-[110px] px-2 py-1.5">Role</th>
-                      <th className="min-w-[130px] px-2 py-1.5">Person</th>
-                      <th className="min-w-[68px] px-1 py-1.5">Rate</th>
+                    <tr className="border-b border-border/70 text-left text-xs font-semibold text-muted-foreground">
+                      <th className="px-3 py-2">Role</th>
+                      <th className="px-3 py-2">Person</th>
+                      <th className="px-2 py-2">Rate</th>
                       {columns.map((col) => (
-                        <th key={col.key} className="w-10 border-l border-border/50 px-0.5 py-1.5 text-center">
+                        <th key={col.key} className="border-l border-border/50 px-1 py-2 text-center">
                           {columnLabel(col)}
                         </th>
                       ))}
-                      <th className="min-w-[70px] border-l border-border/50 px-2 py-1.5 text-right">Sum</th>
-                      <th className="w-6" />
+                      <th className="border-l border-border/50 px-3 py-2 text-right">Sum</th>
+                      <th />
                     </tr>
                   </thead>
                   <tbody>
@@ -436,54 +472,56 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         <Fragment key={req.id}>
                           {assignment ? (
                             <tr className="border-b border-border/40">
-                              <td className="px-2 py-1 text-[11px] text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <Briefcase className="size-3" /> {req.roleName}
+                              <td className="px-3 py-2 text-xs text-muted-foreground">
+                                <span className="flex min-w-0 items-center gap-1.5">
+                                  <Briefcase className="size-3.5 shrink-0" />
+                                  <span className="truncate">{req.roleName}</span>
                                 </span>
                               </td>
-                              <td className="px-2 py-1">
-                                <Link href={`/people/${assignment.personId}`} className="flex items-center gap-1.5 hover:text-primary">
-                                  <Avatar className="size-5">
+                              <td className="px-3 py-2">
+                                <Link href={`/people/${assignment.personId}`} className="flex items-center gap-2 hover:text-primary">
+                                  <Avatar className="size-6">
                                     <AvatarImage src={person?.avatarUrl} alt={person ? fullName(person) : ""} />
-                                    <AvatarFallback className="text-[9px]">{person ? initials(person) : "?"}</AvatarFallback>
+                                    <AvatarFallback className="text-[10px]">{person ? initials(person) : "?"}</AvatarFallback>
                                   </Avatar>
-                                  <span className="truncate text-[11px] font-medium">{person ? fullName(person) : "Unknown"}</span>
+                                  <span className="truncate text-xs font-medium">{person ? fullName(person) : "Unknown"}</span>
                                 </Link>
                               </td>
-                              <td className="px-1 py-1">
+                              <td className="px-2 py-2">
                                 <DayRateInput
                                   value={assignment.dayRate}
                                   onCommit={(v) => updateRoleAssignmentDayRate(assignment.id, v)}
                                 />
                               </td>
                               {columns.map((col) => (
-                                <td key={col.key} className="border-l border-border/40 px-0.5 py-1 text-center tabular-nums text-[11px]">
+                                <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs">
                                   {formatCompactCurrency(columnCost(req.ftePerWeek, assignment.dayRate, col))}
                                 </td>
                               ))}
-                              <td className="border-l border-border/40 px-2 py-1 text-right font-medium tabular-nums">
+                              <td className="border-l border-border/40 px-3 py-2 text-right font-medium tabular-nums">
                                 {formatCompactCurrency(totalCost(req.ftePerWeek, assignment.dayRate))}
                               </td>
-                              <td className="px-0.5 py-1 text-center">
+                              <td className="px-1 py-2 text-center">
                                 <Button
                                   variant="ghost"
                                   size="icon-sm"
                                   onClick={() => removeRoleAssignment(assignment.id)}
                                   aria-label={`Unassign ${person ? fullName(person) : "person"}`}
-                                  className="size-5"
+                                  className="size-7"
                                 >
-                                  <X className="size-3" />
+                                  <X className="size-3.5" />
                                 </Button>
                               </td>
                             </tr>
                           ) : (
                             <tr className="border-b border-border/40">
-                              <td className="px-2 py-1 text-[11px] text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <Briefcase className="size-3" /> {req.roleName}
+                              <td className="px-3 py-2 text-xs text-muted-foreground">
+                                <span className="flex min-w-0 items-center gap-1.5">
+                                  <Briefcase className="size-3.5 shrink-0" />
+                                  <span className="truncate">{req.roleName}</span>
                                 </span>
                               </td>
-                              <td className="px-2 py-1">
+                              <td className="px-3 py-2">
                                 <Select
                                   value={formState.personId || "none"}
                                   onValueChange={(v) =>
@@ -493,7 +531,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                     }))
                                   }
                                 >
-                                  <SelectTrigger size="sm" className="h-6 w-full min-w-[120px] text-[11px]">
+                                  <SelectTrigger size="sm" className="h-8 w-full text-xs">
                                     <SelectValue placeholder="Select a person…">{selectLabel(personOptions, "Select a person…")}</SelectValue>
                                   </SelectTrigger>
                                   <SelectContent>
@@ -505,7 +543,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                   </SelectContent>
                                 </Select>
                               </td>
-                              <td className="px-1 py-1">
+                              <td className="px-2 py-2">
                                 <input
                                   type="text"
                                   inputMode="numeric"
@@ -517,24 +555,24 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                     }))
                                   }
                                   placeholder={String(req.dayRate)}
-                                  className="h-6 w-16 rounded-md border border-input bg-transparent px-1.5 text-[11px] text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+                                  className="h-8 w-full rounded-md border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                                 />
                               </td>
                               {columns.map((col) => (
-                                <td key={col.key} className="border-l border-border/40 px-0.5 py-1 text-center text-[11px] text-border">
+                                <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center text-xs text-border">
                                   –
                                 </td>
                               ))}
-                              <td className="border-l border-border/40 px-2 py-1" />
-                              <td className="px-0.5 py-1">
+                              <td className="border-l border-border/40 px-3 py-2" />
+                              <td className="px-1 py-2 text-center">
                                 <Button
                                   size="icon-sm"
-                                  className="size-5"
+                                  className="size-7"
                                   onClick={() => handleAddPerson(req.id, req.dayRate)}
                                   disabled={!formState.personId}
                                   aria-label={`Assign to ${req.roleName}`}
                                 >
-                                  <Plus className="size-3" />
+                                  <Plus className="size-3.5" />
                                 </Button>
                               </td>
                             </tr>
@@ -544,15 +582,15 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     })}
                     {projAsgs.length > 0 && (
                       <tr className="border-b border-border/40 bg-secondary/30 font-medium">
-                        <td className="px-2 py-1" colSpan={3}>
+                        <td className="px-3 py-2" colSpan={3}>
                           Total (assigned)
                         </td>
                         {actualByColumn.map((v, i) => (
-                          <td key={columns[i].key} className="border-l border-border/40 px-0.5 py-1 text-center tabular-nums">
+                          <td key={columns[i].key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums">
                             {v > 0 ? formatCompactCurrency(v) : "–"}
                           </td>
                         ))}
-                        <td className="border-l border-border/40 px-2 py-1 text-right tabular-nums">
+                        <td className="border-l border-border/40 px-3 py-2 text-right tabular-nums">
                           {formatCompactCurrency(totalActualCost)}
                         </td>
                         <td />
