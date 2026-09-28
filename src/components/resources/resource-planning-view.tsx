@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { UserX } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
@@ -14,6 +14,7 @@ import {
   ALLOCATION_STATUS_STYLES,
 } from "@/lib/data/capacity";
 import { selectLabel } from "@/lib/select-utils";
+import { PROJECT_STATUS_LABEL, SECURE_ALLOCATION_STATUSES } from "@/lib/project-status";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -24,6 +25,18 @@ import { cn } from "@/lib/utils";
 import { DEPARTMENTS, type AllocationStatus, type Project, type ResourceAllocation } from "@/lib/types";
 
 const UNDERALLOCATED_THRESHOLD = 75;
+
+/** Diagonal hatch, tone-on-white so it reads consistently over any of the
+ * four alloc-status fill colors instead of needing a second hue per status
+ * (which is exactly the "color on color" clash a plain second color would
+ * risk). Marks a cell whose allocation includes at least one project that
+ * isn't yet a firm commitment (see SECURE_ALLOCATION_STATUSES) — magnitude
+ * still reads purely from the base fill color; texture is the only signal
+ * for certainty. */
+const UNCERTAIN_HATCH_STYLE: CSSProperties = {
+  backgroundImage:
+    "repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 2px, transparent 2px, transparent 7px)",
+};
 
 /** Read-only — shows which project(s) make up a person's allocation for a
  * month. No add/remove controls; edit allocations from a project's own
@@ -42,6 +55,10 @@ function AllocationDetailCell({
   const rows = allocations.filter((a) => a.personId === person.id && a.month === month);
   const total = rows.reduce((sum, r) => sum + r.allocationPercent, 0);
   const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
+  const rowsWithProject = rows.map((r) => ({ row: r, project: projects.find((p) => p.id === r.projectId) }));
+  const hasUncertainAllocation = rowsWithProject.some(
+    ({ project }) => project && !SECURE_ALLOCATION_STATUSES.includes(project.status)
+  );
 
   if (total === 0) {
     return <div className="flex h-8 w-full items-center justify-center text-xs text-border">–</div>;
@@ -52,6 +69,8 @@ function AllocationDetailCell({
       <PopoverTrigger
         render={
           <button
+            style={hasUncertainAllocation ? UNCERTAIN_HATCH_STYLE : undefined}
+            title={hasUncertainAllocation ? "Includes allocation on a project that isn't yet a signed commitment" : undefined}
             className={cn(
               "flex h-8 w-full items-center justify-center rounded-md text-xs font-semibold tabular-nums transition-opacity hover:opacity-80",
               styles.bar
@@ -67,8 +86,8 @@ function AllocationDetailCell({
           <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", styles.badge)}>{total}%</span>
         </div>
         <div className="flex flex-col gap-1.5">
-          {rows.map((r) => {
-            const project = projects.find((p) => p.id === r.projectId);
+          {rowsWithProject.map(({ row: r, project }) => {
+            const isSecure = !project || SECURE_ALLOCATION_STATUSES.includes(project.status);
             return (
               <Link
                 key={r.id}
@@ -76,6 +95,11 @@ function AllocationDetailCell({
                 className="flex items-center justify-between gap-2 rounded-lg border border-border px-2.5 py-1.5 text-xs hover:bg-secondary/50"
               >
                 <span className="min-w-0 flex-1 truncate">{project?.name ?? "Unknown project"}</span>
+                {!isSecure && (
+                  <span className="shrink-0 text-[10px] font-normal text-muted-foreground">
+                    {project ? PROJECT_STATUS_LABEL[project.status] : "uncertain"}
+                  </span>
+                )}
                 <span className="shrink-0 font-medium tabular-nums">{r.allocationPercent}%</span>
               </Link>
             );
@@ -162,6 +186,10 @@ export function ResourcePlanningView() {
                 {ALLOCATION_STATUS_LABEL[status]}
               </span>
             ))}
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <span className="size-2 rounded-full bg-alloc-full" style={UNCERTAIN_HATCH_STYLE} />
+              Not yet secure
+            </span>
           </div>
         </div>
       </div>
