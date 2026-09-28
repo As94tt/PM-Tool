@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
@@ -33,6 +33,8 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
 
   const [granularity, setGranularity] = useState<Granularity>("month");
   const [offset, setOffset] = useState(0);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const wheelAccumRef = useRef(0);
 
   const members = getProjectMemberDetails(projectMembers, people, project.id);
 
@@ -60,6 +62,31 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
   function step(dir: -1 | 1) {
     setOffset((o) => Math.max(0, Math.min(allPeriods.length - windowSize, o + dir * windowSize)));
   }
+
+  // Lets a mouse wheel (or trackpad) scroll through periods one at a time
+  // instead of only jumping a full window via the Prev/Next buttons. React
+  // attaches its own onWheel handler as passive, so preventDefault() inside
+  // a JSX handler is silently ignored — a native listener is the only way
+  // to actually stop the page from scrolling vertically while hovering here.
+  useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el) return;
+    const maxOffset = Math.max(0, allPeriods.length - windowSize);
+    const STEP_THRESHOLD = 60;
+    function handleWheel(e: WheelEvent) {
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta === 0) return;
+      e.preventDefault();
+      wheelAccumRef.current += delta;
+      while (Math.abs(wheelAccumRef.current) >= STEP_THRESHOLD) {
+        const dir = wheelAccumRef.current > 0 ? 1 : -1;
+        wheelAccumRef.current -= dir * STEP_THRESHOLD;
+        setOffset((o) => Math.max(0, Math.min(maxOffset, o + dir)));
+      }
+    }
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [allPeriods.length, windowSize]);
 
   const formatPeriodLabel = (key: string) =>
     granularity === "month" ? formatMonthLabel(key, { month: "short" }) : formatWeekLabel(key);
@@ -91,63 +118,66 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
         </div>
       </div>
 
-      {allPeriods.length > windowSize && (
-        <div className="mt-3 flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
-          <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} disabled={!canGoBack} aria-label="Previous period">
-            <ChevronLeft className="size-3.5" />
-          </Button>
-          <span className="text-[11px] font-medium text-muted-foreground">
-            {formatPeriodLabel(visiblePeriods[0])} – {formatPeriodLabel(visiblePeriods[visiblePeriods.length - 1])}
-          </span>
-          <Button variant="ghost" size="icon-sm" onClick={() => step(1)} disabled={!canGoForward} aria-label="Next period">
-            <ChevronRight className="size-3.5" />
-          </Button>
-        </div>
-      )}
-
-      {visiblePeriods.length > 0 && (
-        <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground">
-          <div className="size-9 shrink-0" />
-          <div className="w-32 shrink-0" />
-          <div className="flex min-w-0 flex-1 gap-[2px]">
-            {visiblePeriods.map((p, i) => (
-              <span key={p} className="flex-1 text-center">
-                {granularity === "month" ? (i % 2 === 0 ? formatPeriodLabel(p) : "") : formatPeriodLabel(p)}
-              </span>
-            ))}
+      <div ref={scrollAreaRef}>
+        {allPeriods.length > windowSize && (
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
+            <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} disabled={!canGoBack} aria-label="Previous period">
+              <ChevronLeft className="size-3.5" />
+            </Button>
+            <span className="text-[11px] font-medium text-muted-foreground">
+              {formatPeriodLabel(visiblePeriods[0])} – {formatPeriodLabel(visiblePeriods[visiblePeriods.length - 1])}
+              <span className="ml-1.5 font-normal text-muted-foreground/70">(scroll to browse)</span>
+            </span>
+            <Button variant="ghost" size="icon-sm" onClick={() => step(1)} disabled={!canGoForward} aria-label="Next period">
+              <ChevronRight className="size-3.5" />
+            </Button>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-1 flex flex-col divide-y divide-border/70">
-        {members.map(({ person, roleOnProject }) => {
-          const chartData = visiblePeriods.map((p) => ({
-            key: p,
-            label: formatPeriodLabel(p),
-            value:
-              granularity === "month"
-                ? getAllocationForPersonProjectMonth(resourceAllocations, person.id, project.id, p)
-                : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
-          }));
-          return (
-            <Link
-              key={person.id}
-              href={`/people/${person.id}`}
-              className="flex items-center gap-3 py-3 transition-colors hover:bg-secondary/50"
-            >
-              <Avatar className="size-9">
-                <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
-                <AvatarFallback>{initials(person)}</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 w-32 shrink-0">
-                <p className="truncate text-sm font-medium">{fullName(person)}</p>
-                <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
-              </div>
-              <AllocationHeatmapRow data={chartData} />
-            </Link>
-          );
-        })}
-        {members.length === 0 && <p className="py-3 text-sm text-muted-foreground">No team members yet.</p>}
+        {visiblePeriods.length > 0 && (
+          <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground">
+            <div className="size-9 shrink-0" />
+            <div className="w-32 shrink-0" />
+            <div className="flex min-w-0 flex-1 gap-[2px]">
+              {visiblePeriods.map((p, i) => (
+                <span key={p} className="flex-1 text-center">
+                  {granularity === "month" ? (i % 2 === 0 ? formatPeriodLabel(p) : "") : formatPeriodLabel(p)}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-1 flex flex-col divide-y divide-border/70">
+          {members.map(({ person, roleOnProject }) => {
+            const chartData = visiblePeriods.map((p) => ({
+              key: p,
+              label: formatPeriodLabel(p),
+              value:
+                granularity === "month"
+                  ? getAllocationForPersonProjectMonth(resourceAllocations, person.id, project.id, p)
+                  : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
+            }));
+            return (
+              <Link
+                key={person.id}
+                href={`/people/${person.id}`}
+                className="flex items-center gap-3 py-3 transition-colors hover:bg-secondary/50"
+              >
+                <Avatar className="size-9">
+                  <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
+                  <AvatarFallback>{initials(person)}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 w-32 shrink-0">
+                  <p className="truncate text-sm font-medium">{fullName(person)}</p>
+                  <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
+                </div>
+                <AllocationHeatmapRow data={chartData} />
+              </Link>
+            );
+          })}
+          {members.length === 0 && <p className="py-3 text-sm text-muted-foreground">No team members yet.</p>}
+        </div>
       </div>
     </Card>
   );
