@@ -198,7 +198,7 @@ export function ResourcePlanningView() {
               </span>
             ))}
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="size-2 rounded-full bg-alloc-full" style={UNCERTAIN_HATCH_STYLE} />
+              <span className="h-3 w-5 rounded-sm bg-muted-foreground/60" style={UNCERTAIN_HATCH_STYLE} />
               Not yet secure
             </span>
           </div>
