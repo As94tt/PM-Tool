@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
@@ -23,6 +23,10 @@ import type { Project } from "@/lib/types";
 type Granularity = "month" | "week";
 
 const WINDOW_SIZE: Record<Granularity, number> = { month: 12, week: 8 };
+const COL_WIDTH: Record<Granularity, number> = { month: 48, week: 64 };
+const NAME_COL_WIDTH = 188;
+const ROW_HEIGHT = 60;
+const HEADER_HEIGHT = 18;
 
 export function TeamAllocationCard({ project, canSeeBudget }: { project: Project; canSeeBudget: boolean }) {
   const people = useAppStore((s) => s.people);
@@ -32,9 +36,8 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
   const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
 
   const [granularity, setGranularity] = useState<Granularity>("month");
-  const [offset, setOffset] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const wheelAccumRef = useRef(0);
+  const [scrollState, setScrollState] = useState({ left: 0, maxLeft: 0, visibleWidth: 0 });
 
   const members = getProjectMemberDetails(projectMembers, people, project.id);
 
@@ -49,47 +52,69 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
 
   const allPeriods = granularity === "month" ? allMonths : allWeeks;
   const windowSize = WINDOW_SIZE[granularity];
-  const visiblePeriods = allPeriods.slice(offset, offset + windowSize);
-  const canGoBack = offset > 0;
-  const canGoForward = offset + windowSize < allPeriods.length;
+  const colWidth = COL_WIDTH[granularity];
+  const canGoBack = scrollState.left > 1;
+  const canGoForward = scrollState.left < scrollState.maxLeft - 1;
 
-  function switchGranularity(g: Granularity) {
-    if (g === granularity) return;
-    setGranularity(g);
-    setOffset(0);
-  }
-
-  function step(dir: -1 | 1) {
-    setOffset((o) => Math.max(0, Math.min(allPeriods.length - windowSize, o + dir * windowSize)));
-  }
-
-  // Lets a mouse wheel (or trackpad) scroll through periods one at a time
-  // instead of only jumping a full window via the Prev/Next buttons. React
-  // attaches its own onWheel handler as passive, so preventDefault() inside
-  // a JSX handler is silently ignored — a native listener is the only way
-  // to actually stop the page from scrolling vertically while hovering here.
+  // Tracks real scroll position (for the Prev/Next disabled state and the
+  // visible-range label) and keeps it in sync on resize, since the strip's
+  // own width can change independently of any scroll event.
   useEffect(() => {
     const el = scrollAreaRef.current;
     if (!el) return;
-    const maxOffset = Math.max(0, allPeriods.length - windowSize);
-    const STEP_THRESHOLD = 60;
+    function update() {
+      if (!el) return;
+      setScrollState({
+        left: el.scrollLeft,
+        maxLeft: Math.max(0, el.scrollWidth - el.clientWidth),
+        visibleWidth: el.clientWidth,
+      });
+    }
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", update);
+      ro.disconnect();
+    };
+  }, [allPeriods.length, granularity]);
+
+  // Lets a mouse wheel (or trackpad) scroll the strip horizontally, since a
+  // plain vertical wheel over an overflow-x container does nothing on its
+  // own. React attaches its own onWheel handler as passive, so
+  // preventDefault() inside a JSX handler is silently ignored — a native
+  // listener is the only way to actually stop the page from scrolling
+  // vertically while hovering here.
+  useEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el) return;
     function handleWheel(e: WheelEvent) {
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       if (delta === 0) return;
       e.preventDefault();
-      wheelAccumRef.current += delta;
-      while (Math.abs(wheelAccumRef.current) >= STEP_THRESHOLD) {
-        const dir = wheelAccumRef.current > 0 ? 1 : -1;
-        wheelAccumRef.current -= dir * STEP_THRESHOLD;
-        setOffset((o) => Math.max(0, Math.min(maxOffset, o + dir)));
-      }
+      el!.scrollLeft += delta;
     }
     el.addEventListener("wheel", handleWheel, { passive: false });
     return () => el.removeEventListener("wheel", handleWheel);
-  }, [allPeriods.length, windowSize]);
+  }, []);
+
+  function switchGranularity(g: Granularity) {
+    if (g === granularity) return;
+    setGranularity(g);
+    scrollAreaRef.current?.scrollTo({ left: 0 });
+  }
+
+  function step(dir: -1 | 1) {
+    scrollAreaRef.current?.scrollBy({ left: dir * windowSize * colWidth, behavior: "smooth" });
+  }
 
   const formatPeriodLabel = (key: string) =>
     granularity === "month" ? formatMonthLabel(key, { month: "short" }) : formatWeekLabel(key);
+
+  const firstVisibleIdx = Math.min(allPeriods.length - 1, Math.round(scrollState.left / colWidth));
+  const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colWidth));
+  const lastVisibleIdx = Math.min(allPeriods.length - 1, firstVisibleIdx + visibleCount - 1);
 
   return (
     <Card className="p-6 shadow-elevation-1">
@@ -118,65 +143,82 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
         </div>
       </div>
 
-      <div ref={scrollAreaRef}>
-        {allPeriods.length > windowSize && (
-          <div className="mt-3 flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
-            <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} disabled={!canGoBack} aria-label="Previous period">
-              <ChevronLeft className="size-3.5" />
-            </Button>
-            <span className="text-[11px] font-medium text-muted-foreground">
-              {formatPeriodLabel(visiblePeriods[0])} – {formatPeriodLabel(visiblePeriods[visiblePeriods.length - 1])}
-              <span className="ml-1.5 font-normal text-muted-foreground/70">(scroll to browse)</span>
-            </span>
-            <Button variant="ghost" size="icon-sm" onClick={() => step(1)} disabled={!canGoForward} aria-label="Next period">
-              <ChevronRight className="size-3.5" />
-            </Button>
-          </div>
-        )}
+      {allPeriods.length > windowSize && (
+        <div className="mt-3 flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
+          <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} disabled={!canGoBack} aria-label="Previous period">
+            <ChevronLeft className="size-3.5" />
+          </Button>
+          <span className="text-[11px] font-medium text-muted-foreground">
+            {allPeriods[firstVisibleIdx] && formatPeriodLabel(allPeriods[firstVisibleIdx])}
+            {" – "}
+            {allPeriods[lastVisibleIdx] && formatPeriodLabel(allPeriods[lastVisibleIdx])}
+            <span className="ml-1.5 font-normal text-muted-foreground/70">(scroll or drag the bar below to browse)</span>
+          </span>
+          <Button variant="ghost" size="icon-sm" onClick={() => step(1)} disabled={!canGoForward} aria-label="Next period">
+            <ChevronRight className="size-3.5" />
+          </Button>
+        </div>
+      )}
 
-        {visiblePeriods.length > 0 && (
-          <div className="mt-3 flex items-center gap-3 text-[10px] text-muted-foreground">
-            <div className="size-9 shrink-0" />
-            <div className="w-32 shrink-0" />
-            <div className="flex min-w-0 flex-1 gap-[2px]">
-              {visiblePeriods.map((p, i) => (
-                <span key={p} className="flex-1 text-center">
-                  {granularity === "month" ? (i % 2 === 0 ? formatPeriodLabel(p) : "") : formatPeriodLabel(p)}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-1 flex flex-col divide-y divide-border/70">
-          {members.map(({ person, roleOnProject }) => {
-            const chartData = visiblePeriods.map((p) => ({
-              key: p,
-              label: formatPeriodLabel(p),
-              value:
-                granularity === "month"
-                  ? getAllocationForPersonProjectMonth(resourceAllocations, person.id, project.id, p)
-                  : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
-            }));
-            return (
+      <div className="mt-3 flex">
+        <div className="flex shrink-0 flex-col" style={{ width: NAME_COL_WIDTH }}>
+          <div style={{ height: HEADER_HEIGHT }} />
+          <div className="flex flex-col divide-y divide-border/70">
+            {members.map(({ person, roleOnProject }) => (
               <Link
                 key={person.id}
                 href={`/people/${person.id}`}
-                className="flex items-center gap-3 py-3 transition-colors hover:bg-secondary/50"
+                style={{ height: ROW_HEIGHT }}
+                className="flex items-center gap-3 pr-3 transition-colors hover:bg-secondary/50"
               >
                 <Avatar className="size-9">
                   <AvatarImage src={person.avatarUrl} alt={fullName(person)} />
                   <AvatarFallback>{initials(person)}</AvatarFallback>
                 </Avatar>
-                <div className="min-w-0 w-32 shrink-0">
+                <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{fullName(person)}</p>
                   <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
                 </div>
-                <AllocationHeatmapRow data={chartData} />
               </Link>
-            );
-          })}
-          {members.length === 0 && <p className="py-3 text-sm text-muted-foreground">No team members yet.</p>}
+            ))}
+            {members.length === 0 && (
+              <p style={{ height: ROW_HEIGHT }} className="flex items-center text-sm text-muted-foreground">
+                No team members yet.
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div
+          ref={scrollAreaRef}
+          className="min-w-0 flex-1 overflow-x-auto pb-2 [scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent"
+        >
+          <div style={{ width: allPeriods.length * colWidth }}>
+            <div className="flex text-[10px] text-muted-foreground" style={{ height: HEADER_HEIGHT }}>
+              {allPeriods.map((p, i) => (
+                <span key={p} style={{ width: colWidth }} className="shrink-0 text-center">
+                  {granularity === "month" ? (i % 2 === 0 ? formatPeriodLabel(p) : "") : formatPeriodLabel(p)}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col divide-y divide-border/70">
+              {members.map(({ person }) => {
+                const chartData = allPeriods.map((p) => ({
+                  key: p,
+                  label: formatPeriodLabel(p),
+                  value:
+                    granularity === "month"
+                      ? getAllocationForPersonProjectMonth(resourceAllocations, person.id, project.id, p)
+                      : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
+                }));
+                return (
+                  <div key={person.id} style={{ height: ROW_HEIGHT }} className="flex items-center">
+                    <AllocationHeatmapRow data={chartData} columnWidth={colWidth} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </Card>

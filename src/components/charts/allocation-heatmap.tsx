@@ -38,15 +38,24 @@ export function AllocationHeatmapRow({
   data,
   valueFormatter = (v: number) => `${v}% allocated`,
   className,
+  columnWidth,
 }: {
   data: HeatmapCellDatum[];
   valueFormatter?: (v: number) => string;
   className?: string;
+  /** Fixed pixel width per cell instead of the default even-split-to-fit —
+   * for a row that lives inside a horizontally scrollable strip (so its
+   * total width can exceed its container and actually overflow/scroll),
+   * rather than always fitting exactly to the available space. */
+  columnWidth?: number;
 }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   return (
-    <div className={cn("relative flex min-w-0 flex-1 gap-[2px]", className)} onMouseLeave={() => setHoverIdx(null)}>
+    <div
+      className={cn("relative flex gap-[2px]", columnWidth ? "shrink-0" : "min-w-0 flex-1", className)}
+      onMouseLeave={() => setHoverIdx(null)}
+    >
       {hoverIdx !== null && data[hoverIdx] && (
         <div
           className="pointer-events-none absolute top-0 z-10 -translate-y-full rounded-md border border-border bg-popover px-2 py-1 text-xs whitespace-nowrap text-popover-foreground shadow-elevation-2"
@@ -65,11 +74,12 @@ export function AllocationHeatmapRow({
           onBlur={() => setHoverIdx(null)}
           aria-label={`${d.label}: ${valueFormatter(d.value)}`}
           className={cn(
-            "h-[26px] flex-1 rounded-[3px] outline-none transition-transform duration-150",
+            "h-[26px] rounded-[3px] outline-none transition-transform duration-150",
+            columnWidth ? "shrink-0" : "flex-1",
             "focus-visible:ring-2 focus-visible:ring-ring",
             hoverIdx === i && "scale-y-[1.15]"
           )}
-          style={{ backgroundColor: cellColor(d.value) }}
+          style={{ backgroundColor: cellColor(d.value), width: columnWidth }}
         />
       ))}
     </div>
