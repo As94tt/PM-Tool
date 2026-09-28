@@ -34,6 +34,7 @@ const DATA_COL_W = 72;
 const ROLE_COL_W = 176;
 const RATE_COL_W = 88;
 const PLAN_SUM_COL_W = 156;
+const PLAN_EUR_COL_W = 112;
 const ACTION_COL_W = 44;
 const PERSON_COL_W = 180;
 const STAFF_SUM_COL_W = 112;
@@ -147,7 +148,12 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   // the container's width changes (e.g. after adding a role, or expanding a
   // month) instead of staying at their declared fixed width.
   const dataColsWidth = columns.length * DATA_COL_W;
-  const planTableWidth = ROLE_COL_W + RATE_COL_W + dataColsWidth + PLAN_SUM_COL_W + ACTION_COL_W;
+  // The leading Role/Person/Rate columns are the same width in both tables
+  // (including a blank spacer in the plan table where "Person" would go, so
+  // it has no data of its own here) specifically so every month/week column
+  // starts at the same x-position in both tables and lines up for a direct
+  // visual comparison.
+  const planTableWidth = ROLE_COL_W + PERSON_COL_W + RATE_COL_W + dataColsWidth + PLAN_SUM_COL_W + PLAN_EUR_COL_W + ACTION_COL_W;
   const staffingTableWidth = ROLE_COL_W + PERSON_COL_W + RATE_COL_W + dataColsWidth + STAFF_SUM_COL_W + ACTION_COL_W;
 
   const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
@@ -204,6 +210,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   const totalFteAll = projReqs.reduce((sum, r) => sum + sumFteMap(r.ftePerWeek), 0);
   const totalActiveWeeks = new Set(projReqs.flatMap((r) => Object.keys(r.ftePerWeek))).size;
   const totalAvgFte = totalActiveWeeks > 0 ? totalFteAll / totalActiveWeeks : 0;
+  const totalPlannedCost = projReqs.reduce((sum, r) => sum + totalCost(r.ftePerWeek, r.dayRate), 0);
 
   const actualByColumn = columns.map((col) =>
     projAsgs.reduce((sum, a) => {
@@ -274,11 +281,13 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
               <table className="table-fixed border-collapse text-sm" style={{ width: planTableWidth }}>
                 <colgroup>
                   <col style={{ width: ROLE_COL_W }} />
+                  <col style={{ width: PERSON_COL_W }} />
                   <col style={{ width: RATE_COL_W }} />
                   {columns.map((col) => (
                     <col key={col.key} style={{ width: DATA_COL_W }} />
                   ))}
                   <col style={{ width: PLAN_SUM_COL_W }} />
+                  <col style={{ width: PLAN_EUR_COL_W }} />
                   <col style={{ width: ACTION_COL_W }} />
                 </colgroup>
                 <thead>
@@ -286,6 +295,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     <th rowSpan={2} className="px-3 py-2 align-bottom">
                       Role
                     </th>
+                    <th rowSpan={2} className="px-3 py-2 align-bottom" />
                     <th rowSpan={2} className="px-2 py-2 align-bottom">
                       Rate
                     </th>
@@ -312,6 +322,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     })}
                     <th rowSpan={2} className="border-l border-border/50 px-3 py-2 text-right align-bottom">
                       Avg FTE
+                    </th>
+                    <th rowSpan={2} className="border-l border-border/50 px-3 py-2 text-right align-bottom">
+                      Planned €
                     </th>
                     <th rowSpan={2} />
                   </tr>
@@ -348,6 +361,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     return (
                       <tr key={req.id} className="border-b border-border/40">
                         <td className="truncate px-3 py-2 font-medium">{req.roleName}</td>
+                        <td />
                         <td className="px-2 py-2">
                           <DayRateInput value={req.dayRate} onCommit={(v) => updateRoleRequirementDayRate(req.id, v)} />
                         </td>
@@ -371,6 +385,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                             ? `${formatFte(roleAvgFte)} FTE (${roleActiveWeeks} wk${roleActiveWeeks === 1 ? "" : "s"})`
                             : "–"}
                         </td>
+                        <td className="border-l border-border/40 px-3 py-2 text-right tabular-nums">
+                          {formatCompactCurrency(totalCost(req.ftePerWeek, req.dayRate))}
+                        </td>
                         <td className="px-1 py-2 text-center">
                           <Button
                             variant="ghost"
@@ -387,7 +404,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                   })}
                   {projReqs.length > 0 && (
                     <tr className="border-b border-border/40 bg-secondary/30 font-medium">
-                      <td className="px-3 py-2" colSpan={2}>
+                      <td className="px-3 py-2" colSpan={3}>
                         Total FTE
                       </td>
                       {totalFteByColumn.map((v, i) => (
@@ -397,6 +414,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                       ))}
                       <td className="border-l border-border/40 px-3 py-2 text-right tabular-nums">
                         {totalActiveWeeks > 0 ? `~${formatFte(totalAvgFte)} FTE (${totalActiveWeeks} wks)` : "–"}
+                      </td>
+                      <td className="border-l border-border/40 px-3 py-2 text-right tabular-nums">
+                        {formatCompactCurrency(totalPlannedCost)}
                       </td>
                       <td />
                     </tr>
@@ -416,6 +436,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         </SelectContent>
                       </Select>
                     </td>
+                    <td />
                     <td className="px-2 py-2">
                       <input
                         type="text"
@@ -426,7 +447,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                       />
                     </td>
                     <td colSpan={columns.length} />
-                    <td colSpan={2} className="px-3 py-2">
+                    <td colSpan={3} className="px-3 py-2">
                       <Button size="sm" className="h-9 text-xs" onClick={handleAddRole} disabled={!newRoleName.trim()}>
                         <Plus className="size-3.5" /> Add role
                       </Button>
@@ -434,7 +455,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                   </tr>
                   {projReqs.length === 0 && (
                     <tr>
-                      <td colSpan={4 + columns.length} className="px-3 py-2 text-xs text-muted-foreground">
+                      <td colSpan={6 + columns.length} className="px-3 py-2 text-xs text-muted-foreground">
                         No required roles yet — add one above to start the staffing plan.
                       </td>
                     </tr>
