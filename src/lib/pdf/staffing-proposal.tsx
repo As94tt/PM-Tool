@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, StyleSheet, pdf } from "@react-pdf/renderer";
 import { hashColor } from "@/lib/color-hash";
 import { fullName, initials } from "@/lib/data/queries";
-import { formatDate } from "@/lib/format";
+import { formatDate, todayLocalDate } from "@/lib/format";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { NAVY, ORANGE, AMBER, SLATE, INK, MUTED, PAPER, HAIRLINE } from "@/lib/pdf/brand";
 import type { Person, Location } from "@/lib/types";
@@ -311,7 +311,7 @@ function ProposalDocument({
   people: ProposalPersonData[];
   preparedBy?: string;
 }) {
-  const preparedDate = formatDate(new Date().toISOString().slice(0, 10));
+  const preparedDate = formatDate(todayLocalDate());
   return (
     <Document title="Nexus Staffing Proposal">
       <CoverPage people={people} preparedBy={preparedBy} preparedDate={preparedDate} />
@@ -327,7 +327,7 @@ export async function downloadStaffingProposal(people: ProposalPersonData[], pre
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `staffing-proposal-${new Date().toISOString().slice(0, 10)}.pdf`;
+  a.download = `staffing-proposal-${todayLocalDate()}.pdf`;
   document.body.appendChild(a);
   a.click();
   a.remove();

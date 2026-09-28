@@ -56,8 +56,11 @@ function AllocationDetailCell({
   const total = rows.reduce((sum, r) => sum + r.allocationPercent, 0);
   const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
   const rowsWithProject = rows.map((r) => ({ row: r, project: projects.find((p) => p.id === r.projectId) }));
+  // A row whose project can't even be resolved (a dangling projectId) is
+  // the least certain case of all, not the most — must count as uncertain,
+  // not fall through to "secure by default".
   const hasUncertainAllocation = rowsWithProject.some(
-    ({ project }) => project && !SECURE_ALLOCATION_STATUSES.includes(project.status)
+    ({ project }) => !project || !SECURE_ALLOCATION_STATUSES.includes(project.status)
   );
 
   if (total === 0) {
@@ -92,7 +95,7 @@ function AllocationDetailCell({
         </div>
         <div className="flex flex-col gap-1.5">
           {rowsWithProject.map(({ row: r, project }) => {
-            const isSecure = !project || SECURE_ALLOCATION_STATUSES.includes(project.status);
+            const isSecure = project ? SECURE_ALLOCATION_STATUSES.includes(project.status) : false;
             const rowStyles = ALLOCATION_STATUS_STYLES[getAllocationStatus(r.allocationPercent)];
             return (
               <Link
@@ -207,7 +210,7 @@ export function ResourcePlanningView() {
 
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-elevation-1">
         <div className="max-h-[70vh] overflow-auto">
-          <table className="w-full table-fixed border-collapse text-sm">
+          <table className="table-fixed border-collapse text-sm" style={{ width: 190 + horizon.length * 75 }}>
             <colgroup>
               <col className="w-[190px]" />
               {horizon.map((month) => (

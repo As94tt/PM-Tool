@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAppStore } from "@/store/app-store-provider";
 import { selectLabel } from "@/lib/select-utils";
+import { todayLocalDate } from "@/lib/format";
 import { DEPARTMENTS, type Department, type Person } from "@/lib/types";
 
 export function PersonFormSheet() {
@@ -82,7 +83,7 @@ export function PersonFormSheet() {
       bio: bio.trim() || `${firstName.trim()} recently joined the team as ${jobTitle.trim()}.`,
       interestIds,
       industryExperienceIds: industryIds,
-      joinedDate: new Date().toISOString().slice(0, 10),
+      joinedDate: todayLocalDate(),
       languages: [],
       projectStrengths: [],
     };

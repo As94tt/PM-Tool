@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, StyleSheet, pdf } from "@react-pdf/renderer";
 import { hashColor } from "@/lib/color-hash";
 import { fullName, initials } from "@/lib/data/queries";
-import { formatDate } from "@/lib/format";
+import { formatDate, todayLocalDate } from "@/lib/format";
 import { formatMonthLabel } from "@/lib/data/capacity";
 import { SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { NAVY, ORANGE, AMBER, SLATE, INK, MUTED, PAPER, HAIRLINE } from "@/lib/pdf/brand";
@@ -349,7 +349,7 @@ function ContentPage({ data }: { data: CVData }) {
 }
 
 function CVDocument({ data }: { data: CVData }) {
-  const preparedDate = formatDate(new Date().toISOString().slice(0, 10));
+  const preparedDate = formatDate(todayLocalDate());
   return (
     <Document title={`${fullName(data.person)} — CV`}>
       <CoverPage data={data} preparedDate={preparedDate} />

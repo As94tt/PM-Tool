@@ -89,7 +89,7 @@ export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChan
                   key={`${item.type}-${item.id}`}
                   value={`${item.type}-${item.id}-${item.title}`}
                   onSelect={() => {
-                    onOpenChange(false);
+                    handleOpenChange(false);
                     router.push(item.href);
                   }}
                 >

@@ -128,15 +128,21 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
     scrollAreaRef.current?.scrollTo({ left: 0 });
   }
 
+  // Real per-column pitch (a column's own width plus the gap after it) —
+  // dividing/multiplying by colWidth alone here would drift the computed
+  // index further ahead of the actually-visible column the more periods
+  // there are, since CELL_GAP accumulates once per column.
+  const colPitch = colWidth + CELL_GAP;
+
   function step(dir: -1 | 1) {
-    scrollAreaRef.current?.scrollBy({ left: dir * windowSize * colWidth, behavior: "smooth" });
+    scrollAreaRef.current?.scrollBy({ left: dir * windowSize * colPitch, behavior: "smooth" });
   }
 
   const formatPeriodLabel = (key: string) =>
     granularity === "month" ? formatMonthLabel(key, { month: "short" }) : formatWeekLabel(key);
 
-  const firstVisibleIdx = Math.min(allPeriods.length - 1, Math.round(scrollState.left / colWidth));
-  const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colWidth));
+  const firstVisibleIdx = Math.min(allPeriods.length - 1, Math.round(scrollState.left / colPitch));
+  const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colPitch));
   const lastVisibleIdx = Math.min(allPeriods.length - 1, firstVisibleIdx + visibleCount - 1);
 
   return (

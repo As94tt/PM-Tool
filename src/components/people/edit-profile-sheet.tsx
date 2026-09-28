@@ -130,7 +130,9 @@ export function EditProfileSheet({ person }: { person: Person }) {
   ];
   const locationOptions = locations.map((l) => ({ value: l.id, label: l.city }));
   const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
-  const availableLanguages = languages.filter((l) => !person.languages.some((pl) => pl.name === l.name));
+  const availableLanguages = languages.filter(
+    (l) => !person.languages.some((pl) => pl.name.toLowerCase() === l.name.toLowerCase())
+  );
   const languageOptions = [
     { value: "none", label: "Select a language" },
     ...availableLanguages.map((l) => ({ value: l.name, label: l.name })),

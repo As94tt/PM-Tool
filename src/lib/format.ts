@@ -1,3 +1,14 @@
+/** Today's local calendar date as YYYY-MM-DD. Deliberately not
+ * `new Date().toISOString().slice(0, 10)`, which returns the UTC date and
+ * is wrong by one day for part of the day in any timezone ahead of UTC. */
+export function todayLocalDate(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export function formatCurrency(amount: number, currency = "EUR"): string {
   return new Intl.NumberFormat("en-DE", {
     style: "currency",

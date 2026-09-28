@@ -99,7 +99,7 @@ export function PersonCard({
 
   if (selectable) {
     return (
-      <button type="button" onClick={onToggleSelect} className={cn(cardClassName, "text-left")}>
+      <button type="button" onClick={onToggleSelect} aria-pressed={selected} className={cn(cardClassName, "text-left")}>
         {inner}
       </button>
     );

@@ -46,7 +46,7 @@ function ProjectsPageInner() {
   const [status, setStatus] = useState<string>(searchParams.get("status") ?? "");
   const [industryId, setIndustryId] = useState(searchParams.get("industry") ?? "");
   const [skillId, setSkillId] = useState(searchParams.get("skill") ?? "");
-  const [clientName] = useState(searchParams.get("client") ?? "");
+  const [clientName, setClientName] = useState(searchParams.get("client") ?? "");
 
   const filters: ProjectFilters = {
     query: query || undefined,
@@ -132,8 +132,16 @@ function ProjectsPageInner() {
           </Select>
 
           {clientName && (
-            <Badge variant="secondary" className="font-normal">
+            <Badge variant="secondary" className="gap-1 font-normal">
               Client: {clientName}
+              <button
+                type="button"
+                onClick={() => setClientName("")}
+                aria-label="Remove client filter"
+                className="rounded-full hover:text-destructive"
+              >
+                <X className="size-3" />
+              </button>
             </Badge>
           )}
 
@@ -147,6 +155,7 @@ function ProjectsPageInner() {
                 setStatus("");
                 setIndustryId("");
                 setSkillId("");
+                setClientName("");
               }}
             >
               <X /> Clear filters
@@ -206,7 +215,7 @@ function ProjectsPageInner() {
             </TableHeader>
             <TableBody>
               {results.map((project) => (
-                <TableRow key={project.id} className="cursor-pointer">
+                <TableRow key={project.id}>
                   <TableCell>
                     <Link href={`/projects/${project.id}`} className="flex items-center gap-2.5 font-medium hover:text-primary">
                       <ProjectAvatar project={project} clients={clients} size="sm" />

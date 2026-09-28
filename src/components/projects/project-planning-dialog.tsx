@@ -76,7 +76,11 @@ function FteCell({ value, onCommit, title }: { value: number; onCommit: (v: numb
       type="text"
       inputMode="decimal"
       value={text}
-      onChange={(e) => setText(e.target.value.replace(/[^0-9.]/g, ""))}
+      onChange={(e) => {
+        const cleaned = e.target.value.replace(/[^0-9.]/g, "");
+        const firstDot = cleaned.indexOf(".");
+        setText(firstDot === -1 ? cleaned : cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, ""));
+      }}
       onBlur={() => {
         const n = roundFte(Math.max(0, Math.min(MAX_SEAT_FTE, Number(text) || 0)));
         setText(n ? String(n) : "");
@@ -497,16 +501,16 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                               <td className="px-3 py-2 text-xs text-muted-foreground">
                                 <span className="flex min-w-0 items-center gap-1.5">
                                   <Briefcase className="size-3.5 shrink-0" />
-                                  <span className="truncate">{req.roleName}</span>
+                                  <span className="min-w-0 truncate">{req.roleName}</span>
                                 </span>
                               </td>
                               <td className="px-3 py-2">
-                                <Link href={`/people/${assignment.personId}`} className="flex items-center gap-2 hover:text-primary">
-                                  <Avatar className="size-6">
+                                <Link href={`/people/${assignment.personId}`} className="flex min-w-0 items-center gap-2 hover:text-primary">
+                                  <Avatar className="size-6 shrink-0">
                                     <AvatarImage src={person?.avatarUrl} alt={person ? fullName(person) : ""} />
                                     <AvatarFallback className="text-[10px]">{person ? initials(person) : "?"}</AvatarFallback>
                                   </Avatar>
-                                  <span className="truncate text-xs font-medium">{person ? fullName(person) : "Unknown"}</span>
+                                  <span className="min-w-0 truncate text-xs font-medium">{person ? fullName(person) : "Unknown"}</span>
                                 </Link>
                               </td>
                               <td className="px-2 py-2">
@@ -540,7 +544,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                               <td className="px-3 py-2 text-xs text-muted-foreground">
                                 <span className="flex min-w-0 items-center gap-1.5">
                                   <Briefcase className="size-3.5 shrink-0" />
-                                  <span className="truncate">{req.roleName}</span>
+                                  <span className="min-w-0 truncate">{req.roleName}</span>
                                 </span>
                               </td>
                               <td className="px-3 py-2">

@@ -30,11 +30,40 @@ import { useAppStore } from "@/store/app-store-provider";
 import { fullName } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
 import { PROJECT_STATUS_OPTIONS } from "@/lib/project-status";
+import { todayLocalDate } from "@/lib/format";
 import type { Project, ProjectStatus } from "@/lib/types";
 
 interface TeamRow {
   personId: string;
   roleOnProject: string;
+  contributionDescription?: string;
+}
+
+/** Builds the guaranteed-on-the-team rows for Project Lead / Delivery
+ * Responsible / Sales Responsible — skips a slot whose person is empty or
+ * already claimed by an earlier (higher-priority) slot, so the same person
+ * picked for two leadership fields only ever produces one row, and
+ * preserves that person's existing role label / contribution description
+ * from `currentMembers` when they're already on the team rather than
+ * resetting it to the slot's default label. Shared by both the create and
+ * edit submit paths so they can't drift out of sync with each other again. */
+function buildLeadershipRows(
+  slots: { personId: string; defaultRole: string }[],
+  currentMembers: TeamRow[]
+): TeamRow[] {
+  const seen = new Set<string>();
+  const rows: TeamRow[] = [];
+  for (const { personId, defaultRole } of slots) {
+    if (!personId || seen.has(personId)) continue;
+    seen.add(personId);
+    const current = currentMembers.find((m) => m.personId === personId);
+    rows.push({
+      personId,
+      roleOnProject: current?.roleOnProject ?? defaultRole,
+      contributionDescription: current?.contributionDescription,
+    });
+  }
+  return rows;
 }
 
 export function ProjectFormSheet({ project }: { project?: Project }) {
@@ -63,7 +92,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
   const [industryId, setIndustryId] = useState(project?.industryId ?? industries[0]?.id ?? "");
   const [projectType, setProjectType] = useState(project?.projectType ?? projectTypes[0] ?? "Consulting Engagement");
   const [shortDescription, setShortDescription] = useState(project?.shortDescription ?? "");
-  const [startDate, setStartDate] = useState(project?.startDate ?? new Date().toISOString().slice(0, 10));
+  const [startDate, setStartDate] = useState(project?.startDate ?? todayLocalDate());
   const [endDate, setEndDate] = useState(project?.endDate ?? "");
   const [status, setStatus] = useState<ProjectStatus>(project?.status ?? "lead");
   const [leadPersonId, setLeadPersonId] = useState(project?.leadPersonId ?? people[0]?.id ?? "");
@@ -88,7 +117,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
     setName("");
     setClientName("");
     setShortDescription("");
-    setStartDate(new Date().toISOString().slice(0, 10));
+    setStartDate(todayLocalDate());
     setEndDate("");
     setStatus("lead");
     setOutcomes("");
@@ -131,30 +160,23 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
       // new), reading the *current* membership straight from the store
       // rather than a local copy, so every other existing member (and any
       // change made from the Planning dialog since this sheet was opened)
-      // is preserved exactly as-is.
-      const currentMembers = projectMembers.filter((m) => m.projectId === project.id);
-      const leadershipIds = new Set([leadPersonId, deliveryResponsibleId, salesResponsibleId].filter(Boolean));
+      // is preserved exactly as-is — role label AND contribution
+      // description included, not just their personId.
+      const currentMembers: TeamRow[] = projectMembers
+        .filter((m) => m.projectId === project.id)
+        .map((m) => ({ personId: m.personId, roleOnProject: m.roleOnProject, contributionDescription: m.contributionDescription }));
+      const leadershipRows = buildLeadershipRows(
+        [
+          { personId: leadPersonId, defaultRole: "Project Lead" },
+          { personId: deliveryResponsibleId, defaultRole: "Delivery Responsible" },
+          { personId: salesResponsibleId, defaultRole: "Sales Responsible" },
+        ],
+        currentMembers
+      );
+      const leadershipIds = new Set(leadershipRows.map((r) => r.personId));
       const fullTeam: TeamRow[] = [
-        { personId: leadPersonId, roleOnProject: currentMembers.find((m) => m.personId === leadPersonId)?.roleOnProject ?? "Project Lead" },
-        ...(deliveryResponsibleId
-          ? [
-              {
-                personId: deliveryResponsibleId,
-                roleOnProject: currentMembers.find((m) => m.personId === deliveryResponsibleId)?.roleOnProject ?? "Delivery Responsible",
-              },
-            ]
-          : []),
-        ...(salesResponsibleId
-          ? [
-              {
-                personId: salesResponsibleId,
-                roleOnProject: currentMembers.find((m) => m.personId === salesResponsibleId)?.roleOnProject ?? "Sales Responsible",
-              },
-            ]
-          : []),
-        ...currentMembers
-          .filter((m) => !leadershipIds.has(m.personId))
-          .map((m) => ({ personId: m.personId, roleOnProject: m.roleOnProject })),
+        ...leadershipRows,
+        ...currentMembers.filter((m) => !leadershipIds.has(m.personId)),
       ];
       setProjectTeam(project.id, fullTeam);
       setProjectSkills(project.id, selectedSkillIds);
@@ -184,13 +206,14 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         imageUrl,
       },
       [
-        { projectId: id, personId: leadPersonId, roleOnProject: "Project Lead" },
-        ...(deliveryResponsibleId && deliveryResponsibleId !== leadPersonId
-          ? [{ projectId: id, personId: deliveryResponsibleId, roleOnProject: "Delivery Responsible" }]
-          : []),
-        ...(salesResponsibleId && salesResponsibleId !== leadPersonId && salesResponsibleId !== deliveryResponsibleId
-          ? [{ projectId: id, personId: salesResponsibleId, roleOnProject: "Sales Responsible" }]
-          : []),
+        ...buildLeadershipRows(
+          [
+            { personId: leadPersonId, defaultRole: "Project Lead" },
+            { personId: deliveryResponsibleId, defaultRole: "Delivery Responsible" },
+            { personId: salesResponsibleId, defaultRole: "Sales Responsible" },
+          ],
+          []
+        ).map((r) => ({ projectId: id, personId: r.personId, roleOnProject: r.roleOnProject })),
       ],
       selectedSkillIds
     );

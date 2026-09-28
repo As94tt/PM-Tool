@@ -29,6 +29,7 @@ import {
   type PermissionLevel,
 } from "@/lib/permissions";
 import { PROJECT_STATUSES } from "@/lib/project-status";
+import { todayLocalDate } from "@/lib/format";
 import { DEPARTMENTS, type AppRole, type Department, type Person, type Project, type SkillCategory } from "@/lib/types";
 
 const ROLE_OPTIONS: AppRole[] = ["user", "management", "admin"];
@@ -170,7 +171,7 @@ export default function AdminPage() {
   }
 
   function handleImportPeople(rows: Record<string, string>[]): number {
-    const now = new Date().toISOString().slice(0, 10);
+    const now = todayLocalDate();
     const newPeople: Person[] = rows.map((row, i) => {
       const location = locations.find((l) => l.city.toLowerCase() === row.city?.toLowerCase());
       const department = DEPARTMENTS.find(
@@ -206,9 +207,12 @@ export default function AdminPage() {
     // know the exact camelCase key.
     const normalizeStatusKey = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
     const statusByNormalizedKey = new Map(PROJECT_STATUSES.map((s) => [normalizeStatusKey(s), s]));
+    let unrecognizedStatusCount = 0;
     const newProjects: Project[] = rows.map((row, i) => {
       const industry = industries.find((ind) => ind.name.toLowerCase() === row.industry?.toLowerCase());
-      const status = statusByNormalizedKey.get(normalizeStatusKey(row.status ?? "")) ?? "lead";
+      const matchedStatus = statusByNormalizedKey.get(normalizeStatusKey(row.status ?? ""));
+      if (!matchedStatus && row.status?.trim()) unrecognizedStatusCount++;
+      const status = matchedStatus ?? "lead";
       return {
         id: `project-import-${Date.now()}-${i}`,
         name: row.name,
@@ -216,7 +220,7 @@ export default function AdminPage() {
         industryId: (industry ?? industries[0]).id,
         shortDescription: row.shortDescription || "",
         projectType: row.projectType || "Consulting Engagement",
-        startDate: row.startDate || new Date().toISOString().slice(0, 10),
+        startDate: row.startDate || todayLocalDate(),
         endDate: null,
         status,
         leadPersonId: people[0]?.id ?? "",
@@ -226,6 +230,11 @@ export default function AdminPage() {
       };
     });
     importProjects(newProjects);
+    if (unrecognizedStatusCount > 0) {
+      toast.warning(
+        `${unrecognizedStatusCount} project${unrecognizedStatusCount === 1 ? "" : "s"} had an unrecognized status and defaulted to "Lead"`
+      );
+    }
     return newProjects.length;
   }
 

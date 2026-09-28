@@ -63,6 +63,7 @@ export function MatrixView() {
   const availabilityOptions = [
     { value: "0", label: "Any availability" },
     ...[20, 40, 60, 80].map((a) => ({ value: String(a), label: `${a}%+ available` })),
+    { value: "100", label: "Fully available" },
   ];
 
   return (

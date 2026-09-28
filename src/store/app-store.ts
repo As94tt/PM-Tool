@@ -269,17 +269,29 @@ function syncMonthlyAllocations(state: AppState, personId: string, projectId: st
   const personAssignments = state.projectRoleAssignments.filter(
     (a) => a.personId === personId && a.projectId === projectId
   );
-  const monthlyFte = new Map<string, number[]>();
+  // Sum every assignment's FTE per week FIRST (a person could in principle
+  // hold more than one seat on the same project in the same week), then
+  // group those per-week totals by month for averaging — averaging the raw
+  // per-assignment-per-week values directly would understate a person's
+  // true allocation whenever they hold multiple simultaneous seats, since
+  // each seat's own FTE would get diluted into one shared pool instead of
+  // summed first. Matches how getPersonWeeklyAllocationForProject already
+  // sums across seats for the weekly (non-averaged) view.
+  const weeklyTotals = new Map<string, number>();
   for (const asg of personAssignments) {
     const req = state.projectRoleRequirements.find((r) => r.id === asg.roleRequirementId);
     if (!req) continue;
     for (const [week, fte] of Object.entries(req.ftePerWeek)) {
       if (!fte) continue;
-      const month = weekToMonthKey(week);
-      const list = monthlyFte.get(month) ?? [];
-      list.push(fte);
-      monthlyFte.set(month, list);
+      weeklyTotals.set(week, (weeklyTotals.get(week) ?? 0) + fte);
     }
+  }
+  const monthlyFte = new Map<string, number[]>();
+  for (const [week, total] of weeklyTotals) {
+    const month = weekToMonthKey(week);
+    const list = monthlyFte.get(month) ?? [];
+    list.push(total);
+    monthlyFte.set(month, list);
   }
 
   state.resourceAllocations = state.resourceAllocations.filter(
@@ -632,7 +644,20 @@ export function createAppStore() {
         updateClient: (clientId, patch) =>
           set((state) => {
             const client = state.clients.find((c) => c.id === clientId);
-            if (client) Object.assign(client, patch);
+            if (!client) return;
+            // Project.clientName is matched to a Client by exact string,
+            // not a foreign key (see Client's own doc comment in types.ts)
+            // — renaming a client without also updating every project that
+            // references the old name would silently break that match,
+            // dropping the client's "project experience" list to empty and
+            // losing its logo on every one of those projects.
+            const oldName = client.name;
+            Object.assign(client, patch);
+            if (patch.name && patch.name !== oldName) {
+              for (const project of state.projects) {
+                if (project.clientName === oldName) project.clientName = patch.name;
+              }
+            }
           }),
 
         removeClient: (clientId) =>
@@ -910,6 +935,7 @@ export function createAppStore() {
           currentUserId: state.currentUserId,
           viewAsRole: state.viewAsRole,
           locations: state.locations,
+          industries: state.industries,
           skills: state.skills,
           certifications: state.certifications,
           interests: state.interests,
