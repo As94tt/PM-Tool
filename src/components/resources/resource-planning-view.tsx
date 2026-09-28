@@ -9,6 +9,7 @@ import {
   initials,
   getBenchPeople,
   getPersonWeekAllocationBreakdown,
+  getPersonMonthAllocationBreakdown,
   type PersonWeekAllocationRow,
 } from "@/lib/data/queries";
 import {
@@ -19,7 +20,7 @@ import {
   ALLOCATION_STATUS_LABEL,
   ALLOCATION_STATUS_STYLES,
 } from "@/lib/data/capacity";
-import { getHorizonWeeks, formatWeekLabel } from "@/lib/data/week-planning";
+import { getHorizonWeeks, formatWeekLabel, getWeeksInMonth } from "@/lib/data/week-planning";
 import { selectLabel } from "@/lib/select-utils";
 import { PROJECT_STATUS_LABEL, SECURE_ALLOCATION_STATUSES } from "@/lib/project-status";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -317,9 +318,12 @@ export function ResourcePlanningView() {
                   {periods.map((period) => {
                     const rows: PersonWeekAllocationRow[] =
                       granularity === "month"
-                        ? resourceAllocations
-                            .filter((a) => a.personId === person.id && a.month === period)
-                            .map((a) => ({ id: a.id, projectId: a.projectId, percent: a.allocationPercent }))
+                        ? getPersonMonthAllocationBreakdown(
+                            projectRoleRequirements,
+                            projectRoleAssignments,
+                            person.id,
+                            getWeeksInMonth(period)
+                          )
                         : getPersonWeekAllocationBreakdown(projectRoleRequirements, projectRoleAssignments, person.id, period);
                     return (
                       <td key={period} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">

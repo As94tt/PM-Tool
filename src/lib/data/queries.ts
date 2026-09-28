@@ -216,6 +216,29 @@ export function getAllocationForPersonWeek(
   return Math.round(totalFte * 100);
 }
 
+/** A person's average allocation on a project across an entire month,
+ * as a percent — computed LIVE by averaging getPersonWeeklyAllocationForProject
+ * over that month's weeks, instead of reading the separately-synced
+ * ResourceAllocation cache. Several past bugs in this project have come
+ * from a migration/backfill that changes the weekly staffing plan without
+ * also calling the store's syncMonthlyAllocations, leaving that cache
+ * stale — computing live here removes the possibility of that drift for
+ * any view that uses this instead. */
+export function getProjectMonthlyAllocationLive(
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[],
+  personId: string,
+  projectId: string,
+  weeksInMonth: string[]
+): number {
+  if (weeksInMonth.length === 0) return 0;
+  const total = weeksInMonth.reduce(
+    (sum, week) => sum + getPersonWeeklyAllocationForProject(requirements, assignments, personId, projectId, week),
+    0
+  );
+  return Math.round(total / weeksInMonth.length);
+}
+
 export interface PersonWeekAllocationRow {
   id: string;
   projectId: string;
@@ -237,6 +260,26 @@ export function getPersonWeekAllocationBreakdown(
       const req = requirements.find((r) => r.id === a.roleRequirementId);
       const percent = Math.round((req?.ftePerWeek[week] ?? 0) * 100);
       return { id: a.id, projectId: a.projectId, percent };
+    })
+    .filter((r) => r.percent > 0);
+}
+
+/** Per-project breakdown of a person's AVERAGE allocation across a month —
+ * the live-computed monthly analog of getPersonWeekAllocationBreakdown,
+ * for a month-view click-to-view breakdown popover. */
+export function getPersonMonthAllocationBreakdown(
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[],
+  personId: string,
+  weeksInMonth: string[]
+): PersonWeekAllocationRow[] {
+  return assignments
+    .filter((a) => a.personId === personId)
+    .map((a) => {
+      const req = requirements.find((r) => r.id === a.roleRequirementId);
+      const totalFte = weeksInMonth.reduce((sum, week) => sum + (req?.ftePerWeek[week] ?? 0), 0);
+      const avgFte = weeksInMonth.length > 0 ? totalFte / weeksInMonth.length : 0;
+      return { id: a.id, projectId: a.projectId, percent: Math.round(avgFte * 100) };
     })
     .filter((r) => r.percent > 0);
 }

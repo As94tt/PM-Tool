@@ -1,4 +1,4 @@
-import { monthKey } from "./capacity";
+import { monthKey, monthToDate } from "./capacity";
 
 export const WORKING_DAYS_PER_WEEK = 5;
 
@@ -46,6 +46,25 @@ export function formatWeekLabel(key: string): string {
  * roll up into, for combining with the app's existing month-based budget view. */
 export function weekToMonthKey(key: string): string {
   return monthKey(weekToDate(key));
+}
+
+/** Every week (by its Monday key) whose weekToMonthKey bucket is exactly
+ * this month — the inverse of weekToMonthKey. Lets a monthly view average a
+ * person's weekly staffing-plan FTE live, without depending on a
+ * separately-synced monthly cache that can (and, in this project's
+ * history, repeatedly has) drift out of agreement with it. */
+export function getWeeksInMonth(month: string): string[] {
+  const start = monthToDate(month);
+  const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+  const mondays = new Set<string>();
+  let cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  while (cursor <= end) {
+    mondays.add(weekKey(cursor));
+    cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 1);
+  }
+  return Array.from(mondays)
+    .filter((w) => weekToMonthKey(w) === month)
+    .toSorted();
 }
 
 export function sumFteMap(ftePerWeek: Record<string, number>): number {
