@@ -1,10 +1,16 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { UserX } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
-import { fullName, initials, getBenchPeople } from "@/lib/data/queries";
+import {
+  fullName,
+  initials,
+  getBenchPeople,
+  getPersonWeekAllocationBreakdown,
+  type PersonWeekAllocationRow,
+} from "@/lib/data/queries";
 import {
   getHorizonMonths,
   formatMonthLabel,
@@ -13,6 +19,7 @@ import {
   ALLOCATION_STATUS_LABEL,
   ALLOCATION_STATUS_STYLES,
 } from "@/lib/data/capacity";
+import { getHorizonWeeks, formatWeekLabel } from "@/lib/data/week-planning";
 import { selectLabel } from "@/lib/select-utils";
 import { PROJECT_STATUS_LABEL, SECURE_ALLOCATION_STATUSES } from "@/lib/project-status";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,9 +29,14 @@ import { Card } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { DEPARTMENTS, type AllocationStatus, type Project, type ResourceAllocation } from "@/lib/types";
+import { DEPARTMENTS, type AllocationStatus, type Project } from "@/lib/types";
 
 const UNDERALLOCATED_THRESHOLD = 75;
+
+type Granularity = "month" | "week";
+const HORIZON_COUNT: Record<Granularity, number> = { month: 12, week: 10 };
+const MIN_COL_WIDTH: Record<Granularity, number> = { month: 75, week: 62 };
+const PERSON_COL_WIDTH = 190;
 
 /** Diagonal hatch, tone-on-white so it reads consistently over any of the
  * four alloc-status fill colors instead of needing a second hue per status
@@ -39,21 +51,18 @@ const UNCERTAIN_HATCH_STYLE: CSSProperties = {
 };
 
 /** Read-only — shows which project(s) make up a person's allocation for a
- * month. No add/remove controls; edit allocations from a project's own
- * planning dialog instead. */
+ * month or week (whichever granularity is active). No add/remove controls;
+ * edit allocations from a project's own planning dialog instead. */
 function AllocationDetailCell({
-  person,
-  month,
-  allocations,
+  periodLabel,
+  rows,
   projects,
 }: {
-  person: { id: string; };
-  month: string;
-  allocations: ResourceAllocation[];
+  periodLabel: string;
+  rows: PersonWeekAllocationRow[];
   projects: Project[];
 }) {
-  const rows = allocations.filter((a) => a.personId === person.id && a.month === month);
-  const total = rows.reduce((sum, r) => sum + r.allocationPercent, 0);
+  const total = rows.reduce((sum, r) => sum + r.percent, 0);
   const styles = ALLOCATION_STATUS_STYLES[getAllocationStatus(total)];
   const rowsWithProject = rows.map((r) => ({ row: r, project: projects.find((p) => p.id === r.projectId) }));
   // A row whose project can't even be resolved (a dangling projectId) is
@@ -85,7 +94,7 @@ function AllocationDetailCell({
       />
       <PopoverContent className="w-64" align="center">
         <div className="mb-2 flex items-center justify-between">
-          <p className="text-sm font-semibold">{formatMonthLabel(month, { month: "long", year: "numeric" })}</p>
+          <p className="text-sm font-semibold">{periodLabel}</p>
           <span
             style={hasUncertainAllocation ? UNCERTAIN_HATCH_STYLE : undefined}
             className={cn("rounded-full px-2 py-0.5 text-xs font-medium", styles.badge)}
@@ -96,7 +105,7 @@ function AllocationDetailCell({
         <div className="flex flex-col gap-1.5">
           {rowsWithProject.map(({ row: r, project }) => {
             const isSecure = project ? SECURE_ALLOCATION_STATUSES.includes(project.status) : false;
-            const rowStyles = ALLOCATION_STATUS_STYLES[getAllocationStatus(r.allocationPercent)];
+            const rowStyles = ALLOCATION_STATUS_STYLES[getAllocationStatus(r.percent)];
             return (
               <Link
                 key={r.id}
@@ -113,7 +122,7 @@ function AllocationDetailCell({
                   style={!isSecure ? UNCERTAIN_HATCH_STYLE : undefined}
                   className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums", rowStyles.badge)}
                 >
-                  {r.allocationPercent}%
+                  {r.percent}%
                 </span>
               </Link>
             );
@@ -129,13 +138,51 @@ export function ResourcePlanningView() {
   const locations = useAppStore((s) => s.locations);
   const projects = useAppStore((s) => s.projects);
   const resourceAllocations = useAppStore((s) => s.resourceAllocations);
+  const projectRoleRequirements = useAppStore((s) => s.projectRoleRequirements);
+  const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
 
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("");
   const [department, setDepartment] = useState("");
   const [underallocatedOnly, setUnderallocatedOnly] = useState(false);
+  const [granularity, setGranularity] = useState<Granularity>("month");
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
 
-  const horizon = getHorizonMonths(12);
+  // The "underallocated" filter deliberately stays month-based regardless of
+  // the display granularity toggle — it's a coarse, forward-looking signal
+  // ("does this person have any red ahead"), not something that should read
+  // differently just because the table is currently showing weeks.
+  const monthlyHorizonForFilter = getHorizonMonths(12);
+
+  const periods = granularity === "month" ? getHorizonMonths(HORIZON_COUNT.month) : getHorizonWeeks(HORIZON_COUNT.week);
+  const formatPeriodLabel = (key: string) => (granularity === "month" ? formatMonthLabel(key) : formatWeekLabel(key));
+  const formatPeriodLabelLong = (key: string) =>
+    granularity === "month" ? formatMonthLabel(key, { month: "long", year: "numeric" }) : formatWeekLabel(key);
+
+  // Stretch-to-fill vs. fixed-and-scrollable: if every period would fit at
+  // the minimum width within the space actually available, stretch columns
+  // evenly to use all of it; otherwise fall back to the fixed minimum,
+  // which lets the table overflow its own scroll container instead.
+  const minColWidth = MIN_COL_WIDTH[granularity];
+  const dataAreaWidth = Math.max(0, containerWidth - PERSON_COL_WIDTH);
+  const naturalWidth = periods.length * minColWidth;
+  const colWidth =
+    dataAreaWidth > 0 && naturalWidth < dataAreaWidth ? dataAreaWidth / Math.max(1, periods.length) : minColWidth;
+
+  useLayoutEffect(() => {
+    const el = scrollAreaRef.current;
+    if (!el) return;
+    function update() {
+      if (!el) return;
+      setContainerWidth(el.clientWidth);
+    }
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const countries = Array.from(new Set(locations.map((l) => l.country))).toSorted();
   const countryOptions = [{ value: "any", label: "All locations" }, ...countries.map((c) => ({ value: c, label: c }))];
   const departmentOptions = [{ value: "any", label: "All departments" }, ...DEPARTMENTS.map((d) => ({ value: d, label: d }))];
@@ -146,7 +193,7 @@ export function ResourcePlanningView() {
     if (country && locations.find((l) => l.id === p.locationId)?.country !== country) return false;
     if (department && p.department !== department) return false;
     if (underallocatedOnly) {
-      const isOrWillBeUnderallocated = horizon.some(
+      const isOrWillBeUnderallocated = monthlyHorizonForFilter.some(
         (month) => getAllocationForPersonMonth(resourceAllocations, p.id, month) < UNDERALLOCATED_THRESHOLD
       );
       if (!isOrWillBeUnderallocated) return false;
@@ -157,9 +204,9 @@ export function ResourcePlanningView() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-xs text-muted-foreground">
-        Read-only summary of monthly allocation, rolled up from each project&apos;s own resource & budget plan.
-        Click a cell to see which project(s) it comes from — edit allocations from a project&apos;s planning
-        dialog instead.
+        Read-only summary of allocation, rolled up from each project&apos;s own resource & budget plan. Click
+        a cell to see which project(s) it comes from — edit allocations from a project&apos;s planning dialog
+        instead.
       </p>
 
       <div className="rounded-2xl border border-border bg-card p-4 shadow-elevation-1">
@@ -193,6 +240,21 @@ export function ResourcePlanningView() {
             <Switch checked={underallocatedOnly} onCheckedChange={(v) => setUnderallocatedOnly(v === true)} size="sm" />
             Underallocated only
           </label>
+          <div className="flex items-center rounded-lg border border-border p-0.5">
+            {(["month", "week"] as Granularity[]).map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => setGranularity(g)}
+                className={cn(
+                  "rounded-md px-2 py-1 text-xs font-medium transition-colors",
+                  granularity === g ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {g === "month" ? "Monthly" : "Weekly"}
+              </button>
+            ))}
+          </div>
           <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-1">
             {(Object.keys(ALLOCATION_STATUS_LABEL) as AllocationStatus[]).map((status) => (
               <span key={status} className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -209,12 +271,15 @@ export function ResourcePlanningView() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-elevation-1">
-        <div className="max-h-[70vh] overflow-auto">
-          <table className="table-fixed border-collapse text-sm" style={{ width: 190 + horizon.length * 75 }}>
+        <div ref={scrollAreaRef} className="max-h-[70vh] overflow-auto">
+          <table
+            className="table-fixed border-collapse text-sm"
+            style={{ width: PERSON_COL_WIDTH + periods.length * colWidth }}
+          >
             <colgroup>
-              <col className="w-[190px]" />
-              {horizon.map((month) => (
-                <col key={month} className="w-[75px]" />
+              <col style={{ width: PERSON_COL_WIDTH }} />
+              {periods.map((period) => (
+                <col key={period} style={{ width: colWidth }} />
               ))}
             </colgroup>
             <thead>
@@ -222,12 +287,12 @@ export function ResourcePlanningView() {
                 <th className="sticky top-0 left-0 z-20 border-b border-border bg-card px-3 py-3 text-left text-xs font-medium text-muted-foreground">
                   Person
                 </th>
-                {horizon.map((month) => (
+                {periods.map((period) => (
                   <th
-                    key={month}
+                    key={period}
                     className="sticky top-0 z-10 border-b border-l border-border bg-card px-1 py-2 text-center text-[11px] font-medium text-muted-foreground"
                   >
-                    {formatMonthLabel(month)}
+                    {formatPeriodLabel(period)}
                   </th>
                 ))}
               </tr>
@@ -249,11 +314,19 @@ export function ResourcePlanningView() {
                       </span>
                     </Link>
                   </td>
-                  {horizon.map((month) => (
-                    <td key={month} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
-                      <AllocationDetailCell person={person} month={month} allocations={resourceAllocations} projects={projects} />
-                    </td>
-                  ))}
+                  {periods.map((period) => {
+                    const rows: PersonWeekAllocationRow[] =
+                      granularity === "month"
+                        ? resourceAllocations
+                            .filter((a) => a.personId === person.id && a.month === period)
+                            .map((a) => ({ id: a.id, projectId: a.projectId, percent: a.allocationPercent }))
+                        : getPersonWeekAllocationBreakdown(projectRoleRequirements, projectRoleAssignments, person.id, period);
+                    return (
+                      <td key={period} className="border-b border-l border-border/70 p-1 group-hover:bg-secondary/50">
+                        <AllocationDetailCell periodLabel={formatPeriodLabelLong(period)} rows={rows} projects={projects} />
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

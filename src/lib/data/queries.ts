@@ -196,6 +196,51 @@ export function getPersonWeeklyAllocationForProject(
   return Math.round(totalFte * 100);
 }
 
+/** A person's total FTE across EVERY project for one week, as a percent —
+ * the cross-project weekly equivalent of capacity.ts's
+ * getAllocationForPersonMonth (which sums across every project's
+ * ResourceAllocation row that month), just read from the weekly staffing
+ * plan instead of the derived monthly rows. */
+export function getAllocationForPersonWeek(
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[],
+  personId: string,
+  week: string
+): number {
+  const totalFte = assignments
+    .filter((a) => a.personId === personId)
+    .reduce((sum, a) => {
+      const req = requirements.find((r) => r.id === a.roleRequirementId);
+      return sum + (req?.ftePerWeek[week] ?? 0);
+    }, 0);
+  return Math.round(totalFte * 100);
+}
+
+export interface PersonWeekAllocationRow {
+  id: string;
+  projectId: string;
+  percent: number;
+}
+
+/** Per-project breakdown of a person's allocation for one week — the
+ * weekly analog of filtering ResourceAllocation rows by personId+month,
+ * for a click-to-view breakdown popover. */
+export function getPersonWeekAllocationBreakdown(
+  requirements: ProjectRoleRequirement[],
+  assignments: ProjectRoleAssignment[],
+  personId: string,
+  week: string
+): PersonWeekAllocationRow[] {
+  return assignments
+    .filter((a) => a.personId === personId)
+    .map((a) => {
+      const req = requirements.find((r) => r.id === a.roleRequirementId);
+      const percent = Math.round((req?.ftePerWeek[week] ?? 0) * 100);
+      return { id: a.id, projectId: a.projectId, percent };
+    })
+    .filter((r) => r.percent > 0);
+}
+
 export function getProjectSkillDetails(
   projectSkills: ProjectSkill[],
   skills: Skill[],
