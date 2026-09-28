@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
@@ -23,10 +23,16 @@ import type { Project } from "@/lib/types";
 type Granularity = "month" | "week";
 
 const WINDOW_SIZE: Record<Granularity, number> = { month: 12, week: 8 };
-const COL_WIDTH: Record<Granularity, number> = { month: 48, week: 64 };
+/** Floor for a period column's width — used as-is once there are enough
+ * periods that even this minimum would overflow the available space (so the
+ * strip scrolls); otherwise columns stretch evenly to fill the full width,
+ * so a short project's chart never leaves dead space on the right. */
+const MIN_COL_WIDTH: Record<Granularity, number> = { month: 48, week: 64 };
 const NAME_COL_WIDTH = 188;
 const ROW_HEIGHT = 60;
 const HEADER_HEIGHT = 18;
+/** Must match the gap-[2px] AllocationHeatmapRow puts between its cells. */
+const CELL_GAP = 2;
 
 export function TeamAllocationCard({ project, canSeeBudget }: { project: Project; canSeeBudget: boolean }) {
   const people = useAppStore((s) => s.people);
@@ -37,7 +43,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
 
   const [granularity, setGranularity] = useState<Granularity>("month");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const [scrollState, setScrollState] = useState({ left: 0, maxLeft: 0, visibleWidth: 0 });
+  const [scrollState, setScrollState] = useState({ left: 0, visibleWidth: 0 });
 
   const members = getProjectMemberDetails(projectMembers, people, project.id);
 
@@ -52,23 +58,40 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
 
   const allPeriods = granularity === "month" ? allMonths : allWeeks;
   const windowSize = WINDOW_SIZE[granularity];
-  const colWidth = COL_WIDTH[granularity];
+  const minColWidth = MIN_COL_WIDTH[granularity];
+  // AllocationHeatmapRow puts a 2px gap between cells — both the header
+  // labels row and the strip's total declared width need to account for
+  // that same gap, or the two rows drift out of alignment and the strip's
+  // real rendered width silently exceeds its declared width.
+  const gapTotal = Math.max(0, allPeriods.length - 1) * CELL_GAP;
+  // Stretch-to-fill vs. fixed-and-scrollable: if every period would fit at
+  // the minimum width within the space actually available, stretch columns
+  // evenly to use all of it (no scrolling needed, no dead space on the
+  // right); otherwise fall back to the fixed minimum, which lets the strip
+  // overflow and scroll. Both colWidth and maxLeft are derived purely from
+  // measured visibleWidth (not from a DOM scrollWidth read), so they can
+  // never fall out of sync with each other across a render.
+  const naturalWidth = allPeriods.length * minColWidth + gapTotal;
+  const colWidth =
+    scrollState.visibleWidth > 0 && naturalWidth < scrollState.visibleWidth
+      ? (scrollState.visibleWidth - gapTotal) / Math.max(1, allPeriods.length)
+      : minColWidth;
+  const stripWidth = allPeriods.length * colWidth + gapTotal;
+  const maxLeft = Math.max(0, stripWidth - scrollState.visibleWidth);
+  const needsScroll = maxLeft > 1;
   const canGoBack = scrollState.left > 1;
-  const canGoForward = scrollState.left < scrollState.maxLeft - 1;
+  const canGoForward = scrollState.left < maxLeft - 1;
 
-  // Tracks real scroll position (for the Prev/Next disabled state and the
+  // Tracks real scroll position and the container's own width (for the
+  // Prev/Next disabled state, the stretch-vs-scroll decision above, and the
   // visible-range label) and keeps it in sync on resize, since the strip's
   // own width can change independently of any scroll event.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = scrollAreaRef.current;
     if (!el) return;
     function update() {
       if (!el) return;
-      setScrollState({
-        left: el.scrollLeft,
-        maxLeft: Math.max(0, el.scrollWidth - el.clientWidth),
-        visibleWidth: el.clientWidth,
-      });
+      setScrollState({ left: el.scrollLeft, visibleWidth: el.clientWidth });
     }
     update();
     el.addEventListener("scroll", update, { passive: true });
@@ -143,7 +166,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
         </div>
       </div>
 
-      {allPeriods.length > windowSize && (
+      {needsScroll && (
         <div className="mt-3 flex items-center justify-between rounded-lg border border-border bg-secondary/30 px-2 py-1.5">
           <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} disabled={!canGoBack} aria-label="Previous period">
             <ChevronLeft className="size-3.5" />
@@ -193,8 +216,8 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
           ref={scrollAreaRef}
           className="min-w-0 flex-1 overflow-x-auto pb-2 [scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent"
         >
-          <div style={{ width: allPeriods.length * colWidth }}>
-            <div className="flex text-[10px] text-muted-foreground" style={{ height: HEADER_HEIGHT }}>
+          <div style={{ width: stripWidth }}>
+            <div className="flex gap-[2px] text-[10px] text-muted-foreground" style={{ height: HEADER_HEIGHT }}>
               {allPeriods.map((p, i) => (
                 <span key={p} style={{ width: colWidth }} className="shrink-0 text-center">
                   {granularity === "month" ? (i % 2 === 0 ? formatPeriodLabel(p) : "") : formatPeriodLabel(p)}
