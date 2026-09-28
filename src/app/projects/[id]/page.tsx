@@ -22,13 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TeamAllocationCard } from "@/components/projects/team-allocation-card";
 import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
-import type { ProjectStatus } from "@/lib/types";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -60,6 +54,7 @@ export default function ProjectDetailPage() {
   const client = getClientByName(clients, project.clientName);
   const lead = people.find((p) => p.id === project.leadPersonId);
   const deliveryResponsible = people.find((p) => p.id === project.deliveryResponsiblePersonId);
+  const salesResponsible = people.find((p) => p.id === project.salesResponsiblePersonId);
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
   const similar = getSimilarProjects(projects, projectSkills, project.id, 3);
   const budgetPlan = budgetPlans.find((b) => b.projectId === project.id);
@@ -78,8 +73,8 @@ export default function ProjectDetailPage() {
             <div className="flex flex-wrap items-center gap-2">
               <ClientLogo name={project.clientName} logoUrl={client?.logoUrl} size="sm" />
               <h1 className="font-heading text-2xl font-semibold tracking-tight">{project.name}</h1>
-              <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
-                {project.status}
+              <Badge variant="secondary" className={PROJECT_STATUS_BADGE[project.status]}>
+                {PROJECT_STATUS_LABEL[project.status]}
               </Badge>
             </div>
             <p className="mt-1 text-muted-foreground">{project.clientName}</p>
@@ -185,6 +180,23 @@ export default function ProjectDetailPage() {
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{fullName(deliveryResponsible)}</p>
                       <p className="truncate text-xs text-muted-foreground">{deliveryResponsible.jobTitle}</p>
+                    </div>
+                  </Link>
+                </div>
+              )}
+              {salesResponsible && (
+                <div>
+                  <p className="mb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                    Sales responsible
+                  </p>
+                  <Link href={`/people/${salesResponsible.id}`} className="flex items-center gap-3 hover:opacity-80">
+                    <Avatar className="size-10">
+                      <AvatarImage src={salesResponsible.avatarUrl} alt={fullName(salesResponsible)} />
+                      <AvatarFallback>{initials(salesResponsible)}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{fullName(salesResponsible)}</p>
+                      <p className="truncate text-xs text-muted-foreground">{salesResponsible.jobTitle}</p>
                     </div>
                   </Link>
                 </div>

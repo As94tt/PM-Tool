@@ -2,14 +2,9 @@ import Link from "next/link";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/format";
-import type { Client, Project, ProjectStatus } from "@/lib/types";
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
+import type { Client, Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
 
 export function ProjectMiniCard({
   project,
@@ -36,8 +31,8 @@ export function ProjectMiniCard({
         <p className="truncate text-xs text-muted-foreground">{project.clientName}</p>
         {roleOnProject && <p className="mt-1 text-xs text-muted-foreground/80">{roleOnProject}</p>}
         <div className="mt-2 flex items-center gap-2">
-          <Badge variant="secondary" className={cn("font-normal", STATUS_BADGE[project.status])}>
-            {project.status}
+          <Badge variant="secondary" className={cn("font-normal", PROJECT_STATUS_BADGE[project.status])}>
+            {PROJECT_STATUS_LABEL[project.status]}
           </Badge>
           <span className="text-[11px] text-muted-foreground">
             {formatDate(project.startDate)}

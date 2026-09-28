@@ -19,6 +19,7 @@ import type {
 } from "@/lib/types";
 import { getAllocationForPersonMonth, getHorizonMonths } from "./capacity";
 import { totalCost, weeklyCost, weekToMonthKey } from "./week-planning";
+import { PRE_ACTIVE_STATUSES } from "@/lib/project-status";
 
 /** Clients are matched to projects by exact name, not a foreign key. */
 export function getClientByName(clients: Client[], clientName: string): Client | undefined {
@@ -95,9 +96,9 @@ export function getPersonProjectsSplit(
   const memberProjects = projects.filter((p) => memberProjectIds.has(p.id));
   return {
     current: memberProjects.filter((p) => p.status === "active"),
-    upcoming: memberProjects.filter((p) => p.status === "planned"),
+    upcoming: memberProjects.filter((p) => PRE_ACTIVE_STATUSES.includes(p.status)),
     previous: memberProjects
-      .filter((p) => p.status === "completed")
+      .filter((p) => p.status === "finished")
       .toSorted((a, b) => (b.endDate ?? "").localeCompare(a.endDate ?? "")),
   };
 }
@@ -411,7 +412,7 @@ export function getDashboardStats(
   resourceAllocations: ResourceAllocation[]
 ) {
   const activeProjects = projects.filter((p) => p.status === "active").length;
-  const plannedProjects = projects.filter((p) => p.status === "planned").length;
+  const pipelineProjects = projects.filter((p) => PRE_ACTIVE_STATUSES.includes(p.status)).length;
   const currentMonth = getHorizonMonths(1)[0];
   const avgAllocated = people.length
     ? people.reduce(
@@ -422,7 +423,7 @@ export function getDashboardStats(
   return {
     peopleCount: people.length,
     activeProjects,
-    plannedProjects,
+    pipelineProjects,
     skillsCount: skills.length,
     availableCapacityPercent: Math.max(0, Math.round(100 - avgAllocated)),
   };

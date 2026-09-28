@@ -29,31 +29,27 @@
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-kubernetes"
-  },
-  {
-    "projectId": "project-02",
     "skillId": "skill-network-engineering"
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-cloud-security"
+    "skillId": "skill-terraform"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-site-reliability-engineering"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-ci-cd"
   },
   {
     "projectId": "project-02",
     "skillId": "skill-azure"
   },
   {
-    "projectId": "project-02",
-    "skillId": "skill-vmware"
-  },
-  {
     "projectId": "project-03",
     "skillId": "skill-kanban"
-  },
-  {
-    "projectId": "project-03",
-    "skillId": "skill-business-analysis"
   },
   {
     "projectId": "project-03",
@@ -61,23 +57,11 @@
   },
   {
     "projectId": "project-03",
-    "skillId": "skill-change-management"
+    "skillId": "skill-requirements-engineering"
   },
   {
-    "projectId": "project-04",
-    "skillId": "skill-change-management"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-business-analysis"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-kanban"
-  },
-  {
-    "projectId": "project-04",
-    "skillId": "skill-prince2"
+    "projectId": "project-03",
+    "skillId": "skill-stakeholder-management"
   },
   {
     "projectId": "project-04",
@@ -85,7 +69,31 @@
   },
   {
     "projectId": "project-04",
-    "skillId": "skill-financial-modeling"
+    "skillId": "skill-scrum"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-business-analysis"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-change-management"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-terraform"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-aws"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-azure"
+  },
+  {
+    "projectId": "project-05",
+    "skillId": "skill-docker"
   },
   {
     "projectId": "project-05",
@@ -93,14 +101,6 @@
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-kubernetes"
-  },
-  {
-    "projectId": "project-05",
-    "skillId": "skill-google-cloud-platform"
-  },
-  {
-    "projectId": "project-05",
-    "skillId": "skill-terraform"
+    "skillId": "skill-cloud-security"
   }
 ]

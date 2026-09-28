@@ -18,7 +18,7 @@ export const PROJECT_IMPORT_FIELDS: ImportField[] = [
   { key: "clientName", label: "Client", required: true },
   { key: "industry", label: "Industry" },
   { key: "projectType", label: "Project type" },
-  { key: "status", label: "Status (planned / active / completed)" },
+  { key: "status", label: "Status (Lead / Offer Sent / Offer Signed / Active / Finished)" },
   { key: "startDate", label: "Start date (YYYY-MM-DD)" },
   { key: "shortDescription", label: "Description" },
 ];

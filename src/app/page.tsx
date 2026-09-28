@@ -38,13 +38,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HorizontalBarList } from "@/components/charts/horizontal-bar-list";
 import { MiniBarChart } from "@/components/charts/mini-bar-chart";
-import type { AllocationStatus, ProjectStatus } from "@/lib/types";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
+import type { AllocationStatus } from "@/lib/types";
 
 export default function DashboardPage() {
   const person = useCurrentPerson();
@@ -110,7 +105,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <StatCard label="Employees" value={stats.peopleCount} icon={Users} href="/people" tone="brand" />
         <StatCard label="Active projects" value={stats.activeProjects} icon={FolderKanban} href="/projects?status=active" />
-        <StatCard label="Planned projects" value={stats.plannedProjects} icon={CalendarClock} href="/projects?status=planned" />
+        <StatCard label="Pipeline projects" value={stats.pipelineProjects} icon={CalendarClock} href="/projects" />
         <StatCard label="Skills tracked" value={stats.skillsCount} icon={Grid3x3} href="/skill-matrix" />
         <StatCard
           label="Available capacity"
@@ -141,8 +136,8 @@ export default function DashboardPage() {
                       <p className="truncate text-sm font-medium text-foreground">{project.name}</p>
                       <p className="truncate text-xs text-muted-foreground">{project.clientName}</p>
                     </div>
-                    <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
-                      {project.status}
+                    <Badge variant="secondary" className={PROJECT_STATUS_BADGE[project.status]}>
+                      {PROJECT_STATUS_LABEL[project.status]}
                     </Badge>
                     <span className="hidden w-24 shrink-0 text-right text-xs text-muted-foreground sm:block">
                       {formatRelativeToToday(project.startDate)}

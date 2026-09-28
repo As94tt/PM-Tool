@@ -9,6 +9,7 @@ import type {
   Client,
 } from "@/lib/types";
 import { fullName, getProjectsForClient } from "@/lib/data/queries";
+import { PROJECT_STATUS_LABEL } from "@/lib/project-status";
 
 export type SearchResultType = "person" | "project" | "skill" | "client" | "industry" | "certification";
 
@@ -51,7 +52,7 @@ export function buildSearchIndex(src: SearchSource): SearchResult[] {
       id: proj.id,
       type: "project",
       title: proj.name,
-      subtitle: `${proj.clientName} · ${proj.status}`,
+      subtitle: `${proj.clientName} · ${PROJECT_STATUS_LABEL[proj.status]}`,
       href: `/projects/${proj.id}`,
     });
   }

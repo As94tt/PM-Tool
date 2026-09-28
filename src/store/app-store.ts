@@ -24,8 +24,10 @@ import type {
   ProjectRoleAssignment,
   FeedbackNote,
   FeedbackType,
+  ProjectStatus,
 } from "@/lib/types";
 import { APP_FUNCTIONS, DEFAULT_PERMISSIONS, type PermissionLevel, type PermissionMatrix } from "@/lib/permissions";
+import { PROJECT_STATUSES } from "@/lib/project-status";
 import { monthToDate } from "@/lib/data/capacity";
 import { startOfWeek, weekKey, addWeeks, getHorizonWeeks, weekToMonthKey } from "@/lib/data/week-planning";
 import {
@@ -192,6 +194,28 @@ function backfillMissingUsers(state: AppState): AppState {
     .filter((p) => !existingUserPersonIds.has(p.id))
     .map((p) => ({ id: `user-repair-${p.id}`, personId: p.id, email: synthesizeEmail(p), role: "user" }));
   return { ...state, users: [...users, ...missingUsers] };
+}
+
+/** One-time migration (version 3 -> 4): ProjectStatus went from 3 values
+ * (planned/active/completed) to a 5-stage pipeline (lead/offerSent/
+ * offerSigned/active/finished). A browser with projects already persisted
+ * under the old 3 values would otherwise carry a status no longer in the
+ * type, breaking every PROJECT_STATUS_BADGE/LABEL lookup at runtime.
+ * "planned" maps to "offerSigned" (a signed-but-not-yet-started project is
+ * the closest old-to-new equivalent), "active" and "completed"->"finished"
+ * are direct renames. */
+function remapLegacyProjectStatuses(state: AppState): AppState {
+  const LEGACY_STATUS_MAP: Record<string, ProjectStatus> = {
+    planned: "offerSigned",
+    active: "active",
+    completed: "finished",
+  };
+  const projects = (state.projects ?? []).map((p) =>
+    p.status in LEGACY_STATUS_MAP && !PROJECT_STATUSES.includes(p.status)
+      ? { ...p, status: LEGACY_STATUS_MAP[p.status] }
+      : p
+  );
+  return { ...state, projects };
 }
 
 /** Converts a person's monthly ResourceAllocation rows on a project into a
@@ -865,7 +889,7 @@ export function createAppStore() {
       })),
       {
         name: "nexus-pm-tool-store",
-        version: 3,
+        version: 4,
         storage: createJSONStorage(() => localStorage),
         // Runs once for any store persisted at an older version, before
         // `merge` below — the right place for a one-time data cleanup that
@@ -877,6 +901,7 @@ export function createAppStore() {
           let state = persistedState as AppState;
           if (version < 2) state = backfillMissingStaffingSeats(state);
           if (version < 3) state = backfillMissingUsers(state);
+          if (version < 4) state = remapLegacyProjectStatuses(state);
           return state;
         },
         merge: (persistedState, currentState) =>

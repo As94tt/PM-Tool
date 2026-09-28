@@ -28,6 +28,7 @@ import {
   getPermission,
   type PermissionLevel,
 } from "@/lib/permissions";
+import { PROJECT_STATUSES } from "@/lib/project-status";
 import { DEPARTMENTS, type AppRole, type Department, type Person, type Project, type SkillCategory } from "@/lib/types";
 
 const ROLE_OPTIONS: AppRole[] = ["user", "management", "admin"];
@@ -200,10 +201,14 @@ export default function AdminPage() {
   }
 
   function handleImportProjects(rows: Record<string, string>[]): number {
-    const validStatuses = ["planned", "active", "completed"];
+    // Tolerant of "Offer Sent", "offer-sent", "offerSent", etc. — strip
+    // everything but letters before matching so CSV authors don't have to
+    // know the exact camelCase key.
+    const normalizeStatusKey = (s: string) => s.toLowerCase().replace(/[^a-z]/g, "");
+    const statusByNormalizedKey = new Map(PROJECT_STATUSES.map((s) => [normalizeStatusKey(s), s]));
     const newProjects: Project[] = rows.map((row, i) => {
       const industry = industries.find((ind) => ind.name.toLowerCase() === row.industry?.toLowerCase());
-      const status = validStatuses.includes(row.status?.toLowerCase()) ? (row.status.toLowerCase() as Project["status"]) : "planned";
+      const status = statusByNormalizedKey.get(normalizeStatusKey(row.status ?? "")) ?? "lead";
       return {
         id: `project-import-${Date.now()}-${i}`,
         name: row.name,

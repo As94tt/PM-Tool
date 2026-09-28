@@ -439,26 +439,40 @@ let allocIdSeq = 1;
 PROJECT_DEFS.forEach((def, idx) => {
   const id = `project-${String(idx + 1).padStart(2, "0")}`;
 
-  // status distribution across 5 projects: 1 completed, 3 active, 1 planned
+  // status distribution across the 5 projects: one per pipeline stage, in
+  // stage order (idx 0 = earliest/Lead .. idx 4 = Finished), so every badge
+  // color shows up at least once in the demo data.
   let status, startDate, endDate;
-  if (idx < 1) {
-    status = "completed";
-    const durationMonths = rndInt(4, 10);
-    const endOffset = -rndInt(1, 5);
-    startDate = addMonths(TODAY, endOffset - durationMonths);
-    endDate = addMonths(TODAY, endOffset);
-  } else if (idx < 4) {
+  if (idx === 0) {
+    status = "lead";
+    const startOffset = rndInt(3, 8);
+    const durationMonths = rndInt(6, 12);
+    startDate = addMonths(TODAY, startOffset);
+    endDate = addMonths(TODAY, startOffset + durationMonths);
+  } else if (idx === 1) {
+    status = "offerSent";
+    const startOffset = rndInt(2, 5);
+    const durationMonths = rndInt(6, 12);
+    startDate = addMonths(TODAY, startOffset);
+    endDate = addMonths(TODAY, startOffset + durationMonths);
+  } else if (idx === 2) {
+    status = "offerSigned";
+    const startOffset = rndInt(1, 3);
+    const durationMonths = rndInt(6, 12);
+    startDate = addMonths(TODAY, startOffset);
+    endDate = addMonths(TODAY, startOffset + durationMonths);
+  } else if (idx === 3) {
     status = "active";
     const startOffset = -rndInt(1, 9);
     const durationMonths = rndInt(6, 16);
     startDate = addMonths(TODAY, startOffset);
     endDate = addMonths(TODAY, startOffset + durationMonths);
   } else {
-    status = "planned";
-    const startOffset = rndInt(1, 5);
-    const durationMonths = rndInt(6, 12);
-    startDate = addMonths(TODAY, startOffset);
-    endDate = addMonths(TODAY, startOffset + durationMonths);
+    status = "finished";
+    const durationMonths = rndInt(4, 10);
+    const endOffset = -rndInt(1, 5);
+    startDate = addMonths(TODAY, endOffset - durationMonths);
+    endDate = addMonths(TODAY, endOffset);
   }
 
   const leadPool = seniorPeopleByTrack(def.track).length ? seniorPeopleByTrack(def.track) : peopleByTrack(def.track);
@@ -476,7 +490,7 @@ PROJECT_DEFS.forEach((def, idx) => {
     shortDescription: def.desc,
     projectType: def.type,
     startDate: isoDate(startDate),
-    endDate: status === "planned" ? isoDate(endDate) : status === "completed" ? isoDate(endDate) : isoDate(endDate),
+    endDate: isoDate(endDate),
     status,
     leadPersonId: lead.id,
     outcomes: def.outcomes,
@@ -504,6 +518,15 @@ PROJECT_DEFS.forEach((def, idx) => {
     projects[projects.length - 1].deliveryResponsiblePersonId = deliveryResponsible.id;
     const membership = projectMembers.find((m) => m.projectId === id && m.personId === deliveryResponsible.id);
     if (membership) membership.roleOnProject = "Delivery Responsible";
+  }
+
+  // ~50% of projects also get a sales responsible — doesn't overwrite an
+  // already-assigned "Delivery Responsible" label if the same person is picked
+  if (team.length > 0 && chance(0.5)) {
+    const salesResponsible = pick(team);
+    projects[projects.length - 1].salesResponsiblePersonId = salesResponsible.id;
+    const membership = projectMembers.find((m) => m.projectId === id && m.personId === salesResponsible.id);
+    if (membership && membership.roleOnProject !== "Delivery Responsible") membership.roleOnProject = "Sales Responsible";
   }
 
   const allMembers = [lead, ...team];

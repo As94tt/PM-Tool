@@ -3,14 +3,9 @@ import { Users } from "lucide-react";
 import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/format";
-import type { Client, Project, ProjectStatus, Skill } from "@/lib/types";
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
+import type { Client, Project, Skill } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
 
 export function ProjectCard({
   project,
@@ -40,8 +35,8 @@ export function ProjectCard({
             <p className="truncate text-xs text-muted-foreground">{project.clientName}</p>
           </div>
         </div>
-        <Badge variant="secondary" className={cn("shrink-0 font-normal", STATUS_BADGE[project.status])}>
-          {project.status}
+        <Badge variant="secondary" className={cn("shrink-0 font-normal", PROJECT_STATUS_BADGE[project.status])}>
+          {PROJECT_STATUS_LABEL[project.status]}
         </Badge>
       </div>
 

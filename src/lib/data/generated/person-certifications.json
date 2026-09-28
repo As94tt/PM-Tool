@@ -2,29 +2,24 @@
   {
     "personId": "person-006",
     "certificationId": "cert-cka",
-    "issuedDate": "2024-09-01",
     "expiryDate": "2027-09-01"
   },
   {
     "personId": "person-006",
-    "certificationId": "cert-iso27001",
-    "issuedDate": "2025-12-01"
+    "certificationId": "cert-iso27001"
   },
   {
     "personId": "person-007",
     "certificationId": "cert-pmp",
-    "issuedDate": "2021-04-01",
     "expiryDate": "2024-04-01"
   },
   {
     "personId": "person-007",
     "certificationId": "cert-psm",
-    "issuedDate": "2018-11-01",
     "expiryDate": "2021-11-01"
   },
   {
     "personId": "person-010",
-    "certificationId": "cert-sfdc-admin",
-    "issuedDate": "2015-08-01"
+    "certificationId": "cert-sfdc-admin"
   }
 ]

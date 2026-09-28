@@ -19,13 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL, PROJECT_STATUS_OPTIONS } from "@/lib/project-status";
 import type { ProjectStatus } from "@/lib/types";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
 
 export default function ProjectsPage() {
   return (
@@ -69,12 +64,7 @@ function ProjectsPageInner() {
 
   const hasActiveFilters = Boolean(query || status || industryId || skillId || clientName);
 
-  const statusOptions = [
-    { value: "any", label: "All statuses" },
-    { value: "active", label: "Active" },
-    { value: "planned", label: "Planned" },
-    { value: "completed", label: "Completed" },
-  ];
+  const statusOptions = [{ value: "any", label: "All statuses" }, ...PROJECT_STATUS_OPTIONS];
   const industryOptions = [{ value: "any", label: "All industries" }, ...industries.map((i) => ({ value: i.id, label: i.name }))];
   const skillOptions = [{ value: "any", label: "Any skill" }, ...skills.map((s) => ({ value: s.id, label: s.name }))];
 
@@ -228,8 +218,8 @@ function ProjectsPageInner() {
                     {industries.find((i) => i.id === project.industryId)?.name}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
-                      {project.status}
+                    <Badge variant="secondary" className={PROJECT_STATUS_BADGE[project.status]}>
+                      {PROJECT_STATUS_LABEL[project.status]}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">

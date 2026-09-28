@@ -23,6 +23,7 @@ import {
   ALLOCATION_STATUS_LABEL,
 } from "@/lib/data/capacity";
 import { formatDate } from "@/lib/format";
+import { PRE_ACTIVE_STATUSES } from "@/lib/project-status";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -83,8 +84,8 @@ export default function PersonDetailPage() {
   const myIndustries = industries.filter((i) => person.industryExperienceIds.includes(i.id));
   const projectHistory = getPersonProjectHistory(projectMembers, projects, resourceAllocations, person.id);
   const current = projectHistory.filter((e) => e.project.status === "active");
-  const upcoming = projectHistory.filter((e) => e.project.status === "planned");
-  const previous = projectHistory.filter((e) => e.project.status === "completed");
+  const upcoming = projectHistory.filter((e) => PRE_ACTIVE_STATUSES.includes(e.project.status));
+  const previous = projectHistory.filter((e) => e.project.status === "finished");
 
   const horizon = getHorizonMonths(6);
   const currentAllocation = getAllocationForPersonMonth(resourceAllocations, person.id, horizon[0]);

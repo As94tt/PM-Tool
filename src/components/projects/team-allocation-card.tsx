@@ -10,7 +10,7 @@ import {
   getProjectMemberDetails,
   getPersonWeeklyAllocationForProject,
 } from "@/lib/data/queries";
-import { getProjectChartMonths, getAllocationForPersonMonth, formatMonthLabel } from "@/lib/data/capacity";
+import { getProjectChartMonths, getAllocationForPersonProjectMonth, formatMonthLabel } from "@/lib/data/capacity";
 import { getProjectChartWeeks, formatWeekLabel } from "@/lib/data/week-planning";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -126,7 +126,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
             label: formatPeriodLabel(p),
             value:
               granularity === "month"
-                ? getAllocationForPersonMonth(resourceAllocations, person.id, p)
+                ? getAllocationForPersonProjectMonth(resourceAllocations, person.id, project.id, p)
                 : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
           }));
           return (

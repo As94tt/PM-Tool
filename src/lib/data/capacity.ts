@@ -73,6 +73,21 @@ export function getAllocationForPersonMonth(
     .reduce((sum, a) => sum + a.allocationPercent, 0);
 }
 
+/** Same as getAllocationForPersonMonth, but scoped to one project — for a
+ * per-project view (e.g. a project's own team heatmap) that must show only
+ * that project's share of a person's time, not their total across every
+ * project they're staffed on. */
+export function getAllocationForPersonProjectMonth(
+  allocations: ResourceAllocation[],
+  personId: string,
+  projectId: string,
+  month: string
+): number {
+  return allocations
+    .filter((a) => a.personId === personId && a.projectId === projectId && a.month === month)
+    .reduce((sum, a) => sum + a.allocationPercent, 0);
+}
+
 export function getAllocationStatus(percent: number): AllocationStatus {
   if (percent > 100) return "overallocated";
   if (percent === 100) return "full";

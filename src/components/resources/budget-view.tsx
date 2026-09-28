@@ -11,13 +11,7 @@ import { ProjectAvatar } from "@/components/shared/project-avatar";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MiniBarChart } from "@/components/charts/mini-bar-chart";
-import type { ProjectStatus } from "@/lib/types";
-
-const STATUS_BADGE: Record<ProjectStatus, string> = {
-  active: "bg-status-healthy/15 text-status-healthy",
-  planned: "bg-status-under/15 text-status-under",
-  completed: "bg-secondary text-muted-foreground",
-};
+import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
 
 export function BudgetView() {
   const projects = useAppStore((s) => s.projects);
@@ -87,8 +81,8 @@ export function BudgetView() {
                     <p className="truncate text-sm font-medium">{project.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{project.clientName}</p>
                   </div>
-                  <Badge variant="secondary" className={STATUS_BADGE[project.status]}>
-                    {project.status}
+                  <Badge variant="secondary" className={PROJECT_STATUS_BADGE[project.status]}>
+                    {PROJECT_STATUS_LABEL[project.status]}
                   </Badge>
                   {summary.hasDetailedPlan && (
                     <Badge variant="secondary" className="bg-primary/10 text-primary">

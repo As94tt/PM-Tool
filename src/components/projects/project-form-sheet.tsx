@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, X, FolderPlus } from "lucide-react";
+import { X, FolderPlus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -29,24 +29,8 @@ import { ImageUploadField } from "@/components/shared/image-upload-field";
 import { useAppStore } from "@/store/app-store-provider";
 import { fullName } from "@/lib/data/queries";
 import { selectLabel } from "@/lib/select-utils";
+import { PROJECT_STATUS_OPTIONS } from "@/lib/project-status";
 import type { Project, ProjectStatus } from "@/lib/types";
-
-const ROLE_OPTIONS = [
-  "Solution Architect",
-  "Lead Developer",
-  "Business Analyst",
-  "QA Engineer",
-  "Data Engineer",
-  "UX Designer",
-  "DevOps Engineer",
-  "Consultant",
-];
-
-const STATUS_OPTIONS: { value: ProjectStatus; label: string }[] = [
-  { value: "planned", label: "Planned" },
-  { value: "active", label: "Active" },
-  { value: "completed", label: "Completed" },
-];
 
 interface TeamRow {
   personId: string;
@@ -72,9 +56,6 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
 
   const projectTypes = Array.from(new Set(projects.map((p) => p.projectType))).toSorted();
 
-  const existingMembers: TeamRow[] = project
-    ? projectMembers.filter((m) => m.projectId === project.id).map((m) => ({ personId: m.personId, roleOnProject: m.roleOnProject }))
-    : [];
   const existingSkillIds = project ? projectSkills.filter((s) => s.projectId === project.id).map((s) => s.skillId) : [];
 
   const [name, setName] = useState(project?.name ?? "");
@@ -84,36 +65,23 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
   const [shortDescription, setShortDescription] = useState(project?.shortDescription ?? "");
   const [startDate, setStartDate] = useState(project?.startDate ?? new Date().toISOString().slice(0, 10));
   const [endDate, setEndDate] = useState(project?.endDate ?? "");
-  const [status, setStatus] = useState<ProjectStatus>(project?.status ?? "planned");
+  const [status, setStatus] = useState<ProjectStatus>(project?.status ?? "lead");
   const [leadPersonId, setLeadPersonId] = useState(project?.leadPersonId ?? people[0]?.id ?? "");
   const [deliveryResponsibleId, setDeliveryResponsibleId] = useState(project?.deliveryResponsiblePersonId ?? "");
+  const [salesResponsibleId, setSalesResponsibleId] = useState(project?.salesResponsiblePersonId ?? "");
   const [outcomes, setOutcomes] = useState(project?.outcomes.join("\n") ?? "");
-  const [totalBudget, setTotalBudget] = useState(String(project?.totalBudget ?? 0));
   const [imageUrl, setImageUrl] = useState<string | undefined>(project?.imageUrl);
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>(existingSkillIds);
-  const [team, setTeam] = useState<TeamRow[]>(existingMembers);
-  const [addPersonId, setAddPersonId] = useState("");
-  const [addRole, setAddRole] = useState(ROLE_OPTIONS[0]);
 
   const peopleOptions = people.map((p) => ({ value: p.id, label: fullName(p) }));
   const deliveryResponsibleOptions = [{ value: "none", label: "None" }, ...peopleOptions];
+  const salesResponsibleOptions = [{ value: "none", label: "None" }, ...peopleOptions];
   const industryOptions = industries.map((i) => ({ value: i.id, label: i.name }));
   const projectTypeOptions = projectTypes.map((t) => ({ value: t, label: t }));
-  const statusOptions = STATUS_OPTIONS;
-  const availablePeopleForTeam = people.filter((p) => !team.some((t) => t.personId === p.id));
+  const statusOptions = PROJECT_STATUS_OPTIONS;
 
   function toggleSkill(id: string) {
     setSelectedSkillIds((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
-  }
-
-  function addTeamMember() {
-    if (!addPersonId) return;
-    setTeam((prev) => [...prev, { personId: addPersonId, roleOnProject: addRole }]);
-    setAddPersonId("");
-  }
-
-  function removeTeamMember(personId: string) {
-    setTeam((prev) => prev.filter((t) => t.personId !== personId));
   }
 
   function resetForm() {
@@ -122,13 +90,12 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
     setShortDescription("");
     setStartDate(new Date().toISOString().slice(0, 10));
     setEndDate("");
-    setStatus("planned");
+    setStatus("lead");
     setOutcomes("");
-    setTotalBudget("0");
     setImageUrl(undefined);
     setDeliveryResponsibleId("");
+    setSalesResponsibleId("");
     setSelectedSkillIds([]);
-    setTeam([]);
   }
 
   function handleSubmit() {
@@ -154,25 +121,40 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         status,
         leadPersonId,
         deliveryResponsiblePersonId: deliveryResponsibleId || undefined,
+        salesResponsiblePersonId: salesResponsibleId || undefined,
         outcomes: outcomesList,
-        totalBudget: Number(totalBudget) || 0,
         imageUrl,
       });
-      // Guarantee the lead and delivery-responsible are on the team the
-      // same way createProject already does below — picking a new lead who
-      // isn't already in the local `team` list must still add them as a
-      // member, not just update Project.leadPersonId with no matching row.
+      // Team membership itself is managed from the Resource & Budget
+      // Planning dialog now — this form only guarantees the three
+      // leadership roles are on the team (adding them if picking someone
+      // new), reading the *current* membership straight from the store
+      // rather than a local copy, so every other existing member (and any
+      // change made from the Planning dialog since this sheet was opened)
+      // is preserved exactly as-is.
+      const currentMembers = projectMembers.filter((m) => m.projectId === project.id);
+      const leadershipIds = new Set([leadPersonId, deliveryResponsibleId, salesResponsibleId].filter(Boolean));
       const fullTeam: TeamRow[] = [
-        { personId: leadPersonId, roleOnProject: team.find((t) => t.personId === leadPersonId)?.roleOnProject ?? "Project Lead" },
-        ...(deliveryResponsibleId && deliveryResponsibleId !== leadPersonId
+        { personId: leadPersonId, roleOnProject: currentMembers.find((m) => m.personId === leadPersonId)?.roleOnProject ?? "Project Lead" },
+        ...(deliveryResponsibleId
           ? [
               {
                 personId: deliveryResponsibleId,
-                roleOnProject: team.find((t) => t.personId === deliveryResponsibleId)?.roleOnProject ?? "Delivery Responsible",
+                roleOnProject: currentMembers.find((m) => m.personId === deliveryResponsibleId)?.roleOnProject ?? "Delivery Responsible",
               },
             ]
           : []),
-        ...team.filter((t) => t.personId !== leadPersonId && t.personId !== deliveryResponsibleId),
+        ...(salesResponsibleId
+          ? [
+              {
+                personId: salesResponsibleId,
+                roleOnProject: currentMembers.find((m) => m.personId === salesResponsibleId)?.roleOnProject ?? "Sales Responsible",
+              },
+            ]
+          : []),
+        ...currentMembers
+          .filter((m) => !leadershipIds.has(m.personId))
+          .map((m) => ({ personId: m.personId, roleOnProject: m.roleOnProject })),
       ];
       setProjectTeam(project.id, fullTeam);
       setProjectSkills(project.id, selectedSkillIds);
@@ -195,9 +177,10 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         status,
         leadPersonId,
         deliveryResponsiblePersonId: deliveryResponsibleId || undefined,
+        salesResponsiblePersonId: salesResponsibleId || undefined,
         outcomes: outcomesList,
         currency: "EUR",
-        totalBudget: Number(totalBudget) || 0,
+        totalBudget: 0,
         imageUrl,
       },
       [
@@ -205,9 +188,9 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
         ...(deliveryResponsibleId && deliveryResponsibleId !== leadPersonId
           ? [{ projectId: id, personId: deliveryResponsibleId, roleOnProject: "Delivery Responsible" }]
           : []),
-        ...team
-          .filter((t) => t.personId !== leadPersonId && t.personId !== deliveryResponsibleId)
-          .map((t) => ({ projectId: id, ...t })),
+        ...(salesResponsibleId && salesResponsibleId !== leadPersonId && salesResponsibleId !== deliveryResponsibleId
+          ? [{ projectId: id, personId: salesResponsibleId, roleOnProject: "Sales Responsible" }]
+          : []),
       ],
       selectedSkillIds
     );
@@ -302,7 +285,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
                     <SelectValue>{selectLabel(statusOptions, "Status")}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {STATUS_OPTIONS.map((s) => (
+                    {PROJECT_STATUS_OPTIONS.map((s) => (
                       <SelectItem key={s.value} value={s.value}>
                         {s.label}
                       </SelectItem>
@@ -355,20 +338,24 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
                   </SelectContent>
                 </Select>
               </div>
-              {isEdit && (
-                <div className="col-span-2">
-                  <Label htmlFor="p-budget" className="mb-1.5">
-                    Total budget (EUR)
-                  </Label>
-                  <Input
-                    id="p-budget"
-                    type="number"
-                    min={0}
-                    value={totalBudget}
-                    onChange={(e) => setTotalBudget(e.target.value)}
-                  />
-                </div>
-              )}
+              <div className="col-span-2">
+                <Label className="mb-1.5">Sales responsible</Label>
+                <Select
+                  value={salesResponsibleId || "none"}
+                  onValueChange={(v) => setSalesResponsibleId(v && v !== "none" ? v : "")}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{selectLabel(salesResponsibleOptions, "Sales responsible")}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {salesResponsibleOptions.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div>
@@ -414,60 +401,6 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
               </div>
             </div>
 
-            {isEdit && (
-            <div>
-              <h3 className="mb-2 text-sm font-semibold">Team</h3>
-              <div className="flex flex-col gap-2">
-                {team.map((t) => {
-                  const p = people.find((person) => person.id === t.personId);
-                  if (!p) return null;
-                  return (
-                    <div key={t.personId} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                      <span className="flex-1 truncate text-sm">{fullName(p)}</span>
-                      <span className="text-xs text-muted-foreground">{t.roleOnProject}</span>
-                      <Button variant="ghost" size="icon-sm" onClick={() => removeTeamMember(t.personId)} aria-label={`Remove ${fullName(p)}`}>
-                        <X className="size-3.5" />
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-2 flex gap-2">
-                <Select value={addPersonId || "none"} onValueChange={(v) => setAddPersonId(v && v !== "none" ? v : "")}>
-                  <SelectTrigger size="sm" className="flex-1">
-                    <SelectValue placeholder="Add a team member…">
-                      {selectLabel([{ value: "none", label: "Add a team member…" }, ...peopleOptions], "Add a team member…")}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none" disabled>
-                      Select a person
-                    </SelectItem>
-                    {availablePeopleForTeam.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>
-                        {fullName(p)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={addRole} onValueChange={(v) => v && setAddRole(v)}>
-                  <SelectTrigger size="sm" className="w-[160px]">
-                    <SelectValue>{selectLabel(ROLE_OPTIONS.map((r) => ({ value: r, label: r })), "Role")}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ROLE_OPTIONS.map((r) => (
-                      <SelectItem key={r} value={r}>
-                        {r}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button size="sm" onClick={addTeamMember} disabled={!addPersonId}>
-                  <Plus />
-                </Button>
-              </div>
-            </div>
-            )}
           </div>
         </ScrollArea>
 

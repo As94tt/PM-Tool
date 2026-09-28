@@ -122,7 +122,8 @@ export interface Person {
   projectStrengths: string[];
 }
 
-export type ProjectStatus = "planned" | "active" | "completed";
+/** A project's stage in the sales-through-delivery pipeline. */
+export type ProjectStatus = "lead" | "offerSent" | "offerSigned" | "active" | "finished";
 
 export interface Project {
   id: string;
@@ -137,6 +138,8 @@ export interface Project {
   leadPersonId: string;
   /** Optional — the person accountable for day-to-day delivery, distinct from the project lead. */
   deliveryResponsiblePersonId?: string;
+  /** Optional — the person accountable for the sales/commercial relationship. */
+  salesResponsiblePersonId?: string;
   outcomes: string[];
   currency: string;
   totalBudget: number;

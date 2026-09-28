@@ -3,1183 +3,1246 @@
     "id": "alloc-1",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-03",
-    "allocationPercent": 45
+    "month": "2027-03",
+    "allocationPercent": 38
   },
   {
     "id": "alloc-2",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-04",
-    "allocationPercent": 50
+    "month": "2027-04",
+    "allocationPercent": 60
   },
   {
     "id": "alloc-3",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-05",
-    "allocationPercent": 62
+    "month": "2027-05",
+    "allocationPercent": 47
   },
   {
     "id": "alloc-4",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-06",
-    "allocationPercent": 69
+    "month": "2027-06",
+    "allocationPercent": 39
   },
   {
     "id": "alloc-5",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-07",
-    "allocationPercent": 72
+    "month": "2027-07",
+    "allocationPercent": 50
   },
   {
     "id": "alloc-6",
     "personId": "person-001",
     "projectId": "project-01",
-    "month": "2026-08",
-    "allocationPercent": 66
+    "month": "2027-08",
+    "allocationPercent": 51
   },
   {
     "id": "alloc-7",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-03",
-    "allocationPercent": 37
+    "month": "2027-03",
+    "allocationPercent": 48
   },
   {
     "id": "alloc-8",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-04",
-    "allocationPercent": 38
+    "month": "2027-04",
+    "allocationPercent": 64
   },
   {
     "id": "alloc-9",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-05",
-    "allocationPercent": 31
+    "month": "2027-05",
+    "allocationPercent": 65
   },
   {
     "id": "alloc-10",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-06",
-    "allocationPercent": 41
+    "month": "2027-06",
+    "allocationPercent": 47
   },
   {
     "id": "alloc-11",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-07",
-    "allocationPercent": 37
+    "month": "2027-07",
+    "allocationPercent": 53
   },
   {
     "id": "alloc-12",
     "personId": "person-006",
     "projectId": "project-01",
-    "month": "2026-08",
-    "allocationPercent": 31
+    "month": "2027-08",
+    "allocationPercent": 60
   },
   {
     "id": "alloc-13",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-03",
-    "allocationPercent": 25
+    "month": "2027-03",
+    "allocationPercent": 18
   },
   {
     "id": "alloc-14",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-04",
-    "allocationPercent": 27
+    "month": "2027-04",
+    "allocationPercent": 26
   },
   {
     "id": "alloc-15",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-05",
-    "allocationPercent": 25
+    "month": "2027-05",
+    "allocationPercent": 19
   },
   {
     "id": "alloc-16",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-06",
-    "allocationPercent": 28
+    "month": "2027-06",
+    "allocationPercent": 20
   },
   {
     "id": "alloc-17",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-07",
-    "allocationPercent": 20
+    "month": "2027-07",
+    "allocationPercent": 26
   },
   {
     "id": "alloc-18",
     "personId": "person-009",
     "projectId": "project-01",
-    "month": "2026-08",
-    "allocationPercent": 28
+    "month": "2027-08",
+    "allocationPercent": 39
   },
   {
     "id": "alloc-19",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-03",
-    "allocationPercent": 33
+    "month": "2027-03",
+    "allocationPercent": 63
   },
   {
     "id": "alloc-20",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-04",
-    "allocationPercent": 34
+    "month": "2027-04",
+    "allocationPercent": 57
   },
   {
     "id": "alloc-21",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-05",
-    "allocationPercent": 38
+    "month": "2027-05",
+    "allocationPercent": 68
   },
   {
     "id": "alloc-22",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-06",
-    "allocationPercent": 49
+    "month": "2027-06",
+    "allocationPercent": 71
   },
   {
     "id": "alloc-23",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-07",
-    "allocationPercent": 52
+    "month": "2027-07",
+    "allocationPercent": 61
   },
   {
     "id": "alloc-24",
     "personId": "person-004",
     "projectId": "project-01",
-    "month": "2026-08",
-    "allocationPercent": 38
+    "month": "2027-08",
+    "allocationPercent": 63
   },
   {
     "id": "alloc-25",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-03",
-    "allocationPercent": 26
+    "month": "2027-01",
+    "allocationPercent": 42
   },
   {
     "id": "alloc-26",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-04",
-    "allocationPercent": 29
+    "month": "2027-02",
+    "allocationPercent": 58
   },
   {
     "id": "alloc-27",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-05",
-    "allocationPercent": 35
+    "month": "2027-03",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-28",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-06",
-    "allocationPercent": 38
+    "month": "2027-04",
+    "allocationPercent": 49
   },
   {
     "id": "alloc-29",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-07",
-    "allocationPercent": 44
+    "month": "2027-05",
+    "allocationPercent": 35
   },
   {
     "id": "alloc-30",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-08",
-    "allocationPercent": 47
+    "month": "2027-06",
+    "allocationPercent": 28
   },
   {
     "id": "alloc-31",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-09",
-    "allocationPercent": 60
+    "month": "2027-07",
+    "allocationPercent": 44
   },
   {
     "id": "alloc-32",
     "personId": "person-001",
     "projectId": "project-02",
-    "month": "2026-10",
-    "allocationPercent": 49
+    "month": "2027-08",
+    "allocationPercent": 38
   },
   {
     "id": "alloc-33",
-    "personId": "person-001",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-11",
-    "allocationPercent": 49
+    "month": "2027-01",
+    "allocationPercent": 32
   },
   {
     "id": "alloc-34",
-    "personId": "person-001",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-12",
-    "allocationPercent": 58
+    "month": "2027-02",
+    "allocationPercent": 30
   },
   {
     "id": "alloc-35",
-    "personId": "person-001",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2027-01",
-    "allocationPercent": 48
+    "month": "2027-03",
+    "allocationPercent": 22
   },
   {
     "id": "alloc-36",
-    "personId": "person-006",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-03",
-    "allocationPercent": 42
+    "month": "2027-04",
+    "allocationPercent": 21
   },
   {
     "id": "alloc-37",
-    "personId": "person-006",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-04",
-    "allocationPercent": 39
+    "month": "2027-05",
+    "allocationPercent": 22
   },
   {
     "id": "alloc-38",
-    "personId": "person-006",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-05",
-    "allocationPercent": 35
+    "month": "2027-06",
+    "allocationPercent": 16
   },
   {
     "id": "alloc-39",
-    "personId": "person-006",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-06",
-    "allocationPercent": 42
+    "month": "2027-07",
+    "allocationPercent": 25
   },
   {
     "id": "alloc-40",
-    "personId": "person-006",
+    "personId": "person-009",
     "projectId": "project-02",
-    "month": "2026-07",
-    "allocationPercent": 35
+    "month": "2027-08",
+    "allocationPercent": 33
   },
   {
     "id": "alloc-41",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-08",
-    "allocationPercent": 36
+    "month": "2027-01",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-42",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-09",
-    "allocationPercent": 71
+    "month": "2027-02",
+    "allocationPercent": 43
   },
   {
     "id": "alloc-43",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-10",
-    "allocationPercent": 89
+    "month": "2027-03",
+    "allocationPercent": 28
   },
   {
     "id": "alloc-44",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-11",
-    "allocationPercent": 80
+    "month": "2027-04",
+    "allocationPercent": 35
   },
   {
     "id": "alloc-45",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-12",
-    "allocationPercent": 77
+    "month": "2027-05",
+    "allocationPercent": 31
   },
   {
     "id": "alloc-46",
     "personId": "person-006",
     "projectId": "project-02",
-    "month": "2027-01",
-    "allocationPercent": 77
+    "month": "2027-06",
+    "allocationPercent": 26
   },
   {
     "id": "alloc-47",
-    "personId": "person-005",
+    "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-03",
-    "allocationPercent": 48
+    "month": "2027-07",
+    "allocationPercent": 34
   },
   {
     "id": "alloc-48",
-    "personId": "person-005",
+    "personId": "person-006",
     "projectId": "project-02",
-    "month": "2026-04",
-    "allocationPercent": 43
+    "month": "2027-08",
+    "allocationPercent": 34
   },
   {
     "id": "alloc-49",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-05",
-    "allocationPercent": 43
+    "month": "2027-01",
+    "allocationPercent": 10
   },
   {
     "id": "alloc-50",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-06",
-    "allocationPercent": 47
+    "month": "2027-02",
+    "allocationPercent": 20
   },
   {
     "id": "alloc-51",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-07",
-    "allocationPercent": 54
+    "month": "2027-03",
+    "allocationPercent": 26
   },
   {
     "id": "alloc-52",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-08",
-    "allocationPercent": 53
+    "month": "2027-04",
+    "allocationPercent": 24
   },
   {
     "id": "alloc-53",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-09",
-    "allocationPercent": 41
+    "month": "2027-05",
+    "allocationPercent": 14
   },
   {
     "id": "alloc-54",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-10",
-    "allocationPercent": 59
+    "month": "2027-06",
+    "allocationPercent": 23
   },
   {
     "id": "alloc-55",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-11",
-    "allocationPercent": 49
+    "month": "2027-07",
+    "allocationPercent": 25
   },
   {
     "id": "alloc-56",
-    "personId": "person-005",
+    "personId": "person-002",
     "projectId": "project-02",
-    "month": "2026-12",
-    "allocationPercent": 55
+    "month": "2027-08",
+    "allocationPercent": 17
   },
   {
     "id": "alloc-57",
     "personId": "person-005",
     "projectId": "project-02",
     "month": "2027-01",
-    "allocationPercent": 42
+    "allocationPercent": 40
   },
   {
     "id": "alloc-58",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-03",
-    "allocationPercent": 20
+    "month": "2027-02",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-59",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-04",
-    "allocationPercent": 31
+    "month": "2027-03",
+    "allocationPercent": 44
   },
   {
     "id": "alloc-60",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-05",
-    "allocationPercent": 24
+    "month": "2027-04",
+    "allocationPercent": 45
   },
   {
     "id": "alloc-61",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-06",
-    "allocationPercent": 26
+    "month": "2027-05",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-62",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-07",
-    "allocationPercent": 26
+    "month": "2027-06",
+    "allocationPercent": 37
   },
   {
     "id": "alloc-63",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-08",
-    "allocationPercent": 22
+    "month": "2027-07",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-64",
-    "personId": "person-003",
+    "personId": "person-005",
     "projectId": "project-02",
-    "month": "2026-09",
-    "allocationPercent": 26
+    "month": "2027-08",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-65",
-    "personId": "person-003",
-    "projectId": "project-02",
-    "month": "2026-10",
-    "allocationPercent": 27
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2026-11",
+    "allocationPercent": 39
   },
   {
     "id": "alloc-66",
-    "personId": "person-003",
-    "projectId": "project-02",
-    "month": "2026-11",
-    "allocationPercent": 31
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2026-12",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-67",
-    "personId": "person-003",
-    "projectId": "project-02",
-    "month": "2026-12",
-    "allocationPercent": 23
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-01",
+    "allocationPercent": 37
   },
   {
     "id": "alloc-68",
-    "personId": "person-003",
-    "projectId": "project-02",
-    "month": "2027-01",
-    "allocationPercent": 14
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-02",
+    "allocationPercent": 41
   },
   {
     "id": "alloc-69",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-03",
-    "allocationPercent": 13
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-03",
+    "allocationPercent": 45
   },
   {
     "id": "alloc-70",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-04",
-    "allocationPercent": 16
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-04",
+    "allocationPercent": 41
   },
   {
     "id": "alloc-71",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-05",
-    "allocationPercent": 19
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-05",
+    "allocationPercent": 40
   },
   {
     "id": "alloc-72",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-06",
-    "allocationPercent": 21
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-06",
+    "allocationPercent": 41
   },
   {
     "id": "alloc-73",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-07",
-    "allocationPercent": 14
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-07",
+    "allocationPercent": 35
   },
   {
     "id": "alloc-74",
-    "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-08",
-    "allocationPercent": 24
+    "personId": "person-008",
+    "projectId": "project-03",
+    "month": "2027-08",
+    "allocationPercent": 50
   },
   {
     "id": "alloc-75",
     "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-09",
-    "allocationPercent": 29
+    "projectId": "project-03",
+    "month": "2026-11",
+    "allocationPercent": 15
   },
   {
     "id": "alloc-76",
     "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-10",
-    "allocationPercent": 35
+    "projectId": "project-03",
+    "month": "2026-12",
+    "allocationPercent": 24
   },
   {
     "id": "alloc-77",
     "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-11",
-    "allocationPercent": 39
+    "projectId": "project-03",
+    "month": "2027-01",
+    "allocationPercent": 25
   },
   {
     "id": "alloc-78",
     "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2026-12",
-    "allocationPercent": 45
+    "projectId": "project-03",
+    "month": "2027-02",
+    "allocationPercent": 24
   },
   {
     "id": "alloc-79",
     "personId": "person-009",
-    "projectId": "project-02",
-    "month": "2027-01",
-    "allocationPercent": 31
-  },
-  {
-    "id": "alloc-80",
-    "personId": "person-008",
     "projectId": "project-03",
-    "month": "2026-03",
-    "allocationPercent": 39
-  },
-  {
-    "id": "alloc-81",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-04",
-    "allocationPercent": 37
-  },
-  {
-    "id": "alloc-82",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-05",
-    "allocationPercent": 33
-  },
-  {
-    "id": "alloc-83",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-06",
-    "allocationPercent": 35
-  },
-  {
-    "id": "alloc-84",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-07",
-    "allocationPercent": 62
-  },
-  {
-    "id": "alloc-85",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-08",
-    "allocationPercent": 42
-  },
-  {
-    "id": "alloc-86",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-09",
-    "allocationPercent": 39
-  },
-  {
-    "id": "alloc-87",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-10",
-    "allocationPercent": 62
-  },
-  {
-    "id": "alloc-88",
-    "personId": "person-008",
-    "projectId": "project-03",
-    "month": "2026-11",
-    "allocationPercent": 56
-  },
-  {
-    "id": "alloc-89",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-03",
-    "allocationPercent": 26
-  },
-  {
-    "id": "alloc-90",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-04",
-    "allocationPercent": 24
-  },
-  {
-    "id": "alloc-91",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-05",
-    "allocationPercent": 31
-  },
-  {
-    "id": "alloc-92",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-06",
-    "allocationPercent": 36
-  },
-  {
-    "id": "alloc-93",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-07",
-    "allocationPercent": 22
-  },
-  {
-    "id": "alloc-94",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-08",
-    "allocationPercent": 32
-  },
-  {
-    "id": "alloc-95",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-09",
-    "allocationPercent": 42
-  },
-  {
-    "id": "alloc-96",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-10",
-    "allocationPercent": 61
-  },
-  {
-    "id": "alloc-97",
-    "personId": "person-009",
-    "projectId": "project-03",
-    "month": "2026-11",
-    "allocationPercent": 46
-  },
-  {
-    "id": "alloc-98",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-03",
-    "allocationPercent": 66
-  },
-  {
-    "id": "alloc-99",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-04",
-    "allocationPercent": 64
-  },
-  {
-    "id": "alloc-100",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-05",
-    "allocationPercent": 42
-  },
-  {
-    "id": "alloc-101",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-06",
-    "allocationPercent": 52
-  },
-  {
-    "id": "alloc-102",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-07",
-    "allocationPercent": 45
-  },
-  {
-    "id": "alloc-103",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-08",
-    "allocationPercent": 48
-  },
-  {
-    "id": "alloc-104",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-09",
-    "allocationPercent": 52
-  },
-  {
-    "id": "alloc-105",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-10",
-    "allocationPercent": 81
-  },
-  {
-    "id": "alloc-106",
-    "personId": "person-007",
-    "projectId": "project-03",
-    "month": "2026-11",
-    "allocationPercent": 70
-  },
-  {
-    "id": "alloc-107",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-03",
-    "allocationPercent": 42
-  },
-  {
-    "id": "alloc-108",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-04",
-    "allocationPercent": 44
-  },
-  {
-    "id": "alloc-109",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-05",
-    "allocationPercent": 38
-  },
-  {
-    "id": "alloc-110",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-06",
-    "allocationPercent": 45
-  },
-  {
-    "id": "alloc-111",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-07",
-    "allocationPercent": 52
-  },
-  {
-    "id": "alloc-112",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-08",
-    "allocationPercent": 49
-  },
-  {
-    "id": "alloc-113",
-    "personId": "person-008",
-    "projectId": "project-04",
-    "month": "2026-09",
-    "allocationPercent": 33
-  },
-  {
-    "id": "alloc-114",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-03",
-    "allocationPercent": 34
-  },
-  {
-    "id": "alloc-115",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-04",
-    "allocationPercent": 32
-  },
-  {
-    "id": "alloc-116",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-05",
-    "allocationPercent": 29
-  },
-  {
-    "id": "alloc-117",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-06",
-    "allocationPercent": 25
-  },
-  {
-    "id": "alloc-118",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-07",
-    "allocationPercent": 25
-  },
-  {
-    "id": "alloc-119",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-08",
-    "allocationPercent": 31
-  },
-  {
-    "id": "alloc-120",
-    "personId": "person-007",
-    "projectId": "project-04",
-    "month": "2026-09",
-    "allocationPercent": 26
-  },
-  {
-    "id": "alloc-121",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-03",
-    "allocationPercent": 8
-  },
-  {
-    "id": "alloc-122",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-04",
-    "allocationPercent": 7
-  },
-  {
-    "id": "alloc-123",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-05",
-    "allocationPercent": 7
-  },
-  {
-    "id": "alloc-124",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-06",
-    "allocationPercent": 8
-  },
-  {
-    "id": "alloc-125",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-07",
-    "allocationPercent": 10
-  },
-  {
-    "id": "alloc-126",
-    "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-08",
+    "month": "2027-03",
     "allocationPercent": 12
   },
   {
-    "id": "alloc-127",
+    "id": "alloc-80",
     "personId": "person-009",
-    "projectId": "project-04",
-    "month": "2026-09",
-    "allocationPercent": 10
+    "projectId": "project-03",
+    "month": "2027-04",
+    "allocationPercent": 12
   },
   {
-    "id": "alloc-128",
-    "personId": "person-002",
-    "projectId": "project-04",
-    "month": "2026-03",
-    "allocationPercent": 37
+    "id": "alloc-81",
+    "personId": "person-009",
+    "projectId": "project-03",
+    "month": "2027-05",
+    "allocationPercent": 14
   },
   {
-    "id": "alloc-129",
-    "personId": "person-002",
-    "projectId": "project-04",
-    "month": "2026-04",
+    "id": "alloc-82",
+    "personId": "person-009",
+    "projectId": "project-03",
+    "month": "2027-06",
+    "allocationPercent": 15
+  },
+  {
+    "id": "alloc-83",
+    "personId": "person-009",
+    "projectId": "project-03",
+    "month": "2027-07",
+    "allocationPercent": 11
+  },
+  {
+    "id": "alloc-84",
+    "personId": "person-009",
+    "projectId": "project-03",
+    "month": "2027-08",
+    "allocationPercent": 19
+  },
+  {
+    "id": "alloc-85",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2026-11",
+    "allocationPercent": 43
+  },
+  {
+    "id": "alloc-86",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2026-12",
+    "allocationPercent": 61
+  },
+  {
+    "id": "alloc-87",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-01",
+    "allocationPercent": 63
+  },
+  {
+    "id": "alloc-88",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-02",
     "allocationPercent": 55
   },
   {
-    "id": "alloc-130",
-    "personId": "person-002",
+    "id": "alloc-89",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-03",
+    "allocationPercent": 57
+  },
+  {
+    "id": "alloc-90",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-04",
+    "allocationPercent": 58
+  },
+  {
+    "id": "alloc-91",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-05",
+    "allocationPercent": 64
+  },
+  {
+    "id": "alloc-92",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-06",
+    "allocationPercent": 58
+  },
+  {
+    "id": "alloc-93",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-07",
+    "allocationPercent": 57
+  },
+  {
+    "id": "alloc-94",
+    "personId": "person-007",
+    "projectId": "project-03",
+    "month": "2027-08",
+    "allocationPercent": 51
+  },
+  {
+    "id": "alloc-95",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2026-04",
+    "allocationPercent": 36
+  },
+  {
+    "id": "alloc-96",
+    "personId": "person-008",
     "projectId": "project-04",
     "month": "2026-05",
-    "allocationPercent": 38
+    "allocationPercent": 67
   },
   {
-    "id": "alloc-131",
-    "personId": "person-002",
+    "id": "alloc-97",
+    "personId": "person-008",
     "projectId": "project-04",
     "month": "2026-06",
-    "allocationPercent": 40
+    "allocationPercent": 51
   },
   {
-    "id": "alloc-132",
-    "personId": "person-002",
+    "id": "alloc-98",
+    "personId": "person-008",
     "projectId": "project-04",
     "month": "2026-07",
     "allocationPercent": 47
   },
   {
-    "id": "alloc-133",
-    "personId": "person-002",
+    "id": "alloc-99",
+    "personId": "person-008",
     "projectId": "project-04",
     "month": "2026-08",
-    "allocationPercent": 37
-  },
-  {
-    "id": "alloc-134",
-    "personId": "person-002",
-    "projectId": "project-04",
-    "month": "2026-09",
-    "allocationPercent": 44
-  },
-  {
-    "id": "alloc-135",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-01",
-    "allocationPercent": 57
-  },
-  {
-    "id": "alloc-136",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-02",
-    "allocationPercent": 63
-  },
-  {
-    "id": "alloc-137",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-03",
-    "allocationPercent": 57
-  },
-  {
-    "id": "alloc-138",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-04",
-    "allocationPercent": 62
-  },
-  {
-    "id": "alloc-139",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-05",
-    "allocationPercent": 60
-  },
-  {
-    "id": "alloc-140",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-06",
-    "allocationPercent": 70
-  },
-  {
-    "id": "alloc-141",
-    "personId": "person-005",
-    "projectId": "project-05",
-    "month": "2027-07",
-    "allocationPercent": 57
-  },
-  {
-    "id": "alloc-142",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-01",
-    "allocationPercent": 27
-  },
-  {
-    "id": "alloc-143",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-02",
-    "allocationPercent": 37
-  },
-  {
-    "id": "alloc-144",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-03",
-    "allocationPercent": 39
-  },
-  {
-    "id": "alloc-145",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-04",
-    "allocationPercent": 48
-  },
-  {
-    "id": "alloc-146",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-05",
-    "allocationPercent": 51
-  },
-  {
-    "id": "alloc-147",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-06",
-    "allocationPercent": 39
-  },
-  {
-    "id": "alloc-148",
-    "personId": "person-001",
-    "projectId": "project-05",
-    "month": "2027-07",
-    "allocationPercent": 35
-  },
-  {
-    "id": "alloc-149",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-01",
-    "allocationPercent": 54
-  },
-  {
-    "id": "alloc-150",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-02",
     "allocationPercent": 61
   },
   {
-    "id": "alloc-151",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-03",
-    "allocationPercent": 60
+    "id": "alloc-100",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2026-09",
+    "allocationPercent": 63
   },
   {
-    "id": "alloc-152",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-04",
-    "allocationPercent": 67
+    "id": "alloc-101",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2026-10",
+    "allocationPercent": 65
   },
   {
-    "id": "alloc-153",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-05",
-    "allocationPercent": 73
+    "id": "alloc-102",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2026-11",
+    "allocationPercent": 49
   },
   {
-    "id": "alloc-154",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-06",
-    "allocationPercent": 75
+    "id": "alloc-103",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2026-12",
+    "allocationPercent": 50
   },
   {
-    "id": "alloc-155",
-    "personId": "person-002",
-    "projectId": "project-05",
-    "month": "2027-07",
-    "allocationPercent": 56
-  },
-  {
-    "id": "alloc-156",
-    "personId": "person-009",
-    "projectId": "project-05",
+    "id": "alloc-104",
+    "personId": "person-008",
+    "projectId": "project-04",
     "month": "2027-01",
-    "allocationPercent": 23
-  },
-  {
-    "id": "alloc-157",
-    "personId": "person-009",
-    "projectId": "project-05",
-    "month": "2027-02",
-    "allocationPercent": 24
-  },
-  {
-    "id": "alloc-158",
-    "personId": "person-009",
-    "projectId": "project-05",
-    "month": "2027-03",
-    "allocationPercent": 22
-  },
-  {
-    "id": "alloc-159",
-    "personId": "person-009",
-    "projectId": "project-05",
-    "month": "2027-04",
-    "allocationPercent": 23
-  },
-  {
-    "id": "alloc-160",
-    "personId": "person-009",
-    "projectId": "project-05",
-    "month": "2027-05",
     "allocationPercent": 29
   },
   {
-    "id": "alloc-161",
-    "personId": "person-009",
-    "projectId": "project-05",
+    "id": "alloc-105",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2027-02",
+    "allocationPercent": 48
+  },
+  {
+    "id": "alloc-106",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2027-03",
+    "allocationPercent": 41
+  },
+  {
+    "id": "alloc-107",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2027-04",
+    "allocationPercent": 36
+  },
+  {
+    "id": "alloc-108",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2027-05",
+    "allocationPercent": 46
+  },
+  {
+    "id": "alloc-109",
+    "personId": "person-008",
+    "projectId": "project-04",
     "month": "2027-06",
+    "allocationPercent": 48
+  },
+  {
+    "id": "alloc-110",
+    "personId": "person-008",
+    "projectId": "project-04",
+    "month": "2027-07",
+    "allocationPercent": 38
+  },
+  {
+    "id": "alloc-111",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-04",
+    "allocationPercent": 32
+  },
+  {
+    "id": "alloc-112",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-05",
+    "allocationPercent": 32
+  },
+  {
+    "id": "alloc-113",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-06",
+    "allocationPercent": 31
+  },
+  {
+    "id": "alloc-114",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-07",
+    "allocationPercent": 46
+  },
+  {
+    "id": "alloc-115",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-08",
+    "allocationPercent": 39
+  },
+  {
+    "id": "alloc-116",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-09",
+    "allocationPercent": 35
+  },
+  {
+    "id": "alloc-117",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-10",
+    "allocationPercent": 36
+  },
+  {
+    "id": "alloc-118",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-11",
+    "allocationPercent": 39
+  },
+  {
+    "id": "alloc-119",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2026-12",
+    "allocationPercent": 46
+  },
+  {
+    "id": "alloc-120",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2027-01",
+    "allocationPercent": 29
+  },
+  {
+    "id": "alloc-121",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2027-02",
+    "allocationPercent": 22
+  },
+  {
+    "id": "alloc-122",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2027-03",
+    "allocationPercent": 18
+  },
+  {
+    "id": "alloc-123",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2027-04",
     "allocationPercent": 16
   },
   {
-    "id": "alloc-162",
+    "id": "alloc-124",
     "personId": "person-009",
-    "projectId": "project-05",
+    "projectId": "project-04",
+    "month": "2027-05",
+    "allocationPercent": 13
+  },
+  {
+    "id": "alloc-125",
+    "personId": "person-009",
+    "projectId": "project-04",
+    "month": "2027-06",
+    "allocationPercent": 20
+  },
+  {
+    "id": "alloc-126",
+    "personId": "person-009",
+    "projectId": "project-04",
     "month": "2027-07",
     "allocationPercent": 12
   },
   {
-    "id": "alloc-163",
-    "personId": "person-003",
-    "projectId": "project-05",
-    "month": "2027-01",
+    "id": "alloc-127",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-04",
+    "allocationPercent": 33
+  },
+  {
+    "id": "alloc-128",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-05",
+    "allocationPercent": 35
+  },
+  {
+    "id": "alloc-129",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-06",
+    "allocationPercent": 38
+  },
+  {
+    "id": "alloc-130",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-07",
+    "allocationPercent": 35
+  },
+  {
+    "id": "alloc-131",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-08",
+    "allocationPercent": 54
+  },
+  {
+    "id": "alloc-132",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-09",
     "allocationPercent": 62
+  },
+  {
+    "id": "alloc-133",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-10",
+    "allocationPercent": 69
+  },
+  {
+    "id": "alloc-134",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-11",
+    "allocationPercent": 73
+  },
+  {
+    "id": "alloc-135",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2026-12",
+    "allocationPercent": 68
+  },
+  {
+    "id": "alloc-136",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-01",
+    "allocationPercent": 54
+  },
+  {
+    "id": "alloc-137",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-02",
+    "allocationPercent": 56
+  },
+  {
+    "id": "alloc-138",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-03",
+    "allocationPercent": 53
+  },
+  {
+    "id": "alloc-139",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-04",
+    "allocationPercent": 53
+  },
+  {
+    "id": "alloc-140",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-05",
+    "allocationPercent": 45
+  },
+  {
+    "id": "alloc-141",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-06",
+    "allocationPercent": 54
+  },
+  {
+    "id": "alloc-142",
+    "personId": "person-005",
+    "projectId": "project-04",
+    "month": "2027-07",
+    "allocationPercent": 40
+  },
+  {
+    "id": "alloc-143",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-04",
+    "allocationPercent": 15
+  },
+  {
+    "id": "alloc-144",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-05",
+    "allocationPercent": 13
+  },
+  {
+    "id": "alloc-145",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-06",
+    "allocationPercent": 18
+  },
+  {
+    "id": "alloc-146",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-07",
+    "allocationPercent": 15
+  },
+  {
+    "id": "alloc-147",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-08",
+    "allocationPercent": 17
+  },
+  {
+    "id": "alloc-148",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-09",
+    "allocationPercent": 11
+  },
+  {
+    "id": "alloc-149",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-10",
+    "allocationPercent": 11
+  },
+  {
+    "id": "alloc-150",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-11",
+    "allocationPercent": 24
+  },
+  {
+    "id": "alloc-151",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2026-12",
+    "allocationPercent": 20
+  },
+  {
+    "id": "alloc-152",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-01",
+    "allocationPercent": 25
+  },
+  {
+    "id": "alloc-153",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-02",
+    "allocationPercent": 29
+  },
+  {
+    "id": "alloc-154",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-03",
+    "allocationPercent": 20
+  },
+  {
+    "id": "alloc-155",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-04",
+    "allocationPercent": 20
+  },
+  {
+    "id": "alloc-156",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-05",
+    "allocationPercent": 19
+  },
+  {
+    "id": "alloc-157",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-06",
+    "allocationPercent": 17
+  },
+  {
+    "id": "alloc-158",
+    "personId": "person-010",
+    "projectId": "project-04",
+    "month": "2027-07",
+    "allocationPercent": 10
+  },
+  {
+    "id": "alloc-159",
+    "personId": "person-005",
+    "projectId": "project-05",
+    "month": "2026-03",
+    "allocationPercent": 48
+  },
+  {
+    "id": "alloc-160",
+    "personId": "person-005",
+    "projectId": "project-05",
+    "month": "2026-04",
+    "allocationPercent": 34
+  },
+  {
+    "id": "alloc-161",
+    "personId": "person-005",
+    "projectId": "project-05",
+    "month": "2026-05",
+    "allocationPercent": 38
+  },
+  {
+    "id": "alloc-162",
+    "personId": "person-005",
+    "projectId": "project-05",
+    "month": "2026-06",
+    "allocationPercent": 34
+  },
+  {
+    "id": "alloc-163",
+    "personId": "person-005",
+    "projectId": "project-05",
+    "month": "2026-07",
+    "allocationPercent": 38
   },
   {
     "id": "alloc-164",
-    "personId": "person-003",
+    "personId": "person-008",
     "projectId": "project-05",
-    "month": "2027-02",
-    "allocationPercent": 78
+    "month": "2026-03",
+    "allocationPercent": 27
   },
   {
     "id": "alloc-165",
-    "personId": "person-003",
+    "personId": "person-008",
     "projectId": "project-05",
-    "month": "2027-03",
-    "allocationPercent": 75
+    "month": "2026-04",
+    "allocationPercent": 29
   },
   {
     "id": "alloc-166",
-    "personId": "person-003",
+    "personId": "person-008",
     "projectId": "project-05",
-    "month": "2027-04",
-    "allocationPercent": 72
+    "month": "2026-05",
+    "allocationPercent": 38
   },
   {
     "id": "alloc-167",
-    "personId": "person-003",
+    "personId": "person-008",
     "projectId": "project-05",
-    "month": "2027-05",
-    "allocationPercent": 62
+    "month": "2026-06",
+    "allocationPercent": 36
   },
   {
     "id": "alloc-168",
-    "personId": "person-003",
+    "personId": "person-008",
     "projectId": "project-05",
-    "month": "2027-06",
-    "allocationPercent": 63
+    "month": "2026-07",
+    "allocationPercent": 23
   },
   {
     "id": "alloc-169",
-    "personId": "person-003",
+    "personId": "person-002",
     "projectId": "project-05",
-    "month": "2027-07",
-    "allocationPercent": 67
+    "month": "2026-03",
+    "allocationPercent": 78
+  },
+  {
+    "id": "alloc-170",
+    "personId": "person-002",
+    "projectId": "project-05",
+    "month": "2026-04",
+    "allocationPercent": 76
+  },
+  {
+    "id": "alloc-171",
+    "personId": "person-002",
+    "projectId": "project-05",
+    "month": "2026-05",
+    "allocationPercent": 74
+  },
+  {
+    "id": "alloc-172",
+    "personId": "person-002",
+    "projectId": "project-05",
+    "month": "2026-06",
+    "allocationPercent": 81
+  },
+  {
+    "id": "alloc-173",
+    "personId": "person-002",
+    "projectId": "project-05",
+    "month": "2026-07",
+    "allocationPercent": 77
+  },
+  {
+    "id": "alloc-174",
+    "personId": "person-001",
+    "projectId": "project-05",
+    "month": "2026-03",
+    "allocationPercent": 19
+  },
+  {
+    "id": "alloc-175",
+    "personId": "person-001",
+    "projectId": "project-05",
+    "month": "2026-04",
+    "allocationPercent": 18
+  },
+  {
+    "id": "alloc-176",
+    "personId": "person-001",
+    "projectId": "project-05",
+    "month": "2026-05",
+    "allocationPercent": 23
+  },
+  {
+    "id": "alloc-177",
+    "personId": "person-001",
+    "projectId": "project-05",
+    "month": "2026-06",
+    "allocationPercent": 17
+  },
+  {
+    "id": "alloc-178",
+    "personId": "person-001",
+    "projectId": "project-05",
+    "month": "2026-07",
+    "allocationPercent": 25
   }
 ]
