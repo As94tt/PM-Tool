@@ -379,6 +379,30 @@ function backfillMissingStaffingSeats(state: AppState): AppState {
   };
 }
 
+/** One-time migration (version 4 -> 5): re-syncs every person's monthly
+ * ResourceAllocation rows from their current weekly staffing-plan seats,
+ * for every (person, project) pair that has at least one
+ * ProjectRoleAssignment. Fixes drift that could accumulate between the two
+ * systems from several sources over this project's history — most
+ * concretely, backfillMissingStaffingSeats (the version 1 -> 2 migration
+ * above) creates a synthetic weekly-only plan for a member with no prior
+ * allocation history to derive from, but never writes it back into
+ * ResourceAllocation, so that person shows real allocation in the Weekly
+ * heatmap/grid views but 0% in Monthly (which every *other* availability
+ * view in the app reads) for the exact same span of time. Safe to re-run
+ * (syncMonthlyAllocations fully replaces a pair's rows from current data
+ * each time), so this also mops up any other historical mismatch, not just
+ * ones caused by that one migration specifically. */
+function resyncAllMonthlyAllocations(state: AppState): AppState {
+  const newState: AppState = { ...state };
+  const pairs = new Set((state.projectRoleAssignments ?? []).map((a) => `${a.personId}|${a.projectId}`));
+  for (const pair of pairs) {
+    const [personId, projectId] = pair.split("|");
+    syncMonthlyAllocations(newState, personId, projectId);
+  }
+  return newState;
+}
+
 /**
  * Runs on every rehydration (page load) to keep the persisted state
  * internally consistent, self-healing classes of drift that can build up
@@ -914,7 +938,7 @@ export function createAppStore() {
       })),
       {
         name: "nexus-pm-tool-store",
-        version: 4,
+        version: 5,
         storage: createJSONStorage(() => localStorage),
         // Runs once for any store persisted at an older version, before
         // `merge` below — the right place for a one-time data cleanup that
@@ -927,6 +951,7 @@ export function createAppStore() {
           if (version < 2) state = backfillMissingStaffingSeats(state);
           if (version < 3) state = backfillMissingUsers(state);
           if (version < 4) state = remapLegacyProjectStatuses(state);
+          if (version < 5) state = resyncAllMonthlyAllocations(state);
           return state;
         },
         merge: (persistedState, currentState) =>
