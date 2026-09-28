@@ -83,11 +83,17 @@ function AllocationDetailCell({
       <PopoverContent className="w-64" align="center">
         <div className="mb-2 flex items-center justify-between">
           <p className="text-sm font-semibold">{formatMonthLabel(month, { month: "long", year: "numeric" })}</p>
-          <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium", styles.badge)}>{total}%</span>
+          <span
+            style={hasUncertainAllocation ? UNCERTAIN_HATCH_STYLE : undefined}
+            className={cn("rounded-full px-2 py-0.5 text-xs font-medium", styles.badge)}
+          >
+            {total}%
+          </span>
         </div>
         <div className="flex flex-col gap-1.5">
           {rowsWithProject.map(({ row: r, project }) => {
             const isSecure = !project || SECURE_ALLOCATION_STATUSES.includes(project.status);
+            const rowStyles = ALLOCATION_STATUS_STYLES[getAllocationStatus(r.allocationPercent)];
             return (
               <Link
                 key={r.id}
@@ -100,7 +106,12 @@ function AllocationDetailCell({
                     {project ? PROJECT_STATUS_LABEL[project.status] : "uncertain"}
                   </span>
                 )}
-                <span className="shrink-0 font-medium tabular-nums">{r.allocationPercent}%</span>
+                <span
+                  style={!isSecure ? UNCERTAIN_HATCH_STYLE : undefined}
+                  className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums", rowStyles.badge)}
+                >
+                  {r.allocationPercent}%
+                </span>
               </Link>
             );
           })}

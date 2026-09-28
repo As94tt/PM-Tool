@@ -9,10 +9,11 @@ export const PRE_ACTIVE_STATUSES: ProjectStatus[] = ["lead", "offerSent", "offer
 
 /** A project firm enough that a person's booking against it counts as
  * "secure" rather than tentative — a signed contract is a real commitment
- * even before delivery starts, but a bare Lead or a sent-but-unsigned offer
- * could still fall through. Used by the Resource Planning grid to flag
- * allocation that isn't yet certain. */
-export const SECURE_ALLOCATION_STATUSES: ProjectStatus[] = ["active", "offerSigned"];
+ * even before delivery starts, and a finished project is history, not a
+ * pipeline risk, so both count as certain alongside Active. Only a bare
+ * Lead or a sent-but-unsigned offer could still fall through. Used by the
+ * Resource Planning grid to flag allocation that isn't yet certain. */
+export const SECURE_ALLOCATION_STATUSES: ProjectStatus[] = ["active", "offerSigned", "finished"];
 
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
   lead: "Lead",
