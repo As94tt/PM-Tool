@@ -1,0 +1,9 @@
+[
+  { "id": "lang-1", "name": "English" },
+  { "id": "lang-2", "name": "French" },
+  { "id": "lang-3", "name": "German" },
+  { "id": "lang-4", "name": "Italian" },
+  { "id": "lang-5", "name": "Mandarin" },
+  { "id": "lang-6", "name": "Portuguese" },
+  { "id": "lang-7", "name": "Spanish" }
+]

@@ -340,7 +340,6 @@ for (let i = 0; i < PERSON_COUNT; i++) {
     personCertifications.push({
       personId: id,
       certificationId: certId,
-      issuedDate: isoDate(issued),
       expiryDate: hasExpiry ? isoDate(addMonths(issued, 36)) : undefined,
     });
   }

@@ -59,7 +59,6 @@ export function getPersonSkillDetails(
 
 export interface PersonCertificationDetail {
   certification: Certification;
-  issuedDate: string;
   expiryDate?: string;
 }
 
@@ -73,10 +72,10 @@ export function getPersonCertificationDetails(
     .map((pc): PersonCertificationDetail | null => {
       const certification = certifications.find((c) => c.id === pc.certificationId);
       if (!certification) return null;
-      return { certification, issuedDate: pc.issuedDate, expiryDate: pc.expiryDate };
+      return { certification, expiryDate: pc.expiryDate };
     })
     .filter((d): d is PersonCertificationDetail => d !== null)
-    .toSorted((a, b) => b.issuedDate.localeCompare(a.issuedDate));
+    .toSorted((a, b) => a.certification.name.localeCompare(b.certification.name));
 }
 
 export interface PersonProjectsSplit {

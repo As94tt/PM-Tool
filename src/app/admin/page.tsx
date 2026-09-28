@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, UserCog, KeyRound, Trash2 } from "lucide-react";
+import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, Languages, UserCog, KeyRound, Trash2 } from "lucide-react";
 import { RoleGate } from "@/components/shared/role-gate";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -119,6 +119,7 @@ export default function AdminPage() {
   const interests = useAppStore((s) => s.interests);
   const certifications = useAppStore((s) => s.certifications);
   const roles = useAppStore((s) => s.roles);
+  const languages = useAppStore((s) => s.languages);
   const users = useAppStore((s) => s.users);
   const permissions = useAppStore((s) => s.permissions);
   const canViewMasterData = useCanViewFunction("admin-master-data");
@@ -143,6 +144,8 @@ export default function AdminPage() {
   const removeInterest = useAppStore((s) => s.removeInterest);
   const addRole = useAppStore((s) => s.addRole);
   const removeRole = useAppStore((s) => s.removeRole);
+  const addLanguage = useAppStore((s) => s.addLanguage);
+  const removeLanguage = useAppStore((s) => s.removeLanguage);
 
   const [newSkillName, setNewSkillName] = useState("");
   const [newSkillCategory, setNewSkillCategory] = useState<SkillCategory>("Cloud");
@@ -284,6 +287,21 @@ export default function AdminPage() {
     toast.success("Role removed");
   }
 
+  function handleAddLanguage(name: string) {
+    addLanguage({ name });
+    toast.success("Language added to catalog");
+  }
+
+  function handleRemoveLanguage(id: string) {
+    const language = languages.find((l) => l.id === id);
+    if (language && people.some((p) => p.languages.some((pl) => pl.name === language.name))) {
+      toast.error("Can't remove a language people currently speak");
+      return;
+    }
+    removeLanguage(id);
+    toast.success("Language removed");
+  }
+
   function handleChangePersonRole(personId: string, role: AppRole) {
     setPersonRole(personId, role);
     toast.success("Role updated");
@@ -333,6 +351,9 @@ export default function AdminPage() {
                 </TabsTrigger>
                 <TabsTrigger value="roles">
                   <Briefcase className="size-3.5" /> Roles
+                </TabsTrigger>
+                <TabsTrigger value="languages">
+                  <Languages className="size-3.5" /> Languages
                 </TabsTrigger>
               </>
             )}
@@ -593,6 +614,20 @@ export default function AdminPage() {
               items={roles}
               onAdd={handleAddRole}
               onRemove={handleRemoveRole}
+              readOnly={!canEditMasterData}
+            />
+          </TabsContent>
+          )}
+
+          {canViewMasterData && (
+          <TabsContent value="languages" className="mt-4">
+            <SimpleCatalogEditor
+              title="Languages catalog"
+              description="Languages people can pick from when listing their language skills on their profile."
+              placeholder="New language name…"
+              items={languages}
+              onAdd={handleAddLanguage}
+              onRemove={handleRemoveLanguage}
               readOnly={!canEditMasterData}
             />
           </TabsContent>

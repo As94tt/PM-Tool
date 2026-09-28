@@ -53,7 +53,6 @@ export interface Certification {
 export interface PersonCertification {
   personId: string;
   certificationId: string;
-  issuedDate: string; // ISO date
   expiryDate?: string; // ISO date
 }
 
@@ -66,6 +65,13 @@ export interface Interest {
  * managed master-data list, like Skill/Interest/Certification, rather than
  * free text. */
 export interface Role {
+  id: string;
+  name: string;
+}
+
+/** The catalog of allowed language names for PersonLanguage.name — same
+ * admin-managed master-data pattern as Role, rather than free text. */
+export interface Language {
   id: string;
   name: string;
 }

@@ -136,6 +136,15 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
     if (month === expandedMonth) return weeks.map((w) => ({ key: w, type: "week", month }));
     return [{ key: month, type: "month", weeks }];
   });
+  // table-fixed only respects each <col>'s literal pixel width when the
+  // <table> itself has an explicit width equal to their sum — left as "auto"
+  // it's just a block box that fills its container and then distributes that
+  // width as *ratios* of the colgroup, so columns silently rescale whenever
+  // the container's width changes (e.g. after adding a role, or expanding a
+  // month) instead of staying at their declared fixed width.
+  const dataColsWidth = columns.length * DATA_COL_W;
+  const planTableWidth = ROLE_COL_W + RATE_COL_W + dataColsWidth + PLAN_SUM_COL_W + ACTION_COL_W;
+  const staffingTableWidth = ROLE_COL_W + PERSON_COL_W + RATE_COL_W + dataColsWidth + STAFF_SUM_COL_W + ACTION_COL_W;
 
   const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
   const projectWideAssignedPersonIds = new Set(projAsgs.map((a) => a.personId));
@@ -258,7 +267,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
               <h3 className="text-sm font-semibold">Required roles (plan) — one row per seat, FTE per month or week</h3>
             </div>
             <div className="overflow-x-auto">
-              <table className="table-fixed border-collapse text-sm">
+              <table className="table-fixed border-collapse text-sm" style={{ width: planTableWidth }}>
                 <colgroup>
                   <col style={{ width: ROLE_COL_W }} />
                   <col style={{ width: RATE_COL_W }} />
@@ -283,7 +292,6 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         <th
                           key={month}
                           colSpan={isExpanded ? weeks.length : 1}
-                          rowSpan={isExpanded ? 1 : 2}
                           className="border-l border-border/50 px-1 py-2 text-center align-bottom"
                         >
                           <button
@@ -304,8 +312,22 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     <th rowSpan={2} />
                   </tr>
                   <tr className="border-b border-border/70 text-center text-xs font-semibold text-muted-foreground">
+                    {/* Every visible month always contributes at least one cell here — a
+                       filler when collapsed, its real week labels when expanded — so this
+                       row's height (and therefore the whole header's height) never changes
+                       when a month is expanded/collapsed. Only the table's total width
+                       (column count) changes, per the user's explicit request that
+                       expanding should only extend the table to the right, never shift it
+                       vertically. */}
                     {visibleMonths.flatMap((month) => {
-                      if (month !== expandedMonth) return [];
+                      const isExpanded = month === expandedMonth;
+                      if (!isExpanded) {
+                        return [
+                          <th key={month} className="border-l border-border/50 px-1 py-1.5">
+                            &nbsp;
+                          </th>,
+                        ];
+                      }
                       const weeks = weeksByMonth.get(month) ?? [];
                       return weeks.map((w) => (
                         <th key={w} className="border-l border-border/50 px-1 py-1.5">
@@ -432,7 +454,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
               <p className="px-4 py-3 text-xs text-muted-foreground">Define at least one required role first.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="table-fixed border-collapse text-sm">
+                <table className="table-fixed border-collapse text-sm" style={{ width: staffingTableWidth }}>
                   <colgroup>
                     <col style={{ width: ROLE_COL_W }} />
                     <col style={{ width: PERSON_COL_W }} />
@@ -559,11 +581,20 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                 />
                               </td>
                               {columns.map((col) => (
-                                <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center text-xs text-border">
-                                  –
+                                <td
+                                  key={col.key}
+                                  className="border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs text-muted-foreground italic"
+                                  title="Projected from the plan — no person assigned yet."
+                                >
+                                  {formatCompactCurrency(columnCost(req.ftePerWeek, req.dayRate, col))}
                                 </td>
                               ))}
-                              <td className="border-l border-border/40 px-3 py-2" />
+                              <td
+                                className="border-l border-border/40 px-3 py-2 text-right tabular-nums text-muted-foreground italic"
+                                title="Projected from the plan — no person assigned yet."
+                              >
+                                {formatCompactCurrency(totalCost(req.ftePerWeek, req.dayRate))}
+                              </td>
                               <td className="px-1 py-2 text-center">
                                 <Button
                                   size="icon-sm"

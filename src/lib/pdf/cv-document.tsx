@@ -15,7 +15,6 @@ export interface CVSkillGroup {
 export interface CVCertification {
   name: string;
   issuer: string;
-  issuedDate: string;
   expiryDate?: string;
 }
 
@@ -299,7 +298,7 @@ function ContentPage({ data }: { data: CVData }) {
             <View key={c.name} style={styles.certRow} wrap={false}>
               <Text style={styles.certName}>{c.name}</Text>
               <Text style={styles.certMeta}>
-                {c.issuer} · Issued {formatDate(c.issuedDate)}
+                {c.issuer}
                 {c.expiryDate ? ` · Expires ${formatDate(c.expiryDate)}` : ""}
               </Text>
             </View>

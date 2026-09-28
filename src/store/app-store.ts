@@ -18,6 +18,7 @@ import type {
   Certification,
   Interest,
   Role,
+  Language,
   User,
   ProjectRoleRequirement,
   ProjectRoleAssignment,
@@ -34,6 +35,7 @@ import {
   INITIAL_CERTIFICATIONS,
   INITIAL_INTERESTS,
   INITIAL_ROLES,
+  INITIAL_LANGUAGES,
   INITIAL_USERS,
   INITIAL_PEOPLE,
   INITIAL_PERSON_SKILLS,
@@ -60,6 +62,7 @@ export interface AppState {
   certifications: typeof INITIAL_CERTIFICATIONS;
   interests: typeof INITIAL_INTERESTS;
   roles: typeof INITIAL_ROLES;
+  languages: typeof INITIAL_LANGUAGES;
   users: typeof INITIAL_USERS;
   /** Admin-editable see/edit/hide matrix per app function and role — see lib/permissions.ts. */
   permissions: PermissionMatrix;
@@ -114,6 +117,8 @@ export interface AppState {
   removeInterest: (interestId: string) => void;
   addRole: (role: Omit<Role, "id">) => void;
   removeRole: (roleId: string) => void;
+  addLanguage: (language: Omit<Language, "id">) => void;
+  removeLanguage: (languageId: string) => void;
 
   addRoleRequirement: (requirement: { projectId: string; roleName: string; dayRate: number }) => void;
   removeRoleRequirement: (requirementId: string) => void;
@@ -444,6 +449,7 @@ export function createAppStore() {
         certifications: INITIAL_CERTIFICATIONS,
         interests: INITIAL_INTERESTS,
         roles: INITIAL_ROLES,
+        languages: INITIAL_LANGUAGES,
         users: INITIAL_USERS,
         permissions: DEFAULT_PERMISSIONS,
 
@@ -702,6 +708,20 @@ export function createAppStore() {
             state.roles = state.roles.filter((r) => r.id !== roleId);
           }),
 
+        addLanguage: (language) =>
+          set((state) => {
+            const id = nextId(
+              "lang-custom",
+              state.languages.map((l) => l.id)
+            );
+            state.languages.push({ ...language, id });
+          }),
+
+        removeLanguage: (languageId) =>
+          set((state) => {
+            state.languages = state.languages.filter((l) => l.id !== languageId);
+          }),
+
         addRoleRequirement: ({ projectId, roleName, dayRate }) =>
           set((state) => {
             const id = nextId(
@@ -869,6 +889,7 @@ export function createAppStore() {
           certifications: state.certifications,
           interests: state.interests,
           roles: state.roles,
+          languages: state.languages,
           users: state.users,
           permissions: state.permissions,
           people: state.people,

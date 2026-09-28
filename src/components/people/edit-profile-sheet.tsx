@@ -64,6 +64,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const industries = useAppStore((s) => s.industries);
   const locations = useAppStore((s) => s.locations);
   const roles = useAppStore((s) => s.roles);
+  const languages = useAppStore((s) => s.languages);
   const personSkills = useAppStore((s) => s.personSkills);
   const personCertifications = useAppStore((s) => s.personCertifications);
   const projects = useAppStore((s) => s.projects);
@@ -129,6 +130,11 @@ export function EditProfileSheet({ person }: { person: Person }) {
   ];
   const locationOptions = locations.map((l) => ({ value: l.id, label: l.city }));
   const roleOptions = roles.map((r) => ({ value: r.name, label: r.name }));
+  const availableLanguages = languages.filter((l) => !person.languages.some((pl) => pl.name === l.name));
+  const languageOptions = [
+    { value: "none", label: "Select a language" },
+    ...availableLanguages.map((l) => ({ value: l.name, label: l.name })),
+  ];
 
   function saveBasics() {
     const patch: Partial<Person> = {};
@@ -160,7 +166,6 @@ export function EditProfileSheet({ person }: { person: Person }) {
     addPersonCertification({
       personId: person.id,
       certificationId: addCertId,
-      issuedDate: new Date().toISOString().slice(0, 10),
     });
     toast.success("Certification added");
     setAddCertId("");
@@ -421,6 +426,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
                 {mySkills.map(({ skill, level }) => (
                   <div key={skill.id} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
                     <span className="flex-1 truncate text-sm">{skill.name}</span>
+                    <span className="text-xs text-muted-foreground">{SKILL_LEVEL_LABEL[level]}</span>
                     <Select
                       value={String(level)}
                       onValueChange={(v) => v && setPersonSkillLevel(person.id, skill.id, Number(v) as SkillLevel)}
@@ -595,12 +601,21 @@ export function EditProfileSheet({ person }: { person: Person }) {
                 {person.languages.length === 0 && <p className="text-sm text-muted-foreground">No languages added yet.</p>}
               </div>
               <div className="mt-3 flex gap-2">
-                <Input
-                  value={newLanguageName}
-                  onChange={(e) => setNewLanguageName(e.target.value)}
-                  placeholder="Language…"
-                  className="flex-1"
-                />
+                <Select
+                  value={newLanguageName || "none"}
+                  onValueChange={(v) => setNewLanguageName(v && v !== "none" ? v : "")}
+                >
+                  <SelectTrigger size="sm" className="flex-1">
+                    <SelectValue>{selectLabel(languageOptions, "Select a language")}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languageOptions.map((o) => (
+                      <SelectItem key={o.value} value={o.value} disabled={o.value === "none"}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Select
                   value={newLanguageProficiency}
                   onValueChange={(v) => v && setNewLanguageProficiency(v as LanguageProficiency)}

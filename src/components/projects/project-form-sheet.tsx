@@ -355,18 +355,20 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="col-span-2">
-                <Label htmlFor="p-budget" className="mb-1.5">
-                  Total budget (EUR)
-                </Label>
-                <Input
-                  id="p-budget"
-                  type="number"
-                  min={0}
-                  value={totalBudget}
-                  onChange={(e) => setTotalBudget(e.target.value)}
-                />
-              </div>
+              {isEdit && (
+                <div className="col-span-2">
+                  <Label htmlFor="p-budget" className="mb-1.5">
+                    Total budget (EUR)
+                  </Label>
+                  <Input
+                    id="p-budget"
+                    type="number"
+                    min={0}
+                    value={totalBudget}
+                    onChange={(e) => setTotalBudget(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
 
             <div>
@@ -412,6 +414,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
               </div>
             </div>
 
+            {isEdit && (
             <div>
               <h3 className="mb-2 text-sm font-semibold">Team</h3>
               <div className="flex flex-col gap-2">
@@ -464,6 +467,7 @@ export function ProjectFormSheet({ project }: { project?: Project }) {
                 </Button>
               </div>
             </div>
+            )}
           </div>
         </ScrollArea>
 

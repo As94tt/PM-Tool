@@ -133,7 +133,6 @@ export default function PersonDetailPage() {
         certifications: myCerts.map((c) => ({
           name: c.certification.name,
           issuer: c.certification.issuer,
-          issuedDate: c.issuedDate,
           expiryDate: c.expiryDate,
         })),
         industries: myIndustries.map((i) => i.name),
@@ -324,12 +323,10 @@ export default function PersonDetailPage() {
               <Award className="size-4" /> Certifications
             </h2>
             <div className="mt-3 flex flex-col gap-3">
-              {myCerts.map(({ certification, issuedDate }) => (
+              {myCerts.map(({ certification }) => (
                 <div key={certification.id}>
                   <p className="text-sm font-medium">{certification.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {certification.issuer} · {formatDate(issuedDate)}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{certification.issuer}</p>
                 </div>
               ))}
               {myCerts.length === 0 && <p className="text-sm text-muted-foreground">No certifications yet.</p>}
