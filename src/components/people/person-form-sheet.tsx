@@ -86,6 +86,7 @@ export function PersonFormSheet() {
       joinedDate: todayLocalDate(),
       languages: [],
       projectStrengths: [],
+      whyThisPerson: "",
     };
 
     importPeople([newPerson]);

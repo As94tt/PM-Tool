@@ -13,6 +13,7 @@ import {
   getPersonSkillDetails,
   getPersonCertificationDetails,
   getPersonProjectsSplit,
+  getMissingProfileFields,
   fullName,
   type PeopleFilters,
 } from "@/lib/data/queries";
@@ -370,6 +371,7 @@ function PeoplePageInner() {
             const topSkills = getPersonSkillDetails(personSkills, skills, person.id);
             const certs = getPersonCertificationDetails(personCertifications, certifications, person.id);
             const allocated = getAllocationForPersonMonth(resourceAllocations, person.id, month);
+            const missingFields = getMissingProfileFields(person, personSkills, personCertifications, projectMembers);
             return (
               <PersonCard
                 key={person.id}
@@ -378,6 +380,7 @@ function PeoplePageInner() {
                 topSkills={topSkills}
                 certificationCount={certs.length}
                 availabilityPercent={Math.max(0, 100 - allocated)}
+                missingFields={missingFields}
                 selectable={proposalMode}
                 selected={selectedIds.has(person.id)}
                 onToggleSelect={() => toggleSelected(person.id)}

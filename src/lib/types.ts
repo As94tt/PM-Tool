@@ -120,6 +120,10 @@ export interface Person {
    * which are a shared catalog with proficiency levels. Free text per
    * person, not a shared vocabulary. */
   projectStrengths: string[];
+  /** A short "why this person" pitch for a CV/staffing proposal — personal
+   * and technical strengths in prose, distinct from the itemized
+   * projectStrengths chips. */
+  whyThisPerson: string;
 }
 
 /** A project's stage in the sales-through-delivery pipeline. */

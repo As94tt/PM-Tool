@@ -28,7 +28,11 @@ export interface CVProjectEntry {
   startMonth: string | null;
   endMonth: string | null;
   ongoing: boolean;
-  description: string;
+  /** The project's own description — always shown. */
+  projectDescription: string;
+  /** What this person personally did on the project, when they've written
+   * one — shown alongside the project description, not instead of it. */
+  contributionDescription?: string;
   outcomes: string[];
   technologies: string[];
 }
@@ -41,6 +45,7 @@ export interface CVData {
   certifications: CVCertification[];
   industries: string[];
   projects: CVProjectEntry[];
+  whyThisPerson: string;
 }
 
 const styles = StyleSheet.create({
@@ -124,6 +129,8 @@ const styles = StyleSheet.create({
   projectDates: { fontSize: 8.5, color: SLATE },
   projectSubRow: { fontSize: 8.5, color: MUTED, marginTop: 1 },
   projectDesc: { fontSize: 9, color: INK, marginTop: 4, lineHeight: 1.45 },
+  contributionDesc: { fontSize: 9, color: INK, marginTop: 4, lineHeight: 1.45 },
+  contributionLabel: { fontFamily: "Helvetica-Bold", color: SLATE },
   outcomeRow: { flexDirection: "row", marginTop: 3, gap: 5 },
   outcomeDot: { width: 3, height: 3, borderRadius: 1.5, backgroundColor: ORANGE, marginTop: 4 },
   outcomeText: { fontSize: 8.5, color: INK, flex: 1, lineHeight: 1.35 },
@@ -199,7 +206,7 @@ function CoverPage({ data, preparedDate }: { data: CVData; preparedDate: string 
 }
 
 function ContentPage({ data }: { data: CVData }) {
-  const { person, location, email, skillGroups, certifications, industries, projects } = data;
+  const { person, location, email, skillGroups, certifications, industries, projects, whyThisPerson } = data;
   const { bg, fg } = hashColor(fullName(person));
 
   return (
@@ -306,6 +313,13 @@ function ContentPage({ data }: { data: CVData }) {
         </View>
       )}
 
+      {whyThisPerson.trim() && (
+        <View style={styles.section} wrap={false}>
+          <Text style={styles.sectionTitle}>Why {person.firstName}</Text>
+          <Text style={styles.bio}>{whyThisPerson}</Text>
+        </View>
+      )}
+
       {projects.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Project Experience</Text>
@@ -318,7 +332,13 @@ function ContentPage({ data }: { data: CVData }) {
               <Text style={styles.projectSubRow}>
                 {p.roleOnProject} · {p.clientName}
               </Text>
-              <Text style={styles.projectDesc}>{p.description}</Text>
+              <Text style={styles.projectDesc}>{p.projectDescription}</Text>
+              {p.contributionDescription && (
+                <Text style={styles.contributionDesc}>
+                  <Text style={styles.contributionLabel}>{person.firstName}&apos;s contribution: </Text>
+                  {p.contributionDescription}
+                </Text>
+              )}
               {p.outcomes.slice(0, 3).map((outcome, oi) => (
                 <View key={oi} style={styles.outcomeRow}>
                   <View style={styles.outcomeDot} />

@@ -79,6 +79,33 @@ export function getPersonCertificationDetails(
     .toSorted((a, b) => a.certification.name.localeCompare(b.certification.name));
 }
 
+export type ProfileField = "skills" | "certifications" | "languages" | "interests" | "project details";
+
+/**
+ * Which parts of a person's profile are still empty — drives the
+ * "incomplete profile" flag shown on their card and detail page. "Project
+ * details" means no project membership has a written contributionDescription
+ * yet (including the trivial case of no memberships at all), not merely
+ * "isn't on any project" as a separate concept.
+ */
+export function getMissingProfileFields(
+  person: Person,
+  personSkills: PersonSkill[],
+  personCertifications: PersonCertification[],
+  projectMembers: ProjectMember[]
+): ProfileField[] {
+  const missing: ProfileField[] = [];
+  if (!personSkills.some((s) => s.personId === person.id)) missing.push("skills");
+  if (!personCertifications.some((c) => c.personId === person.id)) missing.push("certifications");
+  if (person.languages.length === 0) missing.push("languages");
+  if (person.interestIds.length === 0) missing.push("interests");
+  const hasProjectDetails = projectMembers.some(
+    (m) => m.personId === person.id && m.contributionDescription?.trim()
+  );
+  if (!hasProjectDetails) missing.push("project details");
+  return missing;
+}
+
 export interface PersonProjectsSplit {
   current: Project[];
   upcoming: Project[];

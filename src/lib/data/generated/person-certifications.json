@@ -1,25 +1,24 @@
 [
   {
     "personId": "person-006",
-    "certificationId": "cert-cka",
-    "expiryDate": "2027-09-01"
+    "certificationId": "cert-itil"
   },
   {
     "personId": "person-006",
-    "certificationId": "cert-iso27001"
+    "certificationId": "cert-comptia-sec"
   },
   {
-    "personId": "person-007",
-    "certificationId": "cert-pmp",
-    "expiryDate": "2024-04-01"
+    "personId": "person-008",
+    "certificationId": "cert-prince2",
+    "expiryDate": "2024-09-01"
   },
   {
-    "personId": "person-007",
-    "certificationId": "cert-psm",
-    "expiryDate": "2021-11-01"
+    "personId": "person-009",
+    "certificationId": "cert-sfdc-admin"
   },
   {
     "personId": "person-010",
-    "certificationId": "cert-sfdc-admin"
+    "certificationId": "cert-cka",
+    "expiryDate": "2024-09-01"
   }
 ]

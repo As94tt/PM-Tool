@@ -274,6 +274,14 @@ const BIO_CLOSERS = [
   (skill) => `Currently deepening expertise in ${skill}.`,
   (skill) => `Enjoys mentoring on ${skill} topics whenever possible.`,
 ];
+const WHY_TEMPLATES = [
+  (fn, s1, s2, skill) =>
+    `${fn} pairs strong ${s1.toLowerCase()} with deep technical command of ${skill}, and is just as comfortable in the detail as ${s2.toLowerCase()}.`,
+  (fn, s1, s2, skill) =>
+    `On the technical side, ${fn} brings hands-on expertise in ${skill}; on the personal side, colleagues consistently point to ${s1.toLowerCase()} and ${s2.toLowerCase()}.`,
+  (fn, s1, s2, skill) =>
+    `${fn} combines solid ${skill} expertise with a track record of ${s1.toLowerCase()}, rounded out by a reputation for ${s2.toLowerCase()}.`,
+];
 
 // ================= people =================
 
@@ -366,6 +374,7 @@ for (let i = 0; i < PERSON_COUNT; i++) {
   const domainLabel = pick(industries).name.toLowerCase();
   const topSkillName = (chosenPrimary[0] ?? skills[0]).name;
   const bio = `${pick(BIO_OPENERS)(firstName, jobTitle, location.city)}, ${pick(BIO_MIDDLES)(years, domainLabel)}. ${pick(BIO_CLOSERS)(topSkillName)}`;
+  const whyThisPerson = pick(WHY_TEMPLATES)(firstName, projectStrengths[0], projectStrengths[1] ?? projectStrengths[0], topSkillName);
 
   const joinedDate = isoDate(addMonths(TODAY, -rndInt(2, Math.max(3, years * 12 - 6))));
 
@@ -383,6 +392,7 @@ for (let i = 0; i < PERSON_COUNT; i++) {
     joinedDate,
     languages,
     projectStrengths,
+    whyThisPerson,
     _track: trackKey,
     _seniority: seniority,
   });

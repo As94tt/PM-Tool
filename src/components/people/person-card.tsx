@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { MapPin, Award, Check } from "lucide-react";
+import { MapPin, Award, Check, AlertTriangle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DepartmentBadge } from "@/components/shared/department-badge";
 import type { Person, Location } from "@/lib/types";
-import { fullName, initials, type PersonSkillDetail } from "@/lib/data/queries";
+import { fullName, initials, type PersonSkillDetail, type ProfileField } from "@/lib/data/queries";
 import { getAllocationStatus, ALLOCATION_STATUS_STYLES, ALLOCATION_STATUS_LABEL } from "@/lib/data/capacity";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +14,7 @@ export function PersonCard({
   topSkills,
   certificationCount,
   availabilityPercent,
+  missingFields = [],
   selectable = false,
   selected = false,
   onToggleSelect,
@@ -23,6 +24,9 @@ export function PersonCard({
   topSkills: PersonSkillDetail[];
   certificationCount: number;
   availabilityPercent: number;
+  /** Profile fields still empty — shows a small "incomplete profile" flag
+   * when non-empty, omitted entirely (no flag) when empty. */
+  missingFields?: ProfileField[];
   selectable?: boolean;
   selected?: boolean;
   onToggleSelect?: () => void;
@@ -54,9 +58,16 @@ export function PersonCard({
           <AvatarFallback>{initials(person)}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-heading text-sm font-semibold text-foreground group-hover:text-primary">
-            {fullName(person)}
-          </p>
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p className="truncate font-heading text-sm font-semibold text-foreground group-hover:text-primary">
+              {fullName(person)}
+            </p>
+            {missingFields.length > 0 && (
+              <span title={`Incomplete profile — missing ${missingFields.join(", ")}`} className="shrink-0">
+                <AlertTriangle className="size-3.5 text-warning" />
+              </span>
+            )}
+          </div>
           <p className="truncate text-xs text-muted-foreground">{person.jobTitle}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
             {location && (

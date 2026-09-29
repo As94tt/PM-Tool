@@ -19,7 +19,7 @@
       "ind-healthcare",
       "ind-retail"
     ],
-    "joinedDate": "2021-03-01",
+    "joinedDate": "2024-09-01",
     "languages": [
       {
         "name": "German",
@@ -33,67 +33,29 @@
     "projectStrengths": [
       "Network design",
       "Rollout planning"
-    ]
+    ],
+    "whyThisPerson": "Thomas combines solid Terraform expertise with a track record of network design, rounded out by a reputation for rollout planning."
   },
   {
     "id": "person-002",
-    "firstName": "Nina",
-    "lastName": "Horvat",
+    "firstName": "Thomas",
+    "lastName": "Andersson",
     "avatarUrl": "https://i.pravatar.cc/300?img=26",
     "jobTitle": "Full-Stack Engineer",
     "department": "Development",
-    "locationId": "loc-por",
-    "bio": "Based in Porto, Nina is a Full-Stack Engineer on the delivery team, with a 1-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Node.js.",
+    "locationId": "loc-col",
+    "bio": "Thomas is a Full-Stack Engineer, based in Cologne, bringing 3 years of hands-on work in retail & e-commerce projects. Enjoys mentoring on Go topics whenever possible.",
     "interestIds": [
-      "int-volunteering",
-      "int-yoga",
+      "int-cooking",
+      "int-padel",
       "int-photography"
     ],
     "industryExperienceIds": [
-      "ind-automotive",
-      "ind-banking",
-      "ind-healthcare"
+      "ind-energy",
+      "ind-telco",
+      "ind-insurance"
     ],
-    "joinedDate": "2026-04-01",
-    "languages": [
-      {
-        "name": "Portuguese",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      },
-      {
-        "name": "Mandarin",
-        "proficiency": "Basic"
-      }
-    ],
-    "projectStrengths": [
-      "API design",
-      "Contract negotiation",
-      "Client relationship building"
-    ]
-  },
-  {
-    "id": "person-003",
-    "firstName": "Bogdan",
-    "lastName": "Wolf",
-    "avatarUrl": "https://i.pravatar.cc/300?img=42",
-    "jobTitle": "Data Engineer",
-    "department": "Data",
-    "locationId": "loc-ham",
-    "bio": "Based in Hamburg, Bogdan is a Data Engineer on the delivery team, bringing 1 years of hands-on work in retail & e-commerce projects. Currently deepening expertise in TypeScript.",
-    "interestIds": [
-      "int-sci-fi-novels",
-      "int-home-brewing",
-      "int-woodworking",
-      "int-home-automation-diy-electronics"
-    ],
-    "industryExperienceIds": [
-      "ind-logistics"
-    ],
-    "joinedDate": "2026-07-01",
+    "joinedDate": "2025-12-01",
     "languages": [
       {
         "name": "German",
@@ -105,31 +67,149 @@
       }
     ],
     "projectStrengths": [
-      "Incident response",
-      "Automation scripting"
-    ]
+      "Field troubleshooting",
+      "Code quality & testing",
+      "Network design"
+    ],
+    "whyThisPerson": "Thomas combines solid Go expertise with a track record of field troubleshooting, rounded out by a reputation for code quality & testing."
   },
   {
-    "id": "person-004",
-    "firstName": "Moritz",
-    "lastName": "Andersson",
-    "avatarUrl": "https://i.pravatar.cc/300?img=48",
-    "jobTitle": "Telco Network Engineer",
-    "department": "5G",
-    "locationId": "loc-stu",
-    "bio": "Moritz works as a Telco Network Engineer out of the Stuttgart office, with a 6-year track record delivering banking & financial services initiatives. Recently focused on Private Networks work for enterprise clients.",
+    "id": "person-003",
+    "firstName": "Sarah",
+    "lastName": "Weber",
+    "avatarUrl": "https://i.pravatar.cc/300?img=42",
+    "jobTitle": "Analytics Consultant",
+    "department": "Data",
+    "locationId": "loc-muc",
+    "bio": "Sarah works as a Analytics Consultant out of the Munich office, bringing 2 years of hands-on work in insurance projects. Enjoys mentoring on .NET / C# topics whenever possible.",
     "interestIds": [
-      "int-urban-gardening",
-      "int-amateur-astronomy"
+      "int-chess",
+      "int-home-brewing"
     ],
     "industryExperienceIds": [
       "ind-banking",
-      "ind-manufacturing"
+      "ind-healthcare"
     ],
-    "joinedDate": "2023-07-01",
+    "joinedDate": "2026-02-01",
     "languages": [
       {
         "name": "German",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Professional"
+      },
+      {
+        "name": "French",
+        "proficiency": "Conversational"
+      }
+    ],
+    "projectStrengths": [
+      "Pipeline reliability",
+      "Data storytelling",
+      "Cloud migration"
+    ],
+    "whyThisPerson": "Sarah pairs strong pipeline reliability with deep technical command of .NET / C#, and is just as comfortable in the detail as data storytelling."
+  },
+  {
+    "id": "person-004",
+    "firstName": "Sebastian",
+    "lastName": "Schmidt",
+    "avatarUrl": "https://i.pravatar.cc/300?img=48",
+    "jobTitle": "OSS/BSS Consultant",
+    "department": "5G",
+    "locationId": "loc-lis",
+    "bio": "Based in Lisbon, Sebastian is a OSS/BSS Consultant on the delivery team, with 1 years of experience across automotive engagements. Recently focused on OSS/BSS work for enterprise clients.",
+    "interestIds": [
+      "int-rock-climbing",
+      "int-ceramics",
+      "int-yoga",
+      "int-vinyl-records"
+    ],
+    "industryExperienceIds": [
+      "ind-telco",
+      "ind-insurance",
+      "ind-energy"
+    ],
+    "joinedDate": "2026-04-01",
+    "languages": [
+      {
+        "name": "Portuguese",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Professional"
+      },
+      {
+        "name": "French",
+        "proficiency": "Conversational"
+      }
+    ],
+    "projectStrengths": [
+      "Rollout planning",
+      "Automation scripting",
+      "Reliability engineering"
+    ],
+    "whyThisPerson": "Sebastian combines solid OSS/BSS expertise with a track record of rollout planning, rounded out by a reputation for automation scripting."
+  },
+  {
+    "id": "person-005",
+    "firstName": "Paul",
+    "lastName": "Andersson",
+    "avatarUrl": "https://i.pravatar.cc/300?img=68",
+    "jobTitle": "Systems Administrator",
+    "department": "IT Solutions",
+    "locationId": "loc-lis",
+    "bio": "Paul works as a Systems Administrator out of the Lisbon office, with a 5-year track record delivering healthcare & life sciences initiatives. Currently deepening expertise in Azure.",
+    "interestIds": [
+      "int-podcasting",
+      "int-yoga",
+      "int-sci-fi-novels",
+      "int-chess"
+    ],
+    "industryExperienceIds": [
+      "ind-healthcare",
+      "ind-banking"
+    ],
+    "joinedDate": "2026-02-01",
+    "languages": [
+      {
+        "name": "Portuguese",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Professional"
+      }
+    ],
+    "projectStrengths": [
+      "Incident response",
+      "Capacity planning"
+    ],
+    "whyThisPerson": "Paul combines solid Azure expertise with a track record of incident response, rounded out by a reputation for capacity planning."
+  },
+  {
+    "id": "person-006",
+    "firstName": "Katarzyna",
+    "lastName": "Fischer",
+    "avatarUrl": "https://i.pravatar.cc/300?img=55",
+    "jobTitle": "GRC Consultant",
+    "department": "IT Solutions",
+    "locationId": "loc-lis",
+    "bio": "Katarzyna works as a GRC Consultant out of the Lisbon office, bringing 8 years of hands-on work in automotive projects. Recently focused on GRC & Compliance work for enterprise clients.",
+    "interestIds": [
+      "int-padel",
+      "int-home-brewing"
+    ],
+    "industryExperienceIds": [
+      "ind-logistics"
+    ],
+    "joinedDate": "2021-02-01",
+    "languages": [
+      {
+        "name": "Portuguese",
         "proficiency": "Native"
       },
       {
@@ -138,25 +218,145 @@
       }
     ],
     "projectStrengths": [
-      "Clean architecture",
-      "Agile delivery"
-    ]
+      "Compliance alignment",
+      "Capacity planning"
+    ],
+    "whyThisPerson": "Katarzyna pairs strong compliance alignment with deep technical command of GRC & Compliance, and is just as comfortable in the detail as capacity planning."
   },
   {
-    "id": "person-005",
-    "firstName": "Lena",
-    "lastName": "Koch",
-    "avatarUrl": "https://i.pravatar.cc/300?img=68",
-    "jobTitle": "Network Engineer",
-    "department": "IT Solutions",
+    "id": "person-007",
+    "firstName": "Thomas",
+    "lastName": "Wolf",
+    "avatarUrl": "https://i.pravatar.cc/300?img=63",
+    "jobTitle": "Delivery Lead",
+    "department": "Development",
     "locationId": "loc-dus",
-    "bio": "Lena works as a Network Engineer out of the Düsseldorf office, with 4 years of experience across public sector engagements. Currently deepening expertise in Ansible.",
+    "bio": "Thomas is a Delivery Lead, based in Düsseldorf, with a 5-year track record delivering banking & financial services initiatives. Currently deepening expertise in Scrum.",
     "interestIds": [
-      "int-sci-fi-novels",
-      "int-mountain-biking"
+      "int-ceramics",
+      "int-cooking",
+      "int-rock-climbing",
+      "int-sailing"
+    ],
+    "industryExperienceIds": [
+      "ind-public",
+      "ind-healthcare"
+    ],
+    "joinedDate": "2023-11-01",
+    "languages": [
+      {
+        "name": "German",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Fluent"
+      },
+      {
+        "name": "Italian",
+        "proficiency": "Basic"
+      }
+    ],
+    "projectStrengths": [
+      "Cross-team coordination",
+      "Delivery governance"
+    ],
+    "whyThisPerson": "Thomas combines solid Scrum expertise with a track record of cross-team coordination, rounded out by a reputation for delivery governance."
+  },
+  {
+    "id": "person-008",
+    "firstName": "Chloe",
+    "lastName": "Stanescu",
+    "avatarUrl": "https://i.pravatar.cc/300?img=45",
+    "jobTitle": "Senior Business Analyst",
+    "department": "IT Solutions",
+    "locationId": "loc-muc",
+    "bio": "Based in Munich, Chloe is a Senior Business Analyst on the delivery team, with a 11-year track record delivering retail & e-commerce initiatives. Currently deepening expertise in Stakeholder Management.",
+    "interestIds": [
+      "int-chess",
+      "int-volunteering"
     ],
     "industryExperienceIds": [
       "ind-automotive"
+    ],
+    "joinedDate": "2022-04-01",
+    "languages": [
+      {
+        "name": "German",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Fluent"
+      },
+      {
+        "name": "Spanish",
+        "proficiency": "Basic"
+      }
+    ],
+    "projectStrengths": [
+      "Requirements elicitation",
+      "Design systems",
+      "User research"
+    ],
+    "whyThisPerson": "Chloe combines solid Stakeholder Management expertise with a track record of requirements elicitation, rounded out by a reputation for design systems."
+  },
+  {
+    "id": "person-009",
+    "firstName": "Noah",
+    "lastName": "Becker",
+    "avatarUrl": "https://i.pravatar.cc/300?img=7",
+    "jobTitle": "Sales Director",
+    "department": "IT Solutions",
+    "locationId": "loc-col",
+    "bio": "Noah is a Sales Director, based in Cologne, with a 4-year track record delivering retail & e-commerce initiatives. Recently focused on Change Management work for enterprise clients.",
+    "interestIds": [
+      "int-woodworking",
+      "int-amateur-astronomy"
+    ],
+    "industryExperienceIds": [
+      "ind-logistics",
+      "ind-telco",
+      "ind-retail"
+    ],
+    "joinedDate": "2023-08-01",
+    "languages": [
+      {
+        "name": "German",
+        "proficiency": "Native"
+      },
+      {
+        "name": "English",
+        "proficiency": "Fluent"
+      },
+      {
+        "name": "Spanish",
+        "proficiency": "Basic"
+      }
+    ],
+    "projectStrengths": [
+      "Solution selling",
+      "User research"
+    ],
+    "whyThisPerson": "On the technical side, Noah brings hands-on expertise in Change Management; on the personal side, colleagues consistently point to solution selling and user research."
+  },
+  {
+    "id": "person-010",
+    "firstName": "Lena",
+    "lastName": "Koch",
+    "avatarUrl": "https://i.pravatar.cc/300?img=57",
+    "jobTitle": "Design Lead",
+    "department": "Development",
+    "locationId": "loc-dus",
+    "bio": "Based in Düsseldorf, Lena is a Design Lead on the delivery team, with a 7-year track record delivering logistics & transportation initiatives. Currently deepening expertise in Node.js.",
+    "interestIds": [
+      "int-padel",
+      "int-amateur-astronomy",
+      "int-trail-running"
+    ],
+    "industryExperienceIds": [
+      "ind-healthcare",
+      "ind-logistics"
     ],
     "joinedDate": "2024-08-01",
     "languages": [
@@ -169,188 +369,14 @@
         "proficiency": "Professional"
       },
       {
-        "name": "Italian",
-        "proficiency": "Conversational"
+        "name": "Spanish",
+        "proficiency": "Basic"
       }
     ],
     "projectStrengths": [
-      "Automation scripting",
-      "Reliability engineering",
-      "Solution selling"
-    ]
-  },
-  {
-    "id": "person-006",
-    "firstName": "Lena",
-    "lastName": "Bianchi",
-    "avatarUrl": "https://i.pravatar.cc/300?img=55",
-    "jobTitle": "Senior GRC Consultant",
-    "department": "IT Solutions",
-    "locationId": "loc-dus",
-    "bio": "Lena works as a Senior GRC Consultant out of the Düsseldorf office, with 9 years of experience across banking & financial services engagements. Recently focused on Security Architecture work for enterprise clients.",
-    "interestIds": [
-      "int-sci-fi-novels",
-      "int-running-marathons",
-      "int-sailing"
+      "Rapid prototyping",
+      "User research"
     ],
-    "industryExperienceIds": [
-      "ind-energy",
-      "ind-banking",
-      "ind-insurance"
-    ],
-    "joinedDate": "2021-01-01",
-    "languages": [
-      {
-        "name": "German",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      }
-    ],
-    "projectStrengths": [
-      "Threat modeling",
-      "Compliance alignment"
-    ]
-  },
-  {
-    "id": "person-007",
-    "firstName": "Felix",
-    "lastName": "Schmidt",
-    "avatarUrl": "https://i.pravatar.cc/300?img=63",
-    "jobTitle": "Senior Program Manager",
-    "department": "Development",
-    "locationId": "loc-col",
-    "bio": "Felix works as a Senior Program Manager out of the Cologne office, with 11 years of experience across healthcare & life sciences engagements. Enjoys mentoring on Requirements Engineering topics whenever possible.",
-    "interestIds": [
-      "int-travel",
-      "int-rock-climbing",
-      "int-running-marathons",
-      "int-vinyl-records"
-    ],
-    "industryExperienceIds": [
-      "ind-public",
-      "ind-retail",
-      "ind-manufacturing"
-    ],
-    "joinedDate": "2021-07-01",
-    "languages": [
-      {
-        "name": "German",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      }
-    ],
-    "projectStrengths": [
-      "Risk & issue management",
-      "Change management"
-    ]
-  },
-  {
-    "id": "person-008",
-    "firstName": "David",
-    "lastName": "Laurent",
-    "avatarUrl": "https://i.pravatar.cc/300?img=45",
-    "jobTitle": "Senior Business Analyst",
-    "department": "IT Solutions",
-    "locationId": "loc-col",
-    "bio": "David works as a Senior Business Analyst out of the Cologne office, bringing 16 years of hands-on work in insurance projects. Recently focused on Stakeholder Management work for enterprise clients.",
-    "interestIds": [
-      "int-chess",
-      "int-running-marathons",
-      "int-travel"
-    ],
-    "industryExperienceIds": [
-      "ind-insurance",
-      "ind-telco"
-    ],
-    "joinedDate": "2012-06-01",
-    "languages": [
-      {
-        "name": "German",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      }
-    ],
-    "projectStrengths": [
-      "Requirements elicitation",
-      "Agile delivery"
-    ]
-  },
-  {
-    "id": "person-009",
-    "firstName": "Sebastian",
-    "lastName": "Sharma",
-    "avatarUrl": "https://i.pravatar.cc/300?img=7",
-    "jobTitle": "Sales Director",
-    "department": "IT Solutions",
-    "locationId": "loc-lis",
-    "bio": "Based in Lisbon, Sebastian is a Sales Director on the delivery team, with 8 years of experience across retail & e-commerce engagements. Currently deepening expertise in Bid Management.",
-    "interestIds": [
-      "int-mountain-biking",
-      "int-chess"
-    ],
-    "industryExperienceIds": [
-      "ind-manufacturing",
-      "ind-insurance"
-    ],
-    "joinedDate": "2026-02-01",
-    "languages": [
-      {
-        "name": "Portuguese",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      }
-    ],
-    "projectStrengths": [
-      "Incident response",
-      "Automation scripting"
-    ]
-  },
-  {
-    "id": "person-010",
-    "firstName": "Lea",
-    "lastName": "Becker",
-    "avatarUrl": "https://i.pravatar.cc/300?img=57",
-    "jobTitle": "Senior UI Designer",
-    "department": "Development",
-    "locationId": "loc-por",
-    "bio": "Lea works as a Senior UI Designer out of the Porto office, bringing 12 years of hands-on work in automotive projects. Currently deepening expertise in TypeScript.",
-    "interestIds": [
-      "int-cooking",
-      "int-snowboarding"
-    ],
-    "industryExperienceIds": [
-      "ind-manufacturing"
-    ],
-    "joinedDate": "2017-05-01",
-    "languages": [
-      {
-        "name": "Portuguese",
-        "proficiency": "Native"
-      },
-      {
-        "name": "English",
-        "proficiency": "Fluent"
-      },
-      {
-        "name": "French",
-        "proficiency": "Conversational"
-      }
-    ],
-    "projectStrengths": [
-      "Contract negotiation",
-      "Solution selling"
-    ]
+    "whyThisPerson": "On the technical side, Lena brings hands-on expertise in Node.js; on the personal side, colleagues consistently point to rapid prototyping and user research."
   }
 ]

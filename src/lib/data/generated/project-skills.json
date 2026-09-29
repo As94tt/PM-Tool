@@ -1,11 +1,15 @@
 [
   {
     "projectId": "project-01",
-    "skillId": "skill-vmware"
+    "skillId": "skill-network-engineering"
   },
   {
     "projectId": "project-01",
-    "skillId": "skill-site-reliability-engineering"
+    "skillId": "skill-docker"
+  },
+  {
+    "projectId": "project-01",
+    "skillId": "skill-ansible"
   },
   {
     "projectId": "project-01",
@@ -13,19 +17,7 @@
   },
   {
     "projectId": "project-01",
-    "skillId": "skill-ci-cd"
-  },
-  {
-    "projectId": "project-01",
-    "skillId": "skill-cloud-security"
-  },
-  {
-    "projectId": "project-01",
-    "skillId": "skill-azure"
-  },
-  {
-    "projectId": "project-02",
-    "skillId": "skill-ansible"
+    "skillId": "skill-terraform"
   },
   {
     "projectId": "project-02",
@@ -33,7 +25,11 @@
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-terraform"
+    "skillId": "skill-google-cloud-platform"
+  },
+  {
+    "projectId": "project-02",
+    "skillId": "skill-docker"
   },
   {
     "projectId": "project-02",
@@ -41,11 +37,7 @@
   },
   {
     "projectId": "project-02",
-    "skillId": "skill-ci-cd"
-  },
-  {
-    "projectId": "project-02",
-    "skillId": "skill-azure"
+    "skillId": "skill-cloud-security"
   },
   {
     "projectId": "project-03",
@@ -53,23 +45,27 @@
   },
   {
     "projectId": "project-03",
-    "skillId": "skill-prince2"
+    "skillId": "skill-change-management"
   },
   {
     "projectId": "project-03",
-    "skillId": "skill-requirements-engineering"
+    "skillId": "skill-scrum"
   },
   {
     "projectId": "project-03",
     "skillId": "skill-stakeholder-management"
   },
   {
-    "projectId": "project-04",
-    "skillId": "skill-requirements-engineering"
+    "projectId": "project-03",
+    "skillId": "skill-financial-modeling"
   },
   {
     "projectId": "project-04",
-    "skillId": "skill-scrum"
+    "skillId": "skill-kanban"
+  },
+  {
+    "projectId": "project-04",
+    "skillId": "skill-stakeholder-management"
   },
   {
     "projectId": "project-04",
@@ -81,11 +77,11 @@
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-terraform"
+    "skillId": "skill-ci-cd"
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-aws"
+    "skillId": "skill-network-engineering"
   },
   {
     "projectId": "project-05",
@@ -93,14 +89,6 @@
   },
   {
     "projectId": "project-05",
-    "skillId": "skill-docker"
-  },
-  {
-    "projectId": "project-05",
-    "skillId": "skill-ansible"
-  },
-  {
-    "projectId": "project-05",
-    "skillId": "skill-cloud-security"
+    "skillId": "skill-aws"
   }
 ]

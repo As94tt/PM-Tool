@@ -82,6 +82,7 @@ export function EditProfileSheet({ person }: { person: Person }) {
   const [firstName, setFirstName] = useState(person.firstName);
   const [lastName, setLastName] = useState(person.lastName);
   const [bio, setBio] = useState(person.bio);
+  const [whyThisPerson, setWhyThisPerson] = useState(person.whyThisPerson);
   const [addSkillId, setAddSkillId] = useState("");
   const [addSkillLevel, setAddSkillLevel] = useState("3");
   const [addCertId, setAddCertId] = useState("");
@@ -152,6 +153,13 @@ export function EditProfileSheet({ person }: { person: Person }) {
     if (bio !== person.bio) {
       updatePerson(person.id, { bio });
       toast.success("Bio updated");
+    }
+  }
+
+  function saveWhyThisPerson() {
+    if (whyThisPerson !== person.whyThisPerson) {
+      updatePerson(person.id, { whyThisPerson });
+      toast.success("Updated");
     }
   }
 
@@ -336,6 +344,20 @@ export function EditProfileSheet({ person }: { person: Person }) {
                 Bio
               </Label>
               <Textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} onBlur={saveBio} rows={4} />
+            </section>
+
+            <section>
+              <Label htmlFor="why-this-person" className="mb-2">
+                Why this person
+              </Label>
+              <Textarea
+                id="why-this-person"
+                value={whyThisPerson}
+                onChange={(e) => setWhyThisPerson(e.target.value)}
+                onBlur={saveWhyThisPerson}
+                rows={3}
+                placeholder="A short pitch for a staffing proposal — personal and technical strengths."
+              />
             </section>
 
             <section>

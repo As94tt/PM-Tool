@@ -192,6 +192,7 @@ export default function AdminPage() {
         joinedDate: now,
         languages: [],
         projectStrengths: [],
+        whyThisPerson: "",
       };
     });
     importPeople(newPeople);

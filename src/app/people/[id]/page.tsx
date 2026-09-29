@@ -4,7 +4,18 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
-import { MapPin, Mail, CalendarDays, Award, ArrowLeft, Sparkles, Languages as LanguagesIcon, FileDown } from "lucide-react";
+import {
+  MapPin,
+  Mail,
+  CalendarDays,
+  Award,
+  ArrowLeft,
+  Sparkles,
+  Star,
+  AlertTriangle,
+  Languages as LanguagesIcon,
+  FileDown,
+} from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { useCurrentPerson, useCanEditFunction } from "@/store/hooks";
 import {
@@ -14,6 +25,7 @@ import {
   getPersonCertificationDetails,
   getPersonProjectHistory,
   getProjectSkillDetails,
+  getMissingProfileFields,
 } from "@/lib/data/queries";
 import {
   getHorizonMonths,
@@ -83,6 +95,7 @@ export default function PersonDetailPage() {
   const myCerts = getPersonCertificationDetails(personCertifications, certifications, person.id);
   const myInterests = interests.filter((i) => person.interestIds.includes(i.id));
   const myIndustries = industries.filter((i) => person.industryExperienceIds.includes(i.id));
+  const missingFields = getMissingProfileFields(person, personSkills, personCertifications, projectMembers);
   const projectHistory = getPersonProjectHistory(projectMembers, projects, resourceAllocations, person.id);
   const current = projectHistory.filter((e) => e.project.status === "active");
   const upcoming = projectHistory.filter((e) => PRE_ACTIVE_STATUSES.includes(e.project.status));
@@ -123,7 +136,8 @@ export default function PersonDetailPage() {
         startMonth: entry.startMonth,
         endMonth: entry.endMonth,
         ongoing: entry.ongoing,
-        description: entry.contributionDescription?.trim() || entry.project.shortDescription,
+        projectDescription: entry.project.shortDescription,
+        contributionDescription: entry.contributionDescription?.trim() || undefined,
         outcomes: entry.project.outcomes,
         technologies: getProjectSkillDetails(projectSkills, skills, entry.project.id).map((s) => s.name),
       }));
@@ -139,6 +153,7 @@ export default function PersonDetailPage() {
         })),
         industries: myIndustries.map((i) => i.name),
         projects: projectEntries,
+        whyThisPerson: person.whyThisPerson,
       });
       toast.success("CV generated");
     } finally {
@@ -167,6 +182,14 @@ export default function PersonDetailPage() {
               <span className={cn("size-1.5 rounded-full", styles.dot)} />
               {availabilityPercent}% available
             </span>
+            {missingFields.length > 0 && (
+              <span
+                title={`Missing: ${missingFields.join(", ")}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 px-2.5 py-1 text-xs font-medium text-warning-foreground"
+              >
+                <AlertTriangle className="size-3" /> Incomplete profile
+              </span>
+            )}
           </div>
           <p className="mt-1 text-muted-foreground">
             {person.jobTitle} <span className="text-muted-foreground/50">·</span> {person.department}
@@ -362,6 +385,15 @@ export default function PersonDetailPage() {
               ))}
               {myInterests.length === 0 && <p className="text-sm text-muted-foreground">No interests added yet.</p>}
             </div>
+          </Card>
+
+          <Card className="p-5 shadow-elevation-1">
+            <h2 className="flex items-center gap-1.5 font-heading text-sm font-semibold">
+              <Star className="size-4" /> Why this person
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              {person.whyThisPerson || "Not added yet."}
+            </p>
           </Card>
         </div>
       </div>

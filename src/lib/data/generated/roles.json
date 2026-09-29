@@ -145,50 +145,38 @@
   },
   {
     "id": "role-37",
-    "name": "Senior GRC Consultant"
-  },
-  {
-    "id": "role-38",
     "name": "Senior Product Designer"
   },
   {
-    "id": "role-39",
-    "name": "Senior Program Manager"
-  },
-  {
-    "id": "role-40",
+    "id": "role-38",
     "name": "Senior Project Manager"
   },
   {
-    "id": "role-41",
+    "id": "role-39",
     "name": "Senior Software Engineer"
   },
   {
-    "id": "role-42",
-    "name": "Senior UI Designer"
-  },
-  {
-    "id": "role-43",
+    "id": "role-40",
     "name": "Site Reliability Engineer"
   },
   {
-    "id": "role-44",
+    "id": "role-41",
     "name": "Software Engineer"
   },
   {
-    "id": "role-45",
+    "id": "role-42",
     "name": "Systems Administrator"
   },
   {
-    "id": "role-46",
+    "id": "role-43",
     "name": "Telco Network Engineer"
   },
   {
-    "id": "role-47",
+    "id": "role-44",
     "name": "UI Designer"
   },
   {
-    "id": "role-48",
+    "id": "role-45",
     "name": "UX Designer"
   }
 ]

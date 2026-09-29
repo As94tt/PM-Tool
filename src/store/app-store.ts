@@ -434,6 +434,7 @@ function repairState(state: AppState): AppState {
     ...p,
     languages: Array.isArray(p.languages) ? p.languages : [],
     projectStrengths: Array.isArray(p.projectStrengths) ? p.projectStrengths : [],
+    whyThisPerson: typeof p.whyThisPerson === "string" ? p.whyThisPerson : "",
   }));
 
   const feedbackNotes = state.feedbackNotes.map((n) => ({
