@@ -34,15 +34,18 @@ const CELL_GAP = 2;
 
 /**
  * A person's own allocation timeline — one row per project they're a member
- * of, the exact same project set (and roleOnProject label) as the Current/
- * Upcoming/Previous projects sections below on this same page, via the same
- * getPersonProjectHistory call — showing a different set here would just
- * read as a bug (two "which projects is this person on" answers on one
- * page). A shared Monthly/Weekly horizon spans from today (this is a
- * forward-looking timeline, not a historical record) through their latest
- * project's end, or last actually-staffed period if that runs later. The
- * project-page mirror of TeamAllocationCard, with the row axis swapped:
- * projects instead of people, for one person instead of one project.
+ * of (getPersonProjectHistory, the same call behind the Current/Upcoming/
+ * Previous projects sections below, so the two can't disagree about which
+ * projects this person is on), narrowed to only the ones with some real
+ * current-or-upcoming allocation somewhere in the visible horizon — a
+ * membership with nothing but zeros ahead (a finished project, or one
+ * they're credited on but never actually staffed onto) is still a real
+ * ProjectMember, just not something this forward-looking timeline needs a
+ * row for. A shared Monthly/Weekly horizon spans from today (see
+ * getPersonChartWeeks/Months) through their latest project's end, or last
+ * actually-staffed period if that runs later. The project-page mirror of
+ * TeamAllocationCard, with the row axis swapped: projects instead of
+ * people, for one person instead of one project.
  */
 export function PersonAllocationCard({ person }: { person: Person }) {
   const projects = useAppStore((s) => s.projects);
@@ -138,6 +141,32 @@ export function PersonAllocationCard({ person }: { person: Person }) {
   const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colPitch));
   const lastVisibleIdx = Math.min(allPeriods.length - 1, firstVisibleIdx + visibleCount - 1);
 
+  const rowsWithData = myProjectEntries
+    .map(({ project, roleOnProject }) => ({
+      project,
+      roleOnProject,
+      chartData: allPeriods.map((p) => ({
+        key: p,
+        label: formatPeriodLabel(p),
+        value:
+          granularity === "month"
+            ? getProjectMonthlyAllocationLive(
+                projectRoleRequirements,
+                projectRoleAssignments,
+                person.id,
+                project.id,
+                getWeeksInMonth(p)
+              )
+            : getPersonWeeklyAllocationForProject(projectRoleRequirements, projectRoleAssignments, person.id, project.id, p),
+      })),
+    }))
+    // Current-or-upcoming allocation only — allPeriods already starts at
+    // today (getPersonChartWeeks/Months), so a row with nothing nonzero
+    // anywhere in it has no current or future involvement worth showing,
+    // even though it's still a real ProjectMember (e.g. a finished project,
+    // or one they're credited on but never actually staffed onto).
+    .filter((row) => row.chartData.some((d) => d.value > 0));
+
   return (
     <Card className="p-6 shadow-elevation-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -164,8 +193,12 @@ export function PersonAllocationCard({ person }: { person: Person }) {
         </div>
       </div>
 
-      {myProjectEntries.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">Not currently on any project.</p>
+      {rowsWithData.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">
+          {myProjectEntries.length === 0
+            ? "Not currently on any project."
+            : "No current or upcoming allocation on any project."}
+        </p>
       ) : (
         <>
           {needsScroll && (
@@ -189,7 +222,7 @@ export function PersonAllocationCard({ person }: { person: Person }) {
             <div className="flex shrink-0 flex-col" style={{ width: NAME_COL_WIDTH }}>
               <div style={{ height: HEADER_HEIGHT }} />
               <div className="flex flex-col divide-y divide-border/70">
-                {myProjectEntries.map(({ project, roleOnProject }) => (
+                {rowsWithData.map(({ project, roleOnProject }) => (
                   <Link
                     key={project.id}
                     href={`/projects/${project.id}`}
@@ -219,33 +252,11 @@ export function PersonAllocationCard({ person }: { person: Person }) {
                   ))}
                 </div>
                 <div className="flex flex-col divide-y divide-border/70">
-                  {myProjectEntries.map(({ project }, rowIdx) => {
-                    const chartData = allPeriods.map((p) => ({
-                      key: p,
-                      label: formatPeriodLabel(p),
-                      value:
-                        granularity === "month"
-                          ? getProjectMonthlyAllocationLive(
-                              projectRoleRequirements,
-                              projectRoleAssignments,
-                              person.id,
-                              project.id,
-                              getWeeksInMonth(p)
-                            )
-                          : getPersonWeeklyAllocationForProject(
-                              projectRoleRequirements,
-                              projectRoleAssignments,
-                              person.id,
-                              project.id,
-                              p
-                            ),
-                    }));
-                    return (
-                      <div key={project.id} style={{ height: ROW_HEIGHT }} className="flex items-center">
-                        <AllocationHeatmapRow data={chartData} columnWidth={colWidth} flipTooltip={rowIdx === 0} />
-                      </div>
-                    );
-                  })}
+                  {rowsWithData.map(({ project, chartData }, rowIdx) => (
+                    <div key={project.id} style={{ height: ROW_HEIGHT }} className="flex items-center">
+                      <AllocationHeatmapRow data={chartData} columnWidth={colWidth} flipTooltip={rowIdx === 0} />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
