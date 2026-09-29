@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { CalendarClock, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, X, Briefcase } from "lucide-react";
@@ -9,6 +9,7 @@ import { fullName, initials } from "@/lib/data/queries";
 import { formatCompactCurrency, formatCurrency } from "@/lib/format";
 import { formatMonthLabel } from "@/lib/data/capacity";
 import { selectLabel } from "@/lib/select-utils";
+import { cn } from "@/lib/utils";
 import {
   getProjectChartWeeks,
   formatWeekLabel,
@@ -27,10 +28,12 @@ import type { Project } from "@/lib/types";
 const MONTH_WINDOW = 6;
 const MAX_SEAT_FTE = 1;
 
-/** Every data column (a collapsed month or one of its weeks) renders at this
- * same fixed width, so expanding/collapsing a month never resizes any other
- * column — only the table's total width grows or shrinks. */
+/** Fallback data-column width for the first render, before the container has
+ * been measured — every data column (a collapsed month or one of its weeks)
+ * then renders at a width computed from the dialog's actual available
+ * space instead, so the two tables never need horizontal scrolling to read. */
 const DATA_COL_W = 72;
+const MIN_DATA_COL_W = 40;
 const ROLE_COL_W = 176;
 const RATE_COL_W = 88;
 const PLAN_SUM_COL_W = 156;
@@ -38,6 +41,20 @@ const PLAN_EUR_COL_W = 112;
 const ACTION_COL_W = 44;
 const PERSON_COL_W = 180;
 const STAFF_SUM_COL_W = 112;
+/** The plan table has two more fixed-width trailing columns (Avg FTE +
+ * Planned €) than the staffing table (just Sum) — sizing data columns off
+ * its larger overhead, then reusing that same width for both tables, keeps
+ * every month/week column at the same x-position AND the same width in
+ * both (so they stay directly comparable, per round 33), while guaranteeing
+ * the more constrained table (plan) always fits without scrolling. */
+const PLAN_FIXED_W = ROLE_COL_W + PERSON_COL_W + RATE_COL_W + PLAN_SUM_COL_W + PLAN_EUR_COL_W + ACTION_COL_W;
+
+/** A week column belonging to the currently-expanded month gets a subtle
+ * tint so it visually reads as "part of that month" next to its collapsed
+ * siblings. */
+function weekColClass(col: Column): string {
+  return col.type === "week" ? "bg-primary/5" : "";
+}
 
 /** One visible column — either a whole month (collapsed) or one of its
  * individual weeks (only appear for the single currently-expanded month). */
@@ -116,6 +133,25 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   const [newRoleDayRate, setNewRoleDayRate] = useState("800");
   const [addPersonState, setAddPersonState] = useState<Record<string, { personId: string; dayRate: string }>>({});
 
+  const [containerWidth, setContainerWidth] = useState(0);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  // A callback ref, not useRef + useLayoutEffect keyed on `open` — Base UI
+  // mounts the dialog's actual DOM content asynchronously relative to the
+  // `open` state flipping (it tracks its own internal "mounted" state for
+  // exit-animation purposes), so a layout effect firing in the same commit
+  // as `open` becoming true can still see a null ref. A callback ref instead
+  // fires exactly when React attaches (or detaches) this exact node,
+  // whichever render that happens to land in.
+  const contentRef = useCallback((el: HTMLDivElement | null) => {
+    resizeObserverRef.current?.disconnect();
+    resizeObserverRef.current = null;
+    if (!el) return;
+    setContainerWidth(el.clientWidth);
+    const ro = new ResizeObserver(() => setContainerWidth(el.clientWidth));
+    ro.observe(el);
+    resizeObserverRef.current = ro;
+  }, []);
+
   const projReqs = requirements.filter((r) => r.projectId === project.id);
   const projAsgs = assignments.filter((a) => a.projectId === project.id);
 
@@ -141,13 +177,28 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
     if (month === expandedMonth) return weeks.map((w) => ({ key: w, type: "week", month }));
     return [{ key: month, type: "month", weeks }];
   });
+  // Sized off the actual measured container width (not a fixed constant) so
+  // the table always fits without needing to scroll horizontally to read —
+  // falls back to the fixed default only for the first render, before
+  // ResizeObserver has reported a real width.
+  // The measured element is the scrollable wrapper itself, which has its own
+  // right padding (pr-1) and sits just outside each card's 1px border — a
+  // child card's actual usable width is a few pixels less than the
+  // wrapper's own clientWidth, so a fixed safety margin keeps the table
+  // from ever computing a width that's a hair too wide to actually fit.
+  const CONTAINER_SAFETY_MARGIN = 8;
+  const availableWidth = Math.max(0, containerWidth - CONTAINER_SAFETY_MARGIN);
+  const dataColWidth =
+    availableWidth > 0
+      ? Math.max(MIN_DATA_COL_W, (availableWidth - PLAN_FIXED_W) / Math.max(1, columns.length))
+      : DATA_COL_W;
   // table-fixed only respects each <col>'s literal pixel width when the
   // <table> itself has an explicit width equal to their sum — left as "auto"
   // it's just a block box that fills its container and then distributes that
   // width as *ratios* of the colgroup, so columns silently rescale whenever
   // the container's width changes (e.g. after adding a role, or expanding a
   // month) instead of staying at their declared fixed width.
-  const dataColsWidth = columns.length * DATA_COL_W;
+  const dataColsWidth = columns.length * dataColWidth;
   // The leading Role/Person/Rate columns are the same width in both tables
   // (including a blank spacer in the plan table where "Person" would go, so
   // it has no data of its own here) specifically so every month/week column
@@ -244,7 +295,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
       <DialogTrigger render={<Button variant="outline" size="sm" />}>
         <CalendarClock className="size-3.5" /> Resource & Budget Planning
       </DialogTrigger>
-      <DialogContent className="flex max-h-[92vh] w-fit min-w-[960px] max-w-[1360px] flex-col gap-4 overflow-hidden p-6 sm:max-w-[1360px]">
+      <DialogContent className="flex max-h-[92vh] w-full min-w-[960px] max-w-[1360px] flex-col gap-4 overflow-hidden p-6 sm:max-w-[1360px]">
         <div>
           <h2 className="font-heading text-lg font-semibold">Resource & Budget Planning</h2>
           <p className="text-sm text-muted-foreground">{project.name}</p>
@@ -272,7 +323,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
           </Button>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
+        <div ref={contentRef} className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
           <div className="rounded-lg border border-border">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-4 py-2">
               <h3 className="text-sm font-semibold">Required roles (plan) — one row per seat, FTE per month or week</h3>
@@ -284,7 +335,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                   <col style={{ width: PERSON_COL_W }} />
                   <col style={{ width: RATE_COL_W }} />
                   {columns.map((col) => (
-                    <col key={col.key} style={{ width: DATA_COL_W }} />
+                    <col key={col.key} style={{ width: dataColWidth }} />
                   ))}
                   <col style={{ width: PLAN_SUM_COL_W }} />
                   <col style={{ width: PLAN_EUR_COL_W }} />
@@ -306,7 +357,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         <th
                           key={month}
                           colSpan={isExpanded ? weeks.length : 1}
-                          className="border-l border-border/50 px-1 py-2 text-center align-bottom"
+                          className={cn(
+                            "border-l border-border/50 px-1 py-2 text-center align-bottom",
+                            isExpanded && "bg-primary/5"
+                          )}
                         >
                           <button
                             type="button"
@@ -347,7 +401,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                       }
                       const weeks = weeksByMonth.get(month) ?? [];
                       return weeks.map((w) => (
-                        <th key={w} className="border-l border-border/50 px-1 py-1.5">
+                        <th key={w} className="border-l border-border/50 bg-primary/5 px-1 py-1.5">
                           {formatWeekLabel(w)}
                         </th>
                       ));
@@ -366,7 +420,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                           <DayRateInput value={req.dayRate} onCommit={(v) => updateRoleRequirementDayRate(req.id, v)} />
                         </td>
                         {columns.map((col) => (
-                          <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center">
+                          <td key={col.key} className={cn("border-l border-border/40 px-1 py-2 text-center", weekColClass(col))}>
                             <FteCell
                               value={columnFte(req.ftePerWeek, col)}
                               onCommit={(v) =>
@@ -408,7 +462,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         Total FTE
                       </td>
                       {totalFteByColumn.map((v, i) => (
-                        <td key={columns[i].key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums">
+                        <td
+                          key={columns[i].key}
+                          className={cn("border-l border-border/40 px-1 py-2 text-center tabular-nums", weekColClass(columns[i]))}
+                        >
                           {v > 0 ? formatFte(v) : "–"}
                         </td>
                       ))}
@@ -485,7 +542,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                     <col style={{ width: PERSON_COL_W }} />
                     <col style={{ width: RATE_COL_W }} />
                     {columns.map((col) => (
-                      <col key={col.key} style={{ width: DATA_COL_W }} />
+                      <col key={col.key} style={{ width: dataColWidth }} />
                     ))}
                     <col style={{ width: STAFF_SUM_COL_W }} />
                     <col style={{ width: ACTION_COL_W }} />
@@ -496,7 +553,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                       <th className="px-3 py-2">Person</th>
                       <th className="px-2 py-2">Rate</th>
                       {columns.map((col) => (
-                        <th key={col.key} className="border-l border-border/50 px-1 py-2 text-center">
+                        <th key={col.key} className={cn("border-l border-border/50 px-1 py-2 text-center", weekColClass(col))}>
                           {columnLabel(col)}
                         </th>
                       ))}
@@ -541,7 +598,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                 />
                               </td>
                               {columns.map((col) => (
-                                <td key={col.key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs">
+                                <td
+                                  key={col.key}
+                                  className={cn("border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs", weekColClass(col))}
+                                >
                                   {formatCompactCurrency(columnCost(req.ftePerWeek, assignment.dayRate, col))}
                                 </td>
                               ))}
@@ -608,7 +668,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                               {columns.map((col) => (
                                 <td
                                   key={col.key}
-                                  className="border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs text-muted-foreground italic"
+                                  className={cn(
+                                    "border-l border-border/40 px-1 py-2 text-center tabular-nums text-xs text-muted-foreground italic",
+                                    weekColClass(col)
+                                  )}
                                   title="Projected from the plan — no person assigned yet."
                                 >
                                   {formatCompactCurrency(columnCost(req.ftePerWeek, req.dayRate, col))}
@@ -642,7 +705,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                           Total (assigned)
                         </td>
                         {actualByColumn.map((v, i) => (
-                          <td key={columns[i].key} className="border-l border-border/40 px-1 py-2 text-center tabular-nums">
+                          <td
+                            key={columns[i].key}
+                            className={cn("border-l border-border/40 px-1 py-2 text-center tabular-nums", weekColClass(columns[i]))}
+                          >
                             {v > 0 ? formatCompactCurrency(v) : "–"}
                           </td>
                         ))}

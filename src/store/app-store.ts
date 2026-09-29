@@ -457,9 +457,22 @@ function repairState(state: AppState): AppState {
   );
   const projectRoleRequirements = state.projectRoleRequirements.filter((r) => projectIds.has(r.projectId));
   const requirementIds = new Set(projectRoleRequirements.map((r) => r.id));
-  const projectRoleAssignments = state.projectRoleAssignments.filter(
-    (a) => peopleIds.has(a.personId) && projectIds.has(a.projectId) && requirementIds.has(a.roleRequirementId)
-  );
+  // A requirement is one seat — at most one assignment can ever fill it (the
+  // UI only ever shows/edits the first match for a given roleRequirementId,
+  // so a second one is invisible there and just silently inflates the
+  // "Total (assigned)" sum beyond what any visible row accounts for). Keeps
+  // the first, drops the rest — self-heals a duplicate however it arose
+  // (e.g. a double-submit before the UI re-rendered to hide the add-person
+  // row), the same way a dangling reference above is self-healed.
+  const seenRequirementIds = new Set<string>();
+  const projectRoleAssignments = state.projectRoleAssignments.filter((a) => {
+    if (!peopleIds.has(a.personId) || !projectIds.has(a.projectId) || !requirementIds.has(a.roleRequirementId)) {
+      return false;
+    }
+    if (seenRequirementIds.has(a.roleRequirementId)) return false;
+    seenRequirementIds.add(a.roleRequirementId);
+    return true;
+  });
   const projectMembers = state.projectMembers.filter(
     (m) => peopleIds.has(m.personId) && projectIds.has(m.projectId)
   );
@@ -839,6 +852,13 @@ export function createAppStore() {
 
         addRoleAssignment: ({ projectId, roleRequirementId, personId, dayRate }) =>
           set((state) => {
+            // A requirement is one seat — refuse a second assignment against
+            // an already-filled one (e.g. a double-submit before the UI
+            // re-rendered to hide the add-person row for it), since the UI
+            // would only ever show/edit the first anyway and the extra would
+            // just silently inflate the "Total (assigned)" sum.
+            const alreadyFilled = state.projectRoleAssignments.some((a) => a.roleRequirementId === roleRequirementId);
+            if (alreadyFilled) return;
             const id = nextId(
               "asg",
               state.projectRoleAssignments.map((a) => a.id)
