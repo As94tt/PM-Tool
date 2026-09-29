@@ -3,7 +3,7 @@
 import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { CalendarClock, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Plus, X, Briefcase } from "lucide-react";
+import { CalendarClock, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Pencil, Plus, X, Briefcase } from "lucide-react";
 import { useAppStore } from "@/store/app-store-provider";
 import { fullName, initials } from "@/lib/data/queries";
 import { formatCompactCurrency, formatCurrency } from "@/lib/format";
@@ -128,10 +128,15 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
   const addRoleAssignment = useAppStore((s) => s.addRoleAssignment);
   const removeRoleAssignment = useAppStore((s) => s.removeRoleAssignment);
   const updateRoleAssignmentDayRate = useAppStore((s) => s.updateRoleAssignmentDayRate);
+  const changeRoleAssignmentPerson = useAppStore((s) => s.changeRoleAssignmentPerson);
 
   const [newRoleName, setNewRoleName] = useState(roles[0]?.name ?? "");
   const [newRoleDayRate, setNewRoleDayRate] = useState("800");
-  const [addPersonState, setAddPersonState] = useState<Record<string, { personId: string; dayRate: string }>>({});
+  // Keyed by requirement id — an optional custom day rate typed in before
+  // picking a person (selecting a person assigns immediately, so this is
+  // the only piece of unassigned-row state left to stage).
+  const [dayRateOverrides, setDayRateOverrides] = useState<Record<string, string>>({});
+  const [editingPersonFor, setEditingPersonFor] = useState<string | null>(null);
 
   const [containerWidth, setContainerWidth] = useState(0);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -217,17 +222,18 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
     toast.success("Role added to the plan");
   }
 
-  function handleAddPerson(requirementId: string, requirementDayRate: number) {
-    const form = addPersonState[requirementId];
-    if (!form?.personId) return;
+  // Takes personId as a parameter straight from the Select's onValueChange,
+  // rather than staging it into state first and reading it back out — a
+  // person is assigned the instant one is picked, no separate confirm step.
+  function handleAssignPerson(requirementId: string, requirementDayRate: number, personId: string) {
     // An explicit "0" must stay 0 (e.g. a pro-bono seat) — only fall back to
     // the requirement's own rate when the field was left blank, not just
     // whenever the typed value happens to be falsy.
-    const typed = form.dayRate.trim();
+    const typed = (dayRateOverrides[requirementId] ?? "").trim();
     const dayRate = typed === "" ? requirementDayRate : Math.max(0, Number(typed) || 0);
-    addRoleAssignment({ projectId: project.id, roleRequirementId: requirementId, personId: form.personId, dayRate });
+    addRoleAssignment({ projectId: project.id, roleRequirementId: requirementId, personId, dayRate });
     toast.success("Person staffed to role");
-    setAddPersonState((prev) => ({ ...prev, [requirementId]: { personId: "", dayRate: "" } }));
+    setDayRateOverrides((prev) => ({ ...prev, [requirementId]: "" }));
   }
 
   /** A column's FTE for one role: the week's own value, or (collapsed) the
@@ -570,7 +576,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                         { value: "none", label: "Select a person" },
                         ...availablePeople.map((p) => ({ value: p.id, label: fullName(p) })),
                       ];
-                      const formState = addPersonState[req.id] ?? { personId: "", dayRate: String(req.dayRate) };
+                      const dayRateOverride = dayRateOverrides[req.id] ?? "";
 
                       return (
                         <Fragment key={req.id}>
@@ -583,13 +589,61 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                 </span>
                               </td>
                               <td className="px-3 py-2">
-                                <Link href={`/people/${assignment.personId}`} className="flex min-w-0 items-center gap-2 hover:text-primary">
-                                  <Avatar className="size-6 shrink-0">
-                                    <AvatarImage src={person?.avatarUrl} alt={person ? fullName(person) : ""} />
-                                    <AvatarFallback className="text-[10px]">{person ? initials(person) : "?"}</AvatarFallback>
-                                  </Avatar>
-                                  <span className="min-w-0 truncate text-xs font-medium">{person ? fullName(person) : "Unknown"}</span>
-                                </Link>
+                                {editingPersonFor === req.id ? (
+                                  <div className="flex items-center gap-1">
+                                    <Select
+                                      value="none"
+                                      onValueChange={(v) => {
+                                        if (v && v !== "none") {
+                                          changeRoleAssignmentPerson(assignment.id, v);
+                                          setEditingPersonFor(null);
+                                        }
+                                      }}
+                                    >
+                                      <SelectTrigger size="sm" className="h-8 w-full text-xs">
+                                        <SelectValue placeholder="Select a person…">{selectLabel(personOptions, "Select a person…")}</SelectValue>
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {personOptions.map((o) => (
+                                          <SelectItem key={o.value} value={o.value} disabled={o.value === "none"}>
+                                            {o.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon-sm"
+                                      className="size-6 shrink-0"
+                                      onClick={() => setEditingPersonFor(null)}
+                                      aria-label="Cancel changing person"
+                                    >
+                                      <X className="size-3" />
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="flex min-w-0 items-center gap-1">
+                                    <Link
+                                      href={`/people/${assignment.personId}`}
+                                      className="flex min-w-0 flex-1 items-center gap-2 hover:text-primary"
+                                    >
+                                      <Avatar className="size-6 shrink-0">
+                                        <AvatarImage src={person?.avatarUrl} alt={person ? fullName(person) : ""} />
+                                        <AvatarFallback className="text-[10px]">{person ? initials(person) : "?"}</AvatarFallback>
+                                      </Avatar>
+                                      <span className="min-w-0 truncate text-xs font-medium">{person ? fullName(person) : "Unknown"}</span>
+                                    </Link>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon-sm"
+                                      className="size-6 shrink-0"
+                                      onClick={() => setEditingPersonFor(req.id)}
+                                      aria-label={`Change person for ${req.roleName}`}
+                                    >
+                                      <Pencil className="size-3" />
+                                    </Button>
+                                  </div>
+                                )}
                               </td>
                               <td className="px-2 py-2">
                                 <DayRateInput
@@ -630,13 +684,10 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                               </td>
                               <td className="px-3 py-2">
                                 <Select
-                                  value={formState.personId || "none"}
-                                  onValueChange={(v) =>
-                                    setAddPersonState((prev) => ({
-                                      ...prev,
-                                      [req.id]: { ...formState, personId: v && v !== "none" ? v : "" },
-                                    }))
-                                  }
+                                  value="none"
+                                  onValueChange={(v) => {
+                                    if (v && v !== "none") handleAssignPerson(req.id, req.dayRate, v);
+                                  }}
                                 >
                                   <SelectTrigger size="sm" className="h-8 w-full text-xs">
                                     <SelectValue placeholder="Select a person…">{selectLabel(personOptions, "Select a person…")}</SelectValue>
@@ -654,12 +705,9 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                                 <input
                                   type="text"
                                   inputMode="numeric"
-                                  value={formState.dayRate}
+                                  value={dayRateOverride}
                                   onChange={(e) =>
-                                    setAddPersonState((prev) => ({
-                                      ...prev,
-                                      [req.id]: { ...formState, dayRate: e.target.value.replace(/[^0-9]/g, "") },
-                                    }))
+                                    setDayRateOverrides((prev) => ({ ...prev, [req.id]: e.target.value.replace(/[^0-9]/g, "") }))
                                   }
                                   placeholder={String(req.dayRate)}
                                   className="h-8 w-full rounded-md border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
@@ -683,17 +731,7 @@ export function ProjectPlanningDialog({ project }: { project: Project }) {
                               >
                                 {formatCompactCurrency(totalCost(req.ftePerWeek, req.dayRate))}
                               </td>
-                              <td className="px-1 py-2 text-center">
-                                <Button
-                                  size="icon-sm"
-                                  className="size-7"
-                                  onClick={() => handleAddPerson(req.id, req.dayRate)}
-                                  disabled={!formState.personId}
-                                  aria-label={`Assign to ${req.roleName}`}
-                                >
-                                  <Plus className="size-3.5" />
-                                </Button>
-                              </td>
+                              <td />
                             </tr>
                           )}
                         </Fragment>

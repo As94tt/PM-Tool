@@ -138,6 +138,10 @@ export interface AppState {
   }) => void;
   removeRoleAssignment: (assignmentId: string) => void;
   updateRoleAssignmentDayRate: (assignmentId: string, dayRate: number) => void;
+  /** Swaps who holds an already-filled seat, in place — distinct from
+   * unassign-then-reassign so it never trips the "one assignment per
+   * requirement" guard on `addRoleAssignment` against its own seat. */
+  changeRoleAssignmentPerson: (assignmentId: string, personId: string) => void;
 
   addFeedbackNote: (note: { type: FeedbackType; text: string; authorPersonId: string }) => void;
   removeFeedbackNote: (noteId: string) => void;
@@ -886,6 +890,30 @@ export function createAppStore() {
           set((state) => {
             const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
             if (assignment) assignment.dayRate = dayRate;
+          }),
+
+        changeRoleAssignmentPerson: (assignmentId, personId) =>
+          set((state) => {
+            const assignment = state.projectRoleAssignments.find((a) => a.id === assignmentId);
+            if (!assignment || assignment.personId === personId) return;
+            const oldPersonId = assignment.personId;
+            assignment.personId = personId;
+            // Same ProjectMember-sync as addRoleAssignment, for the new
+            // person — the old person keeps their existing membership
+            // untouched, matching removeRoleAssignment's own behavior (a
+            // lost seat doesn't retroactively remove someone from the
+            // project's team list).
+            const isMember = state.projectMembers.some((m) => m.personId === personId && m.projectId === assignment.projectId);
+            if (!isMember) {
+              const requirement = state.projectRoleRequirements.find((r) => r.id === assignment.roleRequirementId);
+              state.projectMembers.push({
+                projectId: assignment.projectId,
+                personId,
+                roleOnProject: requirement?.roleName ?? "Team Member",
+              });
+            }
+            syncMonthlyAllocations(state, oldPersonId, assignment.projectId);
+            syncMonthlyAllocations(state, personId, assignment.projectId);
           }),
 
         addFeedbackNote: ({ type, text, authorPersonId }) =>
