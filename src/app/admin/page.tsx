@@ -2,7 +2,22 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, X, UploadCloud, Layers, Heart, Award, MapPin, Briefcase, Languages, UserCog, KeyRound, Trash2 } from "lucide-react";
+import {
+  Plus,
+  X,
+  UploadCloud,
+  Layers,
+  Heart,
+  Award,
+  MapPin,
+  Briefcase,
+  Languages,
+  UserCog,
+  KeyRound,
+  Trash2,
+  DatabaseBackup,
+  TriangleAlert,
+} from "lucide-react";
 import { RoleGate } from "@/components/shared/role-gate";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,12 +28,23 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { CsvImportWizard } from "@/components/admin/csv-import-wizard";
 import { PEOPLE_IMPORT_FIELDS, PROJECT_IMPORT_FIELDS } from "@/lib/csv-import";
 import { selectLabel } from "@/lib/select-utils";
 import { groupBy } from "@/lib/utils";
 import { fullName, initials } from "@/lib/data/queries";
-import { useAppStore } from "@/store/app-store-provider";
+import { useAppStore, useAppStoreApi } from "@/store/app-store-provider";
 import { useCanViewFunction, useCanEditFunction } from "@/store/hooks";
 import {
   APP_FUNCTIONS,
@@ -114,6 +140,7 @@ function SimpleCatalogEditor({
 }
 
 export default function AdminPage() {
+  const storeApi = useAppStoreApi();
   const people = useAppStore((s) => s.people);
   const industries = useAppStore((s) => s.industries);
   const locations = useAppStore((s) => s.locations);
@@ -317,6 +344,17 @@ export default function AdminPage() {
     toast.success("Language removed");
   }
 
+  // Regenerating scripts/generate-data.mjs's output only changes the
+  // fresh-install seed — an existing browser's persisted state is never
+  // overwritten by it (persist's merge/migrate only ever repair or extend
+  // what's already stored, never replace it wholesale). This is the only
+  // way to actually get back to that fresh seed from an already-persisted
+  // session, short of manually clearing site data.
+  function handleResetDemoData() {
+    storeApi.persist.clearStorage();
+    window.location.reload();
+  }
+
   function handleChangePersonRole(personId: string, role: AppRole) {
     setPersonRole(personId, role);
     toast.success("Role updated");
@@ -369,6 +407,9 @@ export default function AdminPage() {
                 </TabsTrigger>
                 <TabsTrigger value="languages">
                   <Languages className="size-3.5" /> Languages
+                </TabsTrigger>
+                <TabsTrigger value="data">
+                  <DatabaseBackup className="size-3.5" /> Data
                 </TabsTrigger>
               </>
             )}
@@ -645,6 +686,47 @@ export default function AdminPage() {
               onRemove={handleRemoveLanguage}
               readOnly={!canEditMasterData}
             />
+          </TabsContent>
+          )}
+
+          {canViewMasterData && (
+          <TabsContent value="data" className="mt-4">
+            <Card className="border-destructive/30 p-6 shadow-elevation-1">
+              <h2 className="flex items-center gap-1.5 font-heading text-base font-semibold text-destructive">
+                <TriangleAlert className="size-4" /> Danger zone
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+                This app&apos;s demo data lives entirely in this browser — every person, project, and edit
+                is saved locally, not on a shared server. Regenerating the app&apos;s seed dataset never
+                reaches back into a browser that&apos;s already loaded it before, so a session can drift out
+                of sync over time (e.g. someone showing up in a project&apos;s team list who was never
+                actually staffed in its planning dialog). If that happens, reset this browser&apos;s copy
+                back to the current seed data below.
+              </p>
+              <AlertDialog>
+                <AlertDialogTrigger
+                  render={<Button variant="destructive" className="mt-4" disabled={!canEditMasterData} />}
+                >
+                  <Trash2 className="size-3.5" /> Reset to fresh demo data
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Reset to fresh demo data?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This permanently clears every person, project, and edit stored in this browser and
+                      reloads with the current seed dataset. This can&apos;t be undone, and it only affects
+                      this browser — nobody else&apos;s data is touched.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction variant="destructive" onClick={handleResetDemoData}>
+                      Reset data
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </Card>
           </TabsContent>
           )}
 
