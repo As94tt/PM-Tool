@@ -239,27 +239,30 @@ function personOwnRequirements(
 
 /**
  * Week horizon for a person's own allocation timeline — the union of every
- * project they hold a real staffing seat on, from the earliest project's
- * start through the later of each project's own end date or the last week
- * any of their seats actually has FTE. Mirrors getProjectChartWeeks (one
- * project, every staffed person) with the axes swapped (one person, every
- * staffed project).
+ * project passed in (the caller decides what counts as "theirs", e.g. every
+ * ProjectMember entry, so this stays consistent with whatever project list
+ * is shown elsewhere on their page), clipped to start no earlier than today
+ * (a person's own timeline is forward-looking, not a historical record the
+ * way a single project's own chart is) through the later of each project's
+ * own end date or the last week any of their seats actually has FTE.
+ * Mirrors getProjectChartWeeks (one project, every staffed person) with the
+ * axes swapped (one person, every one of their projects).
  */
 export function getPersonChartWeeks(
-  projects: Pick<Project, "id" | "startDate" | "endDate">[],
+  myProjects: Pick<Project, "id" | "startDate" | "endDate">[],
   requirements: ProjectRoleRequirement[],
   assignments: ProjectRoleAssignment[],
   personId: string,
   opts: { maxWeeks?: number } = {}
 ): string[] {
   const { maxWeeks = 120 } = opts;
-  const myProjectIds = new Set(assignments.filter((a) => a.personId === personId).map((a) => a.projectId));
-  const myProjects = projects.filter((p) => myProjectIds.has(p.id));
   const now = startOfWeek(new Date());
   if (myProjects.length === 0) return [weekKey(now)];
 
-  const starts = myProjects.map((p) => startOfWeek(weekToDate(p.startDate)));
-  let cursor = starts.reduce((min, d) => (d < min ? d : min));
+  const earliestStart = myProjects
+    .map((p) => startOfWeek(weekToDate(p.startDate)))
+    .reduce((min, d) => (d < min ? d : min));
+  let cursor = earliestStart > now ? earliestStart : now;
 
   let endBound = myProjects.reduce((max, p) => {
     const d = startOfWeek(weekToDate(p.endDate ?? p.startDate));
@@ -283,23 +286,24 @@ export function getPersonChartWeeks(
   return weeks.length > 0 ? weeks : [weekKey(cursor)];
 }
 
-/** Month-granularity analog of getPersonChartWeeks — same union-of-projects
- * horizon, bucketed to months via weekToMonthKey for the last-active check. */
+/** Month-granularity analog of getPersonChartWeeks — same caller-supplied
+ * project list and today-onward clipping, bucketed to months via
+ * weekToMonthKey for the last-active check. */
 export function getPersonChartMonths(
-  projects: Pick<Project, "id" | "startDate" | "endDate">[],
+  myProjects: Pick<Project, "id" | "startDate" | "endDate">[],
   requirements: ProjectRoleRequirement[],
   assignments: ProjectRoleAssignment[],
   personId: string,
   opts: { maxMonths?: number } = {}
 ): string[] {
   const { maxMonths = 30 } = opts;
-  const myProjectIds = new Set(assignments.filter((a) => a.personId === personId).map((a) => a.projectId));
-  const myProjects = projects.filter((p) => myProjectIds.has(p.id));
-  const now = new Date();
+  const now = monthToDate(monthKey(new Date()));
   if (myProjects.length === 0) return [monthKey(now)];
 
-  const starts = myProjects.map((p) => monthToDate(p.startDate.slice(0, 7)));
-  let cursor = starts.reduce((min, d) => (d < min ? d : min));
+  const earliestStart = myProjects
+    .map((p) => monthToDate(p.startDate.slice(0, 7)))
+    .reduce((min, d) => (d < min ? d : min));
+  let cursor = earliestStart > now ? earliestStart : now;
 
   let endMonth = myProjects.reduce((max, p) => {
     const d = monthToDate((p.endDate ?? p.startDate).slice(0, 7));
@@ -321,21 +325,6 @@ export function getPersonChartMonths(
     cursor = addMonths(cursor, 1);
   }
   return months.length > 0 ? months : [monthKey(cursor)];
-}
-
-/** The single role this person holds on a given project, via their own
- * staffing-seat assignment(s) there — used to label a row in their
- * allocation timeline the same way a project's own team list shows
- * "roleOnProject" for each member. */
-export function getPersonRoleOnProject(
-  requirements: ProjectRoleRequirement[],
-  assignments: ProjectRoleAssignment[],
-  personId: string,
-  projectId: string
-): string | undefined {
-  const assignment = assignments.find((a) => a.personId === personId && a.projectId === projectId);
-  if (!assignment) return undefined;
-  return requirements.find((r) => r.id === assignment.roleRequirementId)?.roleName;
 }
 
 /** A person's total FTE across EVERY project for one week, as a percent —

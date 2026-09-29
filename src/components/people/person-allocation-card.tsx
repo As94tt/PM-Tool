@@ -9,7 +9,7 @@ import {
   getPersonChartWeeks,
   getPersonWeeklyAllocationForProject,
   getProjectMonthlyAllocationLive,
-  getPersonRoleOnProject,
+  getPersonProjectHistory,
 } from "@/lib/data/queries";
 import { formatMonthLabel } from "@/lib/data/capacity";
 import { getWeeksInMonth, formatWeekLabel } from "@/lib/data/week-planning";
@@ -33,17 +33,22 @@ const HEADER_HEIGHT = 18;
 const CELL_GAP = 2;
 
 /**
- * A person's own allocation timeline — one row per project they hold a real
- * staffing-plan seat on (not every project they're loosely credited on),
- * across a shared Monthly/Weekly horizon spanning their earliest project's
- * start through their latest project's end (or last actually-staffed
- * period, if that runs later). The project-page mirror of
- * TeamAllocationCard, with the row axis swapped: projects instead of
- * people, for one person instead of one project.
+ * A person's own allocation timeline — one row per project they're a member
+ * of, the exact same project set (and roleOnProject label) as the Current/
+ * Upcoming/Previous projects sections below on this same page, via the same
+ * getPersonProjectHistory call — showing a different set here would just
+ * read as a bug (two "which projects is this person on" answers on one
+ * page). A shared Monthly/Weekly horizon spans from today (this is a
+ * forward-looking timeline, not a historical record) through their latest
+ * project's end, or last actually-staffed period if that runs later. The
+ * project-page mirror of TeamAllocationCard, with the row axis swapped:
+ * projects instead of people, for one person instead of one project.
  */
 export function PersonAllocationCard({ person }: { person: Person }) {
   const projects = useAppStore((s) => s.projects);
   const clients = useAppStore((s) => s.clients);
+  const projectMembers = useAppStore((s) => s.projectMembers);
+  const resourceAllocations = useAppStore((s) => s.resourceAllocations);
   const projectRoleRequirements = useAppStore((s) => s.projectRoleRequirements);
   const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
 
@@ -51,20 +56,22 @@ export function PersonAllocationCard({ person }: { person: Person }) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = useState({ left: 0, visibleWidth: 0 });
 
-  const myProjects = useMemo(() => {
-    const myProjectIds = new Set(
-      projectRoleAssignments.filter((a) => a.personId === person.id).map((a) => a.projectId)
-    );
-    return projects.filter((p) => myProjectIds.has(p.id)).toSorted((a, b) => a.startDate.localeCompare(b.startDate));
-  }, [projects, projectRoleAssignments, person.id]);
+  const myProjectEntries = useMemo(
+    () =>
+      getPersonProjectHistory(projectMembers, projects, resourceAllocations, person.id).toSorted((a, b) =>
+        a.project.startDate.localeCompare(b.project.startDate)
+      ),
+    [projectMembers, projects, resourceAllocations, person.id]
+  );
+  const myProjects = useMemo(() => myProjectEntries.map((e) => e.project), [myProjectEntries]);
 
   const allMonths = useMemo(
-    () => getPersonChartMonths(projects, projectRoleRequirements, projectRoleAssignments, person.id),
-    [projects, projectRoleRequirements, projectRoleAssignments, person.id]
+    () => getPersonChartMonths(myProjects, projectRoleRequirements, projectRoleAssignments, person.id),
+    [myProjects, projectRoleRequirements, projectRoleAssignments, person.id]
   );
   const allWeeks = useMemo(
-    () => getPersonChartWeeks(projects, projectRoleRequirements, projectRoleAssignments, person.id),
-    [projects, projectRoleRequirements, projectRoleAssignments, person.id]
+    () => getPersonChartWeeks(myProjects, projectRoleRequirements, projectRoleAssignments, person.id),
+    [myProjects, projectRoleRequirements, projectRoleAssignments, person.id]
   );
 
   const allPeriods = granularity === "month" ? allMonths : allWeeks;
@@ -125,7 +132,7 @@ export function PersonAllocationCard({ person }: { person: Person }) {
   }
 
   const formatPeriodLabel = (key: string) =>
-    granularity === "month" ? formatMonthLabel(key, { month: "short" }) : formatWeekLabel(key);
+    granularity === "month" ? formatMonthLabel(key, { month: "short", year: "2-digit" }) : formatWeekLabel(key);
 
   const firstVisibleIdx = Math.min(allPeriods.length - 1, Math.round(scrollState.left / colPitch));
   const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colPitch));
@@ -157,8 +164,8 @@ export function PersonAllocationCard({ person }: { person: Person }) {
         </div>
       </div>
 
-      {myProjects.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">Not currently staffed to any project.</p>
+      {myProjectEntries.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">Not currently on any project.</p>
       ) : (
         <>
           {needsScroll && (
@@ -182,28 +189,20 @@ export function PersonAllocationCard({ person }: { person: Person }) {
             <div className="flex shrink-0 flex-col" style={{ width: NAME_COL_WIDTH }}>
               <div style={{ height: HEADER_HEIGHT }} />
               <div className="flex flex-col divide-y divide-border/70">
-                {myProjects.map((project) => {
-                  const roleOnProject = getPersonRoleOnProject(
-                    projectRoleRequirements,
-                    projectRoleAssignments,
-                    person.id,
-                    project.id
-                  );
-                  return (
-                    <Link
-                      key={project.id}
-                      href={`/projects/${project.id}`}
-                      style={{ height: ROW_HEIGHT }}
-                      className="flex items-center gap-3 pr-3 transition-colors hover:bg-secondary/50"
-                    >
-                      <ProjectAvatar project={project} clients={clients} size="sm" className="size-9" />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{project.name}</p>
-                        <p className="truncate text-xs text-muted-foreground">{roleOnProject ?? project.clientName}</p>
-                      </div>
-                    </Link>
-                  );
-                })}
+                {myProjectEntries.map(({ project, roleOnProject }) => (
+                  <Link
+                    key={project.id}
+                    href={`/projects/${project.id}`}
+                    style={{ height: ROW_HEIGHT }}
+                    className="flex items-center gap-3 pr-3 transition-colors hover:bg-secondary/50"
+                  >
+                    <ProjectAvatar project={project} clients={clients} size="sm" className="size-9" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{project.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">{roleOnProject}</p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
 
@@ -220,7 +219,7 @@ export function PersonAllocationCard({ person }: { person: Person }) {
                   ))}
                 </div>
                 <div className="flex flex-col divide-y divide-border/70">
-                  {myProjects.map((project, rowIdx) => {
+                  {myProjectEntries.map(({ project }, rowIdx) => {
                     const chartData = allPeriods.map((p) => ({
                       key: p,
                       label: formatPeriodLabel(p),

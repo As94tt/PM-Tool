@@ -140,7 +140,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
   }
 
   const formatPeriodLabel = (key: string) =>
-    granularity === "month" ? formatMonthLabel(key, { month: "short" }) : formatWeekLabel(key);
+    granularity === "month" ? formatMonthLabel(key, { month: "short", year: "2-digit" }) : formatWeekLabel(key);
 
   const firstVisibleIdx = Math.min(allPeriods.length - 1, Math.round(scrollState.left / colPitch));
   const visibleCount = Math.max(1, Math.floor(scrollState.visibleWidth / colPitch));
