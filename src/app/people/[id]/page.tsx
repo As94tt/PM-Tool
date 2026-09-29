@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SkillLevelDots, SKILL_LEVEL_LABEL } from "@/components/shared/skill-level";
 import { PersonProjectEntry } from "@/components/people/person-project-entry";
+import { PersonAllocationCard } from "@/components/people/person-allocation-card";
 import { EditProfileSheet } from "@/components/people/edit-profile-sheet";
 import { RoleGate } from "@/components/shared/role-gate";
 import { cn, groupBy } from "@/lib/utils";
@@ -247,6 +248,8 @@ export default function PersonDetailPage() {
               {mySkills.length === 0 && <p className="text-sm text-muted-foreground">No skills added yet.</p>}
             </div>
           </Card>
+
+          <PersonAllocationCard person={person} />
 
           {current.length > 0 && (
             <section>
