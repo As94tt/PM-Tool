@@ -231,6 +231,12 @@ export default function DashboardPage() {
                 </p>
               </div>
             </div>
+            {/* Absorbs the grid-stretched card's slack so the chart below
+                stays pinned to the same fixed distance from the card's
+                bottom edge as the other card's — keeping both bar-chart
+                baselines aligned regardless of how tall each card's content
+                above the chart is. */}
+            <div className="flex-1" />
             <div className="px-5 pb-5">
               <MiniBarChart
                 data={budget.monthlyTotals.map((m) => ({
@@ -249,20 +255,21 @@ export default function DashboardPage() {
               <h2 className="font-heading text-base font-semibold">Capacity utilization</h2>
               <p className="mt-0.5 text-xs text-muted-foreground">Average allocation across all employees</p>
             </div>
-            <div className="px-5 pt-5 pb-3">
-              <MiniBarChart
-                data={capacityData}
-                valueFormatter={(v) => `${v}% allocated`}
-                height={88}
-              />
-            </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 border-t border-border/70 px-5 py-3">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 px-5 pt-4">
               {(Object.keys(ALLOCATION_STATUS_LABEL) as AllocationStatus[]).map((status) => (
                 <div key={status} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className={`size-2 rounded-full ${ALLOCATION_STATUS_STYLES[status].dot}`} />
                   {ALLOCATION_STATUS_LABEL[status]}
                 </div>
               ))}
+            </div>
+            <div className="flex-1" />
+            <div className="px-5 pb-5">
+              <MiniBarChart
+                data={capacityData}
+                valueFormatter={(v) => `${v}% allocated`}
+                height={88}
+              />
             </div>
           </Card>
         </div>

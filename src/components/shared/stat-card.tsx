@@ -22,7 +22,7 @@ export function StatCard({
   const content = (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-[transform,box-shadow] duration-200",
+        "group relative h-full overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-[transform,box-shadow] duration-200",
         href && "hover:-translate-y-0.5 hover:shadow-elevation-2",
         className
       )}

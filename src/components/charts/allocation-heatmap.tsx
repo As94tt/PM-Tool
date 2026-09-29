@@ -39,6 +39,7 @@ export function AllocationHeatmapRow({
   valueFormatter = (v: number) => `${v}% allocated`,
   className,
   columnWidth,
+  flipTooltip = false,
 }: {
   data: HeatmapCellDatum[];
   valueFormatter?: (v: number) => string;
@@ -48,6 +49,10 @@ export function AllocationHeatmapRow({
    * total width can exceed its container and actually overflow/scroll),
    * rather than always fitting exactly to the available space. */
   columnWidth?: number;
+  /** Renders the hover tooltip below the row instead of above — for a row
+   * with nothing above it to give the tooltip room (e.g. the topmost row of
+   * a heatmap), where "above" would clip against the card's own edge. */
+  flipTooltip?: boolean;
 }) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
@@ -58,8 +63,19 @@ export function AllocationHeatmapRow({
     >
       {hoverIdx !== null && data[hoverIdx] && (
         <div
-          className="pointer-events-none absolute top-0 z-10 -translate-y-full rounded-md border border-border bg-popover px-2 py-1 text-xs whitespace-nowrap text-popover-foreground shadow-elevation-2"
-          style={{ left: `${((hoverIdx + 0.5) / data.length) * 100}%`, transform: "translate(-50%, -100%)" }}
+          className={cn(
+            "pointer-events-none absolute z-10 rounded-md border border-border bg-popover px-2 py-1 text-xs whitespace-nowrap text-popover-foreground shadow-elevation-2",
+            flipTooltip ? "top-full mt-1" : "bottom-full mb-1",
+            // The centered default overflows past the row's own edge for its
+            // first/last cell, clipping against the scroll container — pin
+            // the tooltip's edge to the cell's edge there instead.
+            hoverIdx !== 0 && hoverIdx !== data.length - 1 && "-translate-x-1/2"
+          )}
+          style={
+            hoverIdx === data.length - 1
+              ? { right: 0 }
+              : { left: hoverIdx === 0 ? 0 : `${((hoverIdx + 0.5) / data.length) * 100}%` }
+          }
         >
           <span className="font-medium">{valueFormatter(data[hoverIdx].value)}</span>{" "}
           <span className="text-muted-foreground">{data[hoverIdx].label}</span>

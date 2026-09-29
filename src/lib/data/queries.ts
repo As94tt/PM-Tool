@@ -18,7 +18,7 @@ import type {
   ProjectRoleAssignment,
 } from "@/lib/types";
 import { getAllocationForPersonMonth, getHorizonMonths } from "./capacity";
-import { totalCost, weeklyCost, weekToMonthKey } from "./week-planning";
+import { totalCost, weeklyCost, weekToMonthKey, sumFteMap } from "./week-planning";
 import { PRE_ACTIVE_STATUSES } from "@/lib/project-status";
 
 /** Clients are matched to projects by exact name, not a foreign key. */
@@ -520,6 +520,10 @@ export function getDashboardStats(
 export interface ProjectCostSummary {
   plannedCost: number;
   actualCost: number;
+  /** Average FTE headcount across active weeks — total planned/staffed
+   * FTE-weeks divided by the number of distinct weeks with any plan. */
+  plannedFte: number;
+  actualFte: number;
   /** True when this project has its own weekly role-based staffing plan
    * (project-level planning); false when it only has the legacy flat
    * per-project BudgetPlan figure. */
@@ -527,8 +531,8 @@ export interface ProjectCostSummary {
 }
 
 /**
- * A project's planned/actual personnel cost, preferring its own weekly
- * role-requirement/assignment plan (project-level planning) when one
+ * A project's planned/actual personnel cost and FTE, preferring its own
+ * weekly role-requirement/assignment plan (project-level planning) when one
  * exists, falling back to the legacy per-project BudgetPlan otherwise.
  */
 export function getProjectCostSummary(
@@ -547,10 +551,18 @@ export function getProjectCostSummary(
       const req = reqs.find((r) => r.id === a.roleRequirementId);
       return s + totalCost(req?.ftePerWeek ?? {}, a.dayRate);
     }, 0);
-    return { plannedCost, actualCost, hasDetailedPlan: true };
+    const activeWeeks = new Set(reqs.flatMap((r) => Object.keys(r.ftePerWeek))).size;
+    const plannedFteWeeks = reqs.reduce((s, r) => s + sumFteMap(r.ftePerWeek), 0);
+    const actualFteWeeks = asgs.reduce((s, a) => {
+      const req = reqs.find((r) => r.id === a.roleRequirementId);
+      return s + sumFteMap(req?.ftePerWeek ?? {});
+    }, 0);
+    const plannedFte = activeWeeks > 0 ? plannedFteWeeks / activeWeeks : 0;
+    const actualFte = activeWeeks > 0 ? actualFteWeeks / activeWeeks : 0;
+    return { plannedCost, actualCost, plannedFte, actualFte, hasDetailedPlan: true };
   }
   const plan = budgetPlans.find((b) => b.projectId === project.id);
-  return { plannedCost: plan?.plannedPersonnelCost ?? 0, actualCost: 0, hasDetailedPlan: false };
+  return { plannedCost: plan?.plannedPersonnelCost ?? 0, actualCost: 0, plannedFte: 0, actualFte: 0, hasDetailedPlan: false };
 }
 
 export interface BudgetOverview {

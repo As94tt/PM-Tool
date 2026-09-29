@@ -232,7 +232,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
               ))}
             </div>
             <div className="flex flex-col divide-y divide-border/70">
-              {members.map(({ person }) => {
+              {members.map(({ person }, memberIdx) => {
                 const chartData = allPeriods.map((p) => ({
                   key: p,
                   label: formatPeriodLabel(p),
@@ -249,7 +249,7 @@ export function TeamAllocationCard({ project, canSeeBudget }: { project: Project
                 }));
                 return (
                   <div key={person.id} style={{ height: ROW_HEIGHT }} className="flex items-center">
-                    <AllocationHeatmapRow data={chartData} columnWidth={colWidth} />
+                    <AllocationHeatmapRow data={chartData} columnWidth={colWidth} flipTooltip={memberIdx === 0} />
                   </div>
                 );
               })}

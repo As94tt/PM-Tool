@@ -10,6 +10,7 @@ import {
   getProjectSkillDetails,
   getSimilarProjects,
   getClientByName,
+  getProjectCostSummary,
   fullName,
   initials,
 } from "@/lib/data/queries";
@@ -24,6 +25,11 @@ import { ProjectMiniCard } from "@/components/projects/project-mini-card";
 import { ProjectFormSheet } from "@/components/projects/project-form-sheet";
 import { PROJECT_STATUS_BADGE, PROJECT_STATUS_LABEL } from "@/lib/project-status";
 
+/** FTE is shown to at most 2 decimal places — never more. */
+function formatFte(n: number): string {
+  return String(Math.round(n * 100) / 100);
+}
+
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
 
@@ -35,6 +41,8 @@ export default function ProjectDetailPage() {
   const people = useAppStore((s) => s.people);
   const projectSkills = useAppStore((s) => s.projectSkills);
   const budgetPlans = useAppStore((s) => s.budgetPlans);
+  const projectRoleRequirements = useAppStore((s) => s.projectRoleRequirements);
+  const projectRoleAssignments = useAppStore((s) => s.projectRoleAssignments);
   const clients = useAppStore((s) => s.clients);
 
   const project = projects.find((p) => p.id === id);
@@ -58,6 +66,7 @@ export default function ProjectDetailPage() {
   const techSkills = getProjectSkillDetails(projectSkills, skills, project.id);
   const similar = getSimilarProjects(projects, projectSkills, project.id, 3);
   const budgetPlan = budgetPlans.find((b) => b.projectId === project.id);
+  const costSummary = getProjectCostSummary(project, budgetPlans, projectRoleRequirements, projectRoleAssignments);
 
   return (
     <RoleGate functionKey="projects">
@@ -206,7 +215,13 @@ export default function ProjectDetailPage() {
 
           <Card className="p-5 shadow-elevation-1">
             <h2 className="font-heading text-sm font-semibold">Client</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{project.clientName}</p>
+            {client ? (
+              <Link href={`/customers/${client.id}`} className="mt-2 block text-sm text-primary hover:underline">
+                {project.clientName}
+              </Link>
+            ) : (
+              <p className="mt-2 text-sm text-muted-foreground">{project.clientName}</p>
+            )}
             <p className="text-sm text-muted-foreground">{industry?.name}</p>
           </Card>
 
@@ -215,15 +230,34 @@ export default function ProjectDetailPage() {
               <h2 className="flex items-center gap-1.5 font-heading text-sm font-semibold">
                 <Wallet className="size-4" /> Budget
               </h2>
-              <p className="mt-3 font-heading text-2xl font-semibold">{formatCompactCurrency(project.totalBudget)}</p>
-              <p className="text-xs text-muted-foreground">Total budget</p>
-              {budgetPlan && (
-                <p className="mt-3 rounded-lg bg-secondary/60 px-3 py-2 text-xs text-muted-foreground">
-                  Planned personnel cost:{" "}
-                  <span className="font-medium text-foreground">
-                    {formatCompactCurrency(budgetPlan.plannedPersonnelCost)}
-                  </span>
-                </p>
+              {costSummary.hasDetailedPlan ? (
+                <div className="mt-3 flex flex-col gap-3">
+                  <div>
+                    <p className="font-heading text-2xl font-semibold">{formatFte(costSummary.plannedFte)} FTE</p>
+                    <p className="text-xs text-muted-foreground">Planned team size</p>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg bg-secondary/60 px-3 py-2 text-xs">
+                    <span className="text-muted-foreground">Planned</span>
+                    <span className="font-medium text-foreground">{formatCompactCurrency(costSummary.plannedCost)}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg bg-secondary/60 px-3 py-2 text-xs">
+                    <span className="text-muted-foreground">Staffed ({formatFte(costSummary.actualFte)} FTE)</span>
+                    <span className="font-medium text-foreground">{formatCompactCurrency(costSummary.actualCost)}</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="mt-3 font-heading text-2xl font-semibold">{formatCompactCurrency(project.totalBudget)}</p>
+                  <p className="text-xs text-muted-foreground">Total budget</p>
+                  {budgetPlan && (
+                    <p className="mt-3 rounded-lg bg-secondary/60 px-3 py-2 text-xs text-muted-foreground">
+                      Planned personnel cost:{" "}
+                      <span className="font-medium text-foreground">
+                        {formatCompactCurrency(budgetPlan.plannedPersonnelCost)}
+                      </span>
+                    </p>
+                  )}
+                </>
               )}
             </Card>
           )}
